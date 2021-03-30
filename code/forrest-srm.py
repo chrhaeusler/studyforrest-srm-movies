@@ -10,14 +10,7 @@ To Do:
 
 import argparse
 from glob import glob
-# import matplotlib as mpl
-# import matplotlib.pyplot as plt
-# import nibabel as nib
-# from nilearn import plotting
-# from nilearn.image import smooth_img
-# import os
-# import re
-# import subprocess
+import re
 
 
 def parse_arguments():
@@ -62,7 +55,16 @@ if __name__ == "__main__":
     # read command line arguments
     outPath = parse_arguments()
 
+    # we need preprocessed data
+    # ToDo
+    #   - re-create visual ROI filtered_func.nii.gz
+    # probably load via nibabel
 
+    # we need individual masks for respective gyri
+    # ToDo:
+    #   - create masks manually (fsleyes) or surface based (Freesurfer)
+    #     available?
+    #   - warp masks into subjects space (probably in diffr
 
 
     print("End of Script")
