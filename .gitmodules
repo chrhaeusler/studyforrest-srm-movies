@@ -7,3 +7,6 @@
 	path = inputs/studyforrest-data-visualrois
 	url = https://github.com/psychoinformatics-de/studyforrest-data-visualrois.git
 	datalad-url = https://github.com/psychoinformatics-de/studyforrest-data-visualrois.git
+[submodule "inputs/studyforrest-data-templatetransforms"]
+	path = inputs/studyforrest-data-templatetransforms
+	url = https://github.com/psychoinformatics-de/studyforrest-data-templatetransforms
