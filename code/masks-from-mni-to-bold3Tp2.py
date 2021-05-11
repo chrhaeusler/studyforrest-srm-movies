@@ -28,7 +28,8 @@ def parse_arguments():
 
     parser.add_argument('-i',
                         default='inputs/studyforrest-data-templatetransforms',
-                        help='input directory')
+                        help='input directory containing templates' +
+                        '& transformations')
 
     parser.add_argument('-o',
                         default='masks',
@@ -79,18 +80,16 @@ def create_grp_bilat_mask(grp_masks, grp_out):
     bilat_mask_img = nib.Nifti1Image(mask_data,
                                      mask_img.affine,
                                      header=mask_img.header)
-
-    nib.save(bilat_mask_img, grp_out.replace('binary', 'prob'))
     nib.save(bilat_mask_img, grp_out)
 
     # make the data binary by setting all non-zeros to 1
     mask_data[mask_data > 0] = 1
 
     # save the binarized mask
-    bilat_mask_img = nib.Nifti1Image(mask_data, mask_img.affine, header=mask_img.header)
-    nib.save(bilat_mask_img, grp_out)
-
-    print('wrote', grp_out)
+    bilat_mask_img = nib.Nifti1Image(mask_data,
+                                     mask_img.affine,
+                                     header=mask_img.header)
+    nib.save(bilat_mask_img, grp_out.replace('prob', 'binary'))
 
     return None
 
@@ -99,10 +98,10 @@ def grp_ppa_to_ind_space(input, output, ref, warp):
     '''
     '''
     if not os.path.exists(ref):
-       subprocess.call(['datalad', 'get', ref])
+        subprocess.call(['datalad', 'get', ref])
 
     if not os.path.exists(warp):
-       subprocess.call(['datalad', 'get', warp])
+        subprocess.call(['datalad', 'get', warp])
 
     subprocess.call(
         ['applywarp',
@@ -158,19 +157,7 @@ if __name__ == "__main__":
         'mni2tmpl_12dof.mat'
     )
 
-    # the path to check for which subjects we have (filtered) functional data
-    # that were used to localize the PPA via movie and audio-description
-    SUBJS_PATH_PATTERN = 'inputs/studyforrest-ppa-analysis/sub-??'
 
-    subjs_pathes = find_files(SUBJS_PATH_PATTERN)
-    subjs = [re.search(r'sub-..', string).group() for string in subjs_pathes]
-    # some filtering (which is probably not necessary)
-    subjs = sorted(list(set(subjs)))
-
-    masks_in_mni = find_files(os.path.join(ROIS_PATH, 'in_mni', '*.*'))
-    # filter for relevant masks
-    masks_overlap = [mask for mask in masks_in_mni if 'overlap' in mask]
-    masks_in_mni = [mask for mask in masks_in_mni if 'overlap' not in mask]
 
     # create bilateral ROI overlaps (at the moment just focus on PPA & FFA)
     rois = ['PPA', 'FFA']
@@ -189,20 +176,40 @@ if __name__ == "__main__":
         bilat_outfpath = os.path.join(
             ROIS_PATH,
             'in_mni',
-            f'{roi}_overlap_binary.nii.gz'
+            f'{roi}_overlap_prob.nii.gz'
         )
         # do the conversion
         create_grp_bilat_mask(uni_grp_mask_fpathes, bilat_outfpath)
 
-    for subj in subjs:
+
+    # warp probabilistic maps and FoV of audio-description to bold3Tp2
+    # the path to check for which subjects we have (filtered) functional data
+    # that were used to localize the PPA via movie and audio-description
+    SUBJS_PATH_PATTERN = 'inputs/studyforrest-ppa-analysis/sub-??'
+    subjs_pathes = find_files(SUBJS_PATH_PATTERN)
+    subjs = [re.search(r'sub-..', string).group() for string in subjs_pathes]
+    # some filtering
+    subjs = sorted(list(set(subjs)))
+
+    # find the masks to be warped in to subjects' spaces
+    masks_in_mni = find_files(os.path.join(ROIS_PATH, 'in_mni', '*.*'))
+    # filter for relevant masks
+    # masks_overlap = [mask for mask in masks_in_mni if 'overlap' in mask]
+    masks_in_mni = [mask for mask in masks_in_mni if 'overlap' not in mask]
+
+    for subj in subjs[:1]:
         # create the subject-specific folder in case it does not exist
-        os.makedirs(os.path.join(subj, ROIS_PATH, 'in_bold3Tp2'), exist_ok=True)
+        out_path = os.path.join(subj, ROIS_PATH, 'in_bold3Tp2')
+        os.makedirs(out_path, exist_ok=True)
 
         for mask_in_mni in masks_in_mni:
-            # change the output path to the current subject
-            out_fpath = mask_in_mni.replace('in_mni', subj)
+            # output path/filename
+            out_file = os.path.basename(mask_in_mni)
+            out_fpath = os.path.join(subj, ROIS_PATH, 'in_bold3Tp2', out_file)
+
             # the path of the (individual) reference image
             subj_ref = os.path.join(TNT_DIR, subj, 'bold3Tp2/brain.nii.gz')
+
             # the volume providing warp/coefficient
             subj_warp = os.path.join(
                 TNT_DIR,
@@ -210,11 +217,11 @@ if __name__ == "__main__":
                 'bold3Tp2/in_grpbold3Tp2/'
                 'tmpl2subj_warp.nii.gz'
             )
+
             # the (affine) pre-transformation matrix
             premat = XFM_MAT
 
-            # warp mask (e.g. Havard-Oxford & MNI probabilistic)
-            # from mni into individual subject spaces
+            # do the warping from MNI to bold3Tp2 by calling the function
             mni_2_ind_bold3Tp2(
                 mask_in_mni,
                 out_fpath,
@@ -223,41 +230,46 @@ if __name__ == "__main__":
                 premat
             )
 
-            # warp the (bilateral) union of PPA ROIS from MNI to subject space
+            # warp the (bilateral) union of PPA ROIS that were created above
+            # from MNI to subject space
             for roi in rois:
+                # create the names of pathes
                 in_fpath = os.path.join(
                     ROIS_PATH,
                     'in_mni',
                     f'{roi}_overlap_binary.nii.gz'
                 )
-                out_fpath = os.path.join(ROIS_PATH,
-                                         subj,
-                                         f'grp_{roi}_bin.nii.gz'
-                                         )
+
+                out_fpath = os.path.join(
+                    subj,
+                    ROIS_PATH,
+                    'in_bold3Tp2',
+                    f'grp_{roi}_bin.nii.gz'
+                )
+
+                # call the function to warp from MNI to bold3Tp2
                 grp_ppa_to_ind_space(in_fpath, out_fpath, subj_ref, subj_warp)
 
-                # binarize the mask
+                # binarize the mask and overwrite existing file
                 in_fpath = out_fpath
                 roi_img = nib.load(in_fpath)
                 roi_data = roi_img.get_fdata()
-
-                # do the actual binarization
+                # perform the actual binarization
                 roi_data[roi_data > 0] = 1
-
-                # save the mask
+                # create image from data array
                 img = nib.Nifti1Image(roi_data,
                                       roi_img.affine,
                                       roi_img.header)
-
+                # save it
                 nib.save(img, out_fpath)
 
-                # dilute the mask
-                # open
+                # dilate the union of ROIs by one voxel
                 in_fpath = out_fpath
+                out_fpath = in_fpath.replace('.nii.gz', '_dil.nii.gz')
                 roi_img = nib.load(in_fpath)
                 roi_data = roi_img.get_fdata()
 
-                # dilate the gray matter
+                # perform the acutal dilations
                 roi_data_dil = scipy.ndimage.binary_dilation(roi_data)
                 roi_data_dil[roi_data_dil == False] = 0
                 roi_data_dil[roi_data_dil == True] = 1
@@ -267,6 +279,5 @@ if __name__ == "__main__":
                                       roi_img.affine,
                                       roi_img.header)
                 # save
-                out_fpath = in_fpath.replace('.nii.gz', '_dil.nii.gz')
                 nib.save(img, out_fpath)
 
