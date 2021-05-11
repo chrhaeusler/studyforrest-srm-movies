@@ -157,7 +157,7 @@ if __name__ == "__main__":
     # some filtering
     subjs = sorted(list(set(subjs)))
 
-    for subj in subjs[:1]:
+    for subj in subjs:
         # create the subject-specific folder in case it does not exist
         os.makedirs(os.path.join(subj, ROIS_PATH), exist_ok=True)
 
@@ -235,6 +235,7 @@ if __name__ == "__main__":
         # mask movie data with audio FoV
         movie_in_ao_fov = filt3d_example * ao_fov_img.get_fdata()
 
+        print(f'\n{subj}:')
         print('Non-zero voxels in:')
         print('FoV of audio-description:\t',
               np.count_nonzero(ao_fov_img.get_fdata()))
