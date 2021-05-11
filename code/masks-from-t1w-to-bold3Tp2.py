@@ -2,9 +2,6 @@
 '''
 author: Christian Olaf Häusler
 created on Monday, 12 April 2021
-
-ToDo:
-    - maybe adjust output path to 'sub-*/rois-and-mask/in_bold3Tp2'
 '''
 
 from glob import glob
