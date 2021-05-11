@@ -197,7 +197,7 @@ if __name__ == "__main__":
     # masks_overlap = [mask for mask in masks_in_mni if 'overlap' in mask]
     masks_in_mni = [mask for mask in masks_in_mni if 'overlap' not in mask]
 
-    for subj in subjs[:1]:
+    for subj in subjs:
         # create the subject-specific folder in case it does not exist
         out_path = os.path.join(subj, ROIS_PATH, 'in_bold3Tp2')
         os.makedirs(out_path, exist_ok=True)
