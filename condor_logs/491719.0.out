@@ -1,0 +1,1372 @@
+
+Processing sub-01
+loading inputs/studyforrest-ppa-analysis/sub-01/run-1_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-01/run-2_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-01/run-3_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-01/run-4_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-01/run-5_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-01/run-6_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-01/run-7_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-01/run-8_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-01/run-1_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-01/run-2_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-01/run-3_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-01/run-4_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-01/run-5_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-01/run-6_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-01/run-7_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-01/run-8_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+Processing sub-02
+loading inputs/studyforrest-ppa-analysis/sub-02/run-1_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-02/run-2_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-02/run-3_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-02/run-4_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-02/run-5_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-02/run-6_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-02/run-7_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-02/run-8_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-02/run-1_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-02/run-2_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-02/run-3_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-02/run-4_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-02/run-5_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-02/run-6_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-02/run-7_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-02/run-8_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+Processing sub-03
+loading inputs/studyforrest-ppa-analysis/sub-03/run-1_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-03/run-2_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-03/run-3_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-03/run-4_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-03/run-5_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-03/run-6_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-03/run-7_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-03/run-8_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-03/run-1_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-03/run-2_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-03/run-3_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-03/run-4_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-03/run-5_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-03/run-6_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-03/run-7_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-03/run-8_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+Processing sub-04
+loading inputs/studyforrest-ppa-analysis/sub-04/run-1_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-04/run-2_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-04/run-3_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-04/run-4_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-04/run-5_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-04/run-6_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-04/run-7_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-04/run-8_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 263)
+Data shape - after reshaping:  (263, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-04/run-1_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-04/run-2_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-04/run-3_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-04/run-4_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-04/run-5_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-04/run-6_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-04/run-7_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-04/run-8_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+Processing sub-05
+loading inputs/studyforrest-ppa-analysis/sub-05/run-1_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-05/run-2_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-05/run-3_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-05/run-4_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-05/run-5_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-05/run-6_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-05/run-7_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-05/run-8_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-05/run-1_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-05/run-2_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-05/run-3_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-05/run-4_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-05/run-5_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-05/run-6_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-05/run-7_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-05/run-8_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+Processing sub-06
+loading inputs/studyforrest-ppa-analysis/sub-06/run-1_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-06/run-2_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-06/run-3_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-06/run-4_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-06/run-5_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-06/run-6_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-06/run-7_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-06/run-8_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-06/run-1_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-06/run-2_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-06/run-3_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-06/run-4_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-06/run-5_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-06/run-6_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-06/run-7_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-06/run-8_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+Processing sub-09
+loading inputs/studyforrest-ppa-analysis/sub-09/run-1_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-09/run-2_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-09/run-3_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-09/run-4_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-09/run-5_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-09/run-6_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-09/run-7_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-09/run-8_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-09/run-1_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-09/run-2_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-09/run-3_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-09/run-4_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-09/run-5_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-09/run-6_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-09/run-7_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-09/run-8_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+Processing sub-14
+loading inputs/studyforrest-ppa-analysis/sub-14/run-1_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-14/run-2_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-14/run-3_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-14/run-4_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-14/run-5_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-14/run-6_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-14/run-7_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-14/run-8_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-14/run-1_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-14/run-2_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-14/run-3_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-14/run-4_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-14/run-5_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-14/run-6_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-14/run-7_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-14/run-8_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+Processing sub-15
+loading inputs/studyforrest-ppa-analysis/sub-15/run-1_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-15/run-2_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-15/run-3_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-15/run-4_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-15/run-5_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-15/run-6_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-15/run-7_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-15/run-8_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-15/run-1_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-15/run-2_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-15/run-3_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-15/run-4_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-15/run-5_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-15/run-6_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-15/run-7_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-15/run-8_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+Processing sub-16
+loading inputs/studyforrest-ppa-analysis/sub-16/run-1_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-16/run-2_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-16/run-3_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-16/run-4_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-16/run-5_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-16/run-6_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-16/run-7_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-16/run-8_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-16/run-1_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-16/run-2_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-16/run-3_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-16/run-4_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-16/run-5_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-16/run-6_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-16/run-7_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-16/run-8_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+Processing sub-17
+loading inputs/studyforrest-ppa-analysis/sub-17/run-1_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-17/run-2_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-17/run-3_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-17/run-4_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-17/run-5_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-17/run-6_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-17/run-7_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-17/run-8_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-17/run-1_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-17/run-2_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-17/run-3_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-17/run-4_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-17/run-5_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-17/run-6_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-17/run-7_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-17/run-8_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+Processing sub-18
+loading inputs/studyforrest-ppa-analysis/sub-18/run-1_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-18/run-2_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-18/run-3_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-18/run-4_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-18/run-5_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-18/run-6_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-18/run-7_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-18/run-8_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-18/run-1_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-18/run-2_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-18/run-3_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-18/run-4_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-18/run-5_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-18/run-6_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-18/run-7_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-18/run-8_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+Processing sub-19
+loading inputs/studyforrest-ppa-analysis/sub-19/run-1_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-19/run-2_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-19/run-3_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-19/run-4_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-19/run-5_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-19/run-6_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-19/run-7_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-19/run-8_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-19/run-1_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-19/run-2_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-19/run-3_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-19/run-4_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-19/run-5_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-19/run-6_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-19/run-7_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-19/run-8_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+Processing sub-20
+loading inputs/studyforrest-ppa-analysis/sub-20/run-1_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-20/run-2_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-20/run-3_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-20/run-4_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-20/run-5_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-20/run-6_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-20/run-7_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-20/run-8_audio-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-20/run-1_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 451)
+Data shape - after reshaping:  (451, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-20/run-2_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 441)
+Data shape - after reshaping:  (441, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-20/run-3_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 438)
+Data shape - after reshaping:  (438, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-20/run-4_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 488)
+Data shape - after reshaping:  (488, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-20/run-5_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 462)
+Data shape - after reshaping:  (462, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-20/run-6_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 439)
+Data shape - after reshaping:  (439, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-20/run-7_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 542)
+Data shape - after reshaping:  (542, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+loading inputs/studyforrest-ppa-analysis/sub-20/run-8_movie-ppa-ind.feat/filtered_func_data.nii.gz
+Data shape - before reshaping:  (64, 86, 45, 338)
+Data shape - after reshaping:  (338, 247680)
+Number of voxels is 247680
+Mean of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Std.Dev. of first few voxels:  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
