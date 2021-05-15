@@ -65,14 +65,19 @@ def sort_nicely(l):
 if __name__ == "__main__":
     # read command line arguments
     subj, out_dir = parse_arguments()
+    subj = subj.strip('/')
 
     print('Processing', subj)
 
-    in_fpathes = find_files(IN_FILE_PTTRN.replace('sub-??', subj))
+    in_pattern = IN_FILE_PTTRN.replace('sub-??', subj)
+    in_fpathes = find_files(in_pattern)
+    print('in_pattern:', in_pattern)
+    for in_file in in_fpathes:
+        print(in_file)
 
-
-    ##### READ the mask and give as an read-in image and not as path
-    ##### will allow to do some merging of masks before
+    # DEBUG / TO DO
+    # READ the mask and give as an read-in image and not as path
+    # will allow to do some merging of masks before
     mask_fpath = MASK_PTTRN.replace('sub-??', subj)
 
     # create instance of NiftiMasker used to mask the 4D time-series
@@ -115,9 +120,8 @@ if __name__ == "__main__":
 
         print(masked_data.shape)
 
-    out_fpath = os.path.join(
-        out_dir,
-        f'{subj}_task_aomovie-avmovie_run-1-8_bold-filtered.npy')
+    out_file = f'{subj}_task_aomovie-avmovie_run-1-8_bold-filtered.npy'
+    out_fpath = os.path.join(out_dir, out_file)
 
     # only needed for testpath
     os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
@@ -129,5 +133,3 @@ if __name__ == "__main__":
 #                                     all_imgs_affine,
 #                                     header=all_imgs_header)
 #     nib.save(all_data_img, out_fpath.replace('.npy', '.nii.gz')
-
-    print("\nEnd of Script")

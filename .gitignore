@@ -1,2 +1,3 @@
 code/*.sw?
+condor_logs/
 test/

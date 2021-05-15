@@ -1,0 +1,28 @@
+# following script will send out command
+# ./code/data_masks_jobs.sh rawdata/acquisition_day1year1_.txt
+
+# initialdir = /data/group/psyinf/studyforrest-srm-movies
+executable     = $ENV(PWD)/code/data_mask_concat_jobs.sh
+
+universe       = vanilla
+get_env        = True
+request_cpus   = 1
+request_memory = 4G
+# request_disk   = 210G
+# should_transfer_files = NO
+# transfer_executable = False
+
+# the job expects to environment variables for labeling and synchronization
+environment = "JOBID=$(Cluster).$(Process) DSLOCKFILE=$ENV(PWD)/.git/datalad_lock"
+log    = $ENV(PWD)/condor_logs/$(Cluster).$(Process).log
+output = $ENV(PWD)/condor_logs/$(Cluster).$(Process).out
+error  = $ENV(PWD)/condor_logs/$(Cluster).$(Process).err
+
+# find all input data, based on the file names in the source dataset.
+# The pattern matching below finds all *files* that match the path
+# e.g. "rawdata/acquisition_*.txt".
+# Each relative path to such a file name will become the value of `inputfile`,
+# the argument given to the executable (the shell script).
+# This will queue as many jobs as file names match the pattern
+arguments = $(inputfile)
+queue inputfile matching dirs sub-??
