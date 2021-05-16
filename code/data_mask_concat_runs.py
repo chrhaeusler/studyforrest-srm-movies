@@ -15,6 +15,7 @@ import re
 
 # constants
 MASK_PTTRN = 'sub-??/masks/in_bold3Tp2/grp_PPA_bin.nii.gz'
+GM_MASK = 'sub-??/masks/in_bold3Tp2/gm_bin_dil_fov.nii.gz'
 IN_FILE_PTTRN = 'sub-??/sub-??_task-a?movie_run-?_bold_filtered.nii.gz'
 
 
@@ -67,22 +68,36 @@ if __name__ == "__main__":
     subj, out_dir = parse_arguments()
     subj = subj.strip('/')
 
-    print('Processing', subj)
+    print('\nProcessing', subj)
 
     in_pattern = IN_FILE_PTTRN.replace('sub-??', subj)
     in_fpathes = find_files(in_pattern)
     print('in_pattern:', in_pattern)
-    for in_file in in_fpathes:
-        print(in_file)
+
+    # open the mask of cortices (at the moment it justs the union of
+    # individual PPAs) and mask that with the individual (dilated) gray matter
+    # in the audio-descriptions FoV
+    mask_fpath = MASK_PTTRN.replace('sub-??', subj)
 
     # DEBUG / TO DO
-    # READ the mask and give as an read-in image and not as path
-    # will allow to do some merging of masks before
-    mask_fpath = MASK_PTTRN.replace('sub-??', subj)
+    # MERGE PPA and (e.g.) FFA here before masking with GM in Fov
+
+    # (dilated) gray matter mask; see constat at script's top
+    gm_mask = GM_MASK.replace('sub-??', subj)
+
+    # mask the area with individual (dilated) gray matter in FoV
+    # of audio-description
+    area_img = nib.load(mask_fpath)
+    gm_img = nib.load(gm_mask)
+
+    final_mask_data = area_img.get_fdata() * gm_img.get_fdata()
+    final_mask_img = nib.Nifti1Image(final_mask_data,
+                                     area_img.affine,
+                                     header=area_img.header)
 
     # create instance of NiftiMasker used to mask the 4D time-series
     # which will be loaded next
-    nifti_masker = NiftiMasker(mask_img=mask_fpath)
+    nifti_masker = NiftiMasker(mask_img=final_mask_img)
 
     # initialize image
     print(in_fpathes[0])
@@ -104,7 +119,7 @@ if __name__ == "__main__":
     for run, in_fpath in enumerate(in_fpathes[1:]):  # first index is 'first_img'
         run = run + 2
         # DEBUGGING / CHECK
-        print('\n' + in_fpath)
+        print(in_fpath)
         # load image
         new_img = nib.load(in_fpath)
         # mask the image and get the data as np.ndarray
