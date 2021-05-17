@@ -5,9 +5,10 @@ author: Christian Olaf Haeusler
 '''
 
 from glob import glob
-from nilearn.input_data import NiftiMasker, MultiNiftiMasker
+# from nilearn.input_data import NiftiMasker, MultiNiftiMasker
+import brainiak.funcalign.srm
 import argparse
-import nibabel as nib
+# import nibabel as nib
 import numpy as np
 import os
 import re
@@ -34,12 +35,24 @@ def parse_arguments():
                         default='test',
                         help='output directory (e.g. "sub-01")')
 
+    parser.add_argument('-feat',
+                        required=False,
+                        default='50',
+                        help='number of features (shared responses)')
+
+    parser.add_argument('-niter',
+                        required=False,
+                        default='20',
+                        help='number of iterations')
+
     args = parser.parse_args()
 
     sub = args.sub
     outdir = args.outdir
+    features = int(args.feat)
+    n_iter = int(args.niter)
 
-    return sub, outdir
+    return sub, outdir, features, n_iter
 
 
 def find_files(pattern):
@@ -60,26 +73,24 @@ def find_files(pattern):
     return found_files
 
 
-
-
 if __name__ == "__main__":
     # read command line arguments
-    subj, out_dir = parse_arguments()
+    subj, out_dir, features, n_iter = parse_arguments()
     # save model as (zipped) pickle variable
 
     # find all input files
     in_fpathes = find_files(IN_PATTERN)
     # filter for non-current subject
-    # in_fpathes = [fpath for fpath in in_fpathes if subj not in fpath]
+    in_fpathes = [fpath for fpath in in_fpathes if subj not in fpath]
 
-    arrays = []
+    movie_arrays = []
     for in_fpath in in_fpathes:
         array = np.load(in_fpath)
         dim = array.shape
 
         # check (hard coded) expected number of TRs
         if dim[1] == 7198:
-            arrays.append(array)
+            movie_arrays.append(array)
             print(in_fpath[:6], dim)
         else:
             # do some zero padding for sub-04 who has ~ 75 TRs missing in
@@ -88,11 +99,26 @@ if __name__ == "__main__":
             print(in_fpath[:6], dim, '(before)')
             zero_padded[:array.shape[0], :array.shape[1]] = array
             print(in_fpath[:6], zero_padded.shape, '(after)')
-            arrays.append(zero_padded)
+            movie_arrays.append(zero_padded)
 
-    movie_data = np.concatenate(arrays, axis=0)
-
-    features = 10
-    n_iter = 20
+    # concat array; but: brainaik expects list of arrays
+    # movie_data = np.concatenate(arrays, axis=0)
 
     # Create the SRM object
+    srm = brainiak.funcalign.srm.SRM(n_iter=n_iter, features=features)
+
+    # Fit the SRM data
+    # fit the model
+    print('Fitting SRM, may take a minute ...')
+    # TESTING PURPOSE: take only a slice of all subjects data
+    # movie_arrays = [array[:, :150] for array in movie_arrays]
+    # actuall model fitting
+    srm.fit(movie_arrays)
+
+    # prepare saving results as pickle
+    out_file = f'{subj}_srm_feat{features}-iter{n_iter}.npz'
+    out_fpath = os.path.join(out_dir, out_file)
+    # create (sub)directories
+    os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
+    # save it
+    srm.save(out_fpath)
