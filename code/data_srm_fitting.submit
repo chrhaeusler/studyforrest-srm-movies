@@ -1,15 +1,32 @@
 universe = vanilla
 getenv   = True
+request_cpus = 1
+request_memory = 4G
+
+# Outputs
 output = condor_logs/$(CLUSTER).$(PROCESS).out
 error = condor_logs/$(CLUSTER).$(PROCESS).err
 log = condor_logs/$(CLUSTER).$(PROCESS).log
-getenv = True
-request_cpus = 4
-request_memory = 4000
-should_transfer_files = NO
-transfer_executable = False
-initialdir = /data/group/psyinf/studyforrest-srm-movies
-executable = /home/chaeusler/python/environments/datalad/bin/python
 
-arguments = code/data_srm_fitting.py -sub sub-01 -outdir test -feat 10 -niter 20
+# Execution
+initialdir = /data/group/psyinf/studyforrest-srm-movies
+executable = /bin/bash
+transfer_executable = False
+should_transfer_files = NO
+
+arguments = ./code/data_srm_fitting_venv.sh sub-01 test 10 20
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-01 test 20 20
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-01 test 30 20
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-01 test 40 20
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-02 test 10 20
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-02 test 20 20
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-02 test 30 20
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-02 test 40 20
 queue

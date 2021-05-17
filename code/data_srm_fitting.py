@@ -22,7 +22,7 @@ def parse_arguments():
     '''
     '''
     parser = argparse.ArgumentParser(
-        description='masks and concatenates runs of AO & AV stimulus'
+        description='fits SRM to data from all subjects except given subject'
     )
 
     parser.add_argument('-sub',
@@ -35,7 +35,7 @@ def parse_arguments():
                         default='test',
                         help='output directory (e.g. "sub-01")')
 
-    parser.add_argument('-feat',
+    parser.add_argument('-nfeat',
                         required=False,
                         default='50',
                         help='number of features (shared responses)')
@@ -49,10 +49,10 @@ def parse_arguments():
 
     sub = args.sub
     outdir = args.outdir
-    features = int(args.feat)
+    n_feat = int(args.nfeat)
     n_iter = int(args.niter)
 
-    return sub, outdir, features, n_iter
+    return sub, outdir, n_feat, n_iter
 
 
 def find_files(pattern):
@@ -75,7 +75,7 @@ def find_files(pattern):
 
 if __name__ == "__main__":
     # read command line arguments
-    subj, out_dir, features, n_iter = parse_arguments()
+    subj, out_dir, n_feat, n_iter = parse_arguments()
     # save model as (zipped) pickle variable
 
     # find all input files
@@ -105,7 +105,7 @@ if __name__ == "__main__":
     # movie_data = np.concatenate(arrays, axis=0)
 
     # Create the SRM object
-    srm = brainiak.funcalign.srm.SRM(n_iter=n_iter, features=features)
+    srm = brainiak.funcalign.srm.SRM(features=n_feat, n_iter=n_iter)
 
     # Fit the SRM data
     # fit the model
@@ -116,9 +116,10 @@ if __name__ == "__main__":
     srm.fit(movie_arrays)
 
     # prepare saving results as pickle
-    out_file = f'{subj}_srm_feat{features}-iter{n_iter}.npz'
+    out_file = f'{subj}_srm_feat{n_feat}-iter{n_iter}.npz'
     out_fpath = os.path.join(out_dir, out_file)
     # create (sub)directories
     os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
     # save it
     srm.save(out_fpath)
+    print('SRM saved to', out_fpath)
