@@ -14,14 +14,6 @@ executable = /bin/bash
 transfer_executable = False
 should_transfer_files = NO
 
-arguments = ./code/data_srm_fitting_venv.sh sub-01 test 10 20
-queue
-arguments = ./code/data_srm_fitting_venv.sh sub-01 test 20 20
-queue
-arguments = ./code/data_srm_fitting_venv.sh sub-01 test 30 20
-queue
-arguments = ./code/data_srm_fitting_venv.sh sub-01 test 40 20
-queue
 arguments = ./code/data_srm_fitting_venv.sh sub-02 test 10 20
 queue
 arguments = ./code/data_srm_fitting_venv.sh sub-02 test 20 20
@@ -29,4 +21,28 @@ queue
 arguments = ./code/data_srm_fitting_venv.sh sub-02 test 30 20
 queue
 arguments = ./code/data_srm_fitting_venv.sh sub-02 test 40 20
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-05 test 10 20
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-05 test 20 20
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-05 test 30 20
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-05 test 40 20
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-16 test 10 20
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-16 test 20 20
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-16 test 30 20
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-16 test 40 20
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-17 test 10 20
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-17 test 20 20
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-17 test 30 20
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-17 test 40 20
 queue

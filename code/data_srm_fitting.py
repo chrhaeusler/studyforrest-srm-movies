@@ -76,7 +76,6 @@ def find_files(pattern):
 if __name__ == "__main__":
     # read command line arguments
     subj, out_dir, n_feat, n_iter = parse_arguments()
-    # save model as (zipped) pickle variable
 
     # find all input files
     in_fpathes = find_files(IN_PATTERN)
@@ -109,7 +108,7 @@ if __name__ == "__main__":
 
     # Fit the SRM data
     # fit the model
-    print('Fitting SRM, may take a minute ...')
+    print(f'Fitting SRM to data of all subjects except {subj}...')
     # TESTING PURPOSE: take only a slice of all subjects data
     # movie_arrays = [array[:, :150] for array in movie_arrays]
     # actuall model fitting
