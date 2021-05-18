@@ -13,6 +13,7 @@ import argparse
 import numpy as np
 import os
 import re
+import scipy.spatial.distance as sp_distance
 
 
 def parse_arguments():
@@ -88,3 +89,44 @@ if __name__ == "__main__":
     srm = brainiak.funcalign.srm.load(in_fpath)
     # change np.load() back to normal
     np.load = np_load_old
+
+    # Plot the shared response
+    print('SRM: Features X Time-points ', srm.s_.shape)
+    plt.figure(figsize=(15, 4))
+    #plt.set_aspect(aspect=0.5)
+    plt.title('SRM: Features X Time-points')
+    plt.xlabel('TR')
+    plt.ylabel('feature')
+    plt.yticks(list(range(0,n_feat)))
+    plt.hlines([y + 0.5 for y in (range(0, n_feat))], 0, srm.s_.shape[1],
+               colors='k', linewidth=.5, linestyle='dashed')
+    plt.imshow(srm.s_, cmap='viridis', aspect='auto')
+    plt.tight_layout()
+    plt.colorbar()
+    #
+    plt.savefig(f'test/features{n_feat}_time-points.svg', bbox_inches='tight')
+    plt.close()
+
+    # plot top3 features
+    plt.figure(figsize=(15, 4))
+
+    plt.title('SRM: top 3 feature in audio-description')
+    plt.xlabel('TR')
+    start = 0
+    end = int(srm.s_.shape[1] / 8)  # first quarter of audio-description
+    plt.plot(srm.s_[0, start:end], linewidth=0.5)
+    plt.plot(srm.s_[1, start:end], linewidth=0.5)
+    plt.plot(srm.s_[2, start:end], linewidth=0.5)
+    #
+    plt.savefig(f'test/top3features.svg', bbox_inches='tight')
+    plt.close()
+
+    # plot distance matrix
+    dist_mat = sp_distance.squareform(sp_distance.pdist(srm.s_[:, start:end].T))
+    plt.figure(figsize=(7,5))
+    plt.title('Distance between pairs of time points in shared space')
+    plt.xlabel('TR')
+    plt.ylabel('TR')
+    plt.imshow(dist_mat, cmap='viridis')
+    plt.colorbar()
+    plt.savefig(f'test/distance-matrix.svg', bbox_inches='tight')
