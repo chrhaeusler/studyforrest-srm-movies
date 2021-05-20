@@ -73,6 +73,77 @@ def find_files(pattern):
     return found_files
 
 
+def zero_padding(in_fpath):
+    '''performs zero padding of an array in case no. of columns is != 7198
+    '''
+    # check (hard coded) expected number of TRs
+    array = np.load(in_fpath)
+    dim = array.shape
+
+    if dim[1] == 7198:
+        print(in_fpath[:6], dim)
+        return_array = array
+
+    else:
+        # do some zero padding for sub-04 who has ~ 75 TRs missing in
+        # run 8
+        return_array = np.zeros([array.shape[0], 7198], dtype=np.float32)
+        print(in_fpath[:6], dim, '(before)')
+        return_array[:array.shape[0], :array.shape[1]] = array
+        print(in_fpath[:6], return_array.shape, '(after)')
+
+    return return_array
+
+
+def array_cutting(in_fpath):
+    '''performs zero padding of an array in case no. of columns is != 7198
+    '''
+    # check (hard coded) expected number of TRs
+    array = np.load(in_fpath)
+    dim = array.shape
+
+    if dim[1] > 7123:
+        # slice the array to length of 7123 TRs
+        return_array = array[:, :7123]
+        new_dim = return_array.shape
+        print(in_fpath[:6], new_dim, '(after cutting)')
+    elif dim[1] == 7123:
+        # correct length -> do noting
+        return_array = array
+        print(in_fpath[:6], dim, '(unchanged)')
+    else:
+        raise ValueError('unexpected number of TRs')
+
+    return return_array
+
+
+def fit_srm_and_save(list_of_arrays, out_dir):
+    '''Fits the SRM and saves it to files
+
+    To Do: change from global to local variables
+    '''
+    srm = brainiak.funcalign.srm.SRM(features=n_feat, n_iter=n_iter)
+
+    # Fit the SRM data
+    # fit the model
+    print(f'Fitting SRM to data of all subjects except {subj}...')
+    # TESTING PURPOSE: take only a slice of all subjects data
+    # movie_arrays = [array[:, :150] for array in movie_arrays]
+    # actuall model fitting
+    srm.fit(list_of_arrays)
+
+    # prepare saving results as pickle
+    out_file = f'{subj}_srm_feat{n_feat}-iter{n_iter}.npz'
+    out_fpath = os.path.join(out_dir, out_file)
+    # create (sub)directories
+    os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
+    # save it
+    srm.save(out_fpath)
+    print('SRM saved to', out_fpath)
+
+    return None
+
+
 if __name__ == "__main__":
     # read command line arguments
     subj, out_dir, n_feat, n_iter = parse_arguments()
@@ -84,41 +155,14 @@ if __name__ == "__main__":
 
     movie_arrays = []
     for in_fpath in in_fpathes:
-        array = np.load(in_fpath)
-        dim = array.shape
-
-        # check (hard coded) expected number of TRs
-        if dim[1] == 7198:
-            movie_arrays.append(array)
-            print(in_fpath[:6], dim)
-        else:
-            # do some zero padding for sub-04 who has ~ 75 TRs missing in
-            # run 8
-            zero_padded = np.zeros([array.shape[0], 7198], dtype=np.float32)
-            print(in_fpath[:6], dim, '(before)')
-            zero_padded[:array.shape[0], :array.shape[1]] = array
-            print(in_fpath[:6], zero_padded.shape, '(after)')
-            movie_arrays.append(zero_padded)
-
-    # concat array; but: brainaik expects list of arrays
-    # movie_data = np.concatenate(arrays, axis=0)
+        # ~75 TRs of run-8 in sub-04 are missing
+        # Do:
+        # a) perform zero padding
+        # corrected_array = zero_padding(in_fpath)
+        # b) cutting of all other arrays
+        corrected_array = array_cutting(in_fpath)
+        # populate the list of arrays (as expected by brainiac)
+        movie_arrays.append(corrected_array)
 
     # Create the SRM object
-    srm = brainiak.funcalign.srm.SRM(features=n_feat, n_iter=n_iter)
-
-    # Fit the SRM data
-    # fit the model
-    print(f'Fitting SRM to data of all subjects except {subj}...')
-    # TESTING PURPOSE: take only a slice of all subjects data
-    # movie_arrays = [array[:, :150] for array in movie_arrays]
-    # actuall model fitting
-    srm.fit(movie_arrays)
-
-    # prepare saving results as pickle
-    out_file = f'{subj}_srm_feat{n_feat}-iter{n_iter}.npz'
-    out_fpath = os.path.join(out_dir, out_file)
-    # create (sub)directories
-    os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
-    # save it
-    srm.save(out_fpath)
-    print('SRM saved to', out_fpath)
+    fit_srm_and_save(movie_arrays, out_dir)
