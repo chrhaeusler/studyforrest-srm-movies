@@ -165,4 +165,4 @@ if __name__ == "__main__":
         movie_arrays.append(corrected_array)
 
     # Create the SRM object
-    fit_srm_and_save(movie_arrays, out_dir)
+    # fit_srm_and_save(movie_arrays, out_dir)
