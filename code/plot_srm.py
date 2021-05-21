@@ -16,6 +16,11 @@ import re
 import scipy.spatial.distance as sp_distance
 
 
+# do some slicing
+start = 0
+end = 800  # first quarter of audio-description
+
+
 def parse_arguments():
     '''
     '''
@@ -71,14 +76,7 @@ def find_files(pattern):
     return found_files
 
 
-if __name__ == "__main__":
-    # read command line arguments
-    subj, in_dir, n_feat, n_iter = parse_arguments()
-    # save model as (zipped) pickle variable
-    in_fpath = os.path.join(
-        in_dir, f'{subj}_srm_feat{n_feat}-iter{n_iter}.npz'
-    )
-
+def load_srm(in_fpath):
     # make np.load work with allow_pickle=True
     # save np.load
     np_load_old = np.load
@@ -90,43 +88,87 @@ if __name__ == "__main__":
     # change np.load() back to normal
     np.load = np_load_old
 
-    # Plot the shared response
+    return srm
+
+
+def plot_feat_x_timepoints(srm):
+    '''Plot the shared response
+    '''
     print('SRM: Features X Time-points ', srm.s_.shape)
     plt.figure(figsize=(15, 4))
-    #plt.set_aspect(aspect=0.5)
     plt.title('SRM: Features X Time-points')
     plt.xlabel('TR')
     plt.ylabel('feature')
-    plt.yticks(list(range(0,n_feat)))
+    plt.yticks(list(range(0, n_feat)))
     plt.hlines([y + 0.5 for y in (range(0, n_feat))], 0, srm.s_.shape[1],
                colors='k', linewidth=.5, linestyle='dashed')
     plt.imshow(srm.s_, cmap='viridis', aspect='auto')
     plt.tight_layout()
     plt.colorbar()
-    #
+    # save it
     plt.savefig(f'test/features{n_feat}_time-points.svg', bbox_inches='tight')
     plt.close()
 
-    # plot top3 features
+    return None
+
+
+def plot_top_repsonses(srm, start, end):
+    '''
+    '''
     plt.figure(figsize=(15, 4))
 
+    # some labels
     plt.title('SRM: top 3 feature in audio-description')
     plt.xlabel('TR')
-    start = 0
-    end = int(srm.s_.shape[1] / 8)  # first quarter of audio-description
+
+
+    # do some slicing, so the plot does not get too crowded
     plt.plot(srm.s_[0, start:end], linewidth=0.5)
     plt.plot(srm.s_[1, start:end], linewidth=0.5)
     plt.plot(srm.s_[2, start:end], linewidth=0.5)
+
+    # some "making it neat"
+    plt.xlim(start, end)
+
     #
     plt.savefig(f'test/top3features.svg', bbox_inches='tight')
     plt.close()
 
-    # plot distance matrix
+    return None
+
+
+def plot_distance_mtrx(srm, start, end):
+    '''
+    '''
+    # do some slicing, so the plot does not get too crowded
     dist_mat = sp_distance.squareform(sp_distance.pdist(srm.s_[:, start:end].T))
-    plt.figure(figsize=(7,5))
+    plt.figure(figsize=(7, 5))
     plt.title('Distance between pairs of time points in shared space')
     plt.xlabel('TR')
     plt.ylabel('TR')
     plt.imshow(dist_mat, cmap='viridis')
     plt.colorbar()
     plt.savefig(f'test/distance-matrix.svg', bbox_inches='tight')
+
+    return None
+
+
+if __name__ == "__main__":
+    # read command line arguments
+    subj, in_dir, n_feat, n_iter = parse_arguments()
+    # save model as (zipped) pickle variable
+    in_fpath = os.path.join(
+        in_dir, f'{subj}_srm_feat{n_feat}-iter{n_iter}.npz'
+    )
+
+    # load the srm from file
+    srm = load_srm(in_fpath)
+
+    # plot depicting features x timepoints
+    plot_feat_x_timepoints(srm)
+
+    # plot depicting time-series of x top shared responses
+    plot_top_repsonses(srm, start, end)
+
+    plot_distance_mtrx(srm, start, end)
+    # plot distance matrix
