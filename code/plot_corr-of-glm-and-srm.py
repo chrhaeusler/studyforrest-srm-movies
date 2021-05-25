@@ -56,6 +56,7 @@ AV_NAMES = { 1: 'vse_new',
             14: 'fg_av_ger_ud'
             }
 
+
 def parse_arguments():
     '''
     '''
@@ -146,6 +147,7 @@ def plot_heatmap(matrix, outFpath):
     plt.xticks(rotation=90, fontsize=12)
     plt.yticks(rotation=0, fontsize=12)
 
+    # coloring of ticklabels
 #     for x in range(0, len(AO_USED)):
 #         plt.gca().get_xticklabels()[x].set_color('blue')  # black = default
 #
@@ -158,11 +160,12 @@ def plot_heatmap(matrix, outFpath):
 #     for y in range(0, len(AO_USED)):
 #         plt.gca().get_yticklabels()[y].set_color('blue')
 
-    os.makedirs(outFpath, exist_ok=True)
+    # create the output path
+    os.makedirs(os.path.dirname(outFpath), exist_ok=True)
 
-    file_name = os.path.join(outFpath, 'regressor-corr.%s')
-    f.savefig(file_name % 'svg', bbox_inches='tight', transparent=True)
-    f.savefig(file_name % 'pdf', bbox_inches='tight', transparent=True)
+    # save the plot
+    f.savefig(out_fpath + '.svg', bbox_inches='tight', transparent=True)
+    f.savefig(out_fpath + '.pdf', bbox_inches='tight', transparent=True)
     plt.close()
 
 
@@ -205,6 +208,10 @@ if __name__ == "__main__":
     # concatenate data of AO & AV
 #    all_df = pd.concat([aoDf, avDf], axis=1)
     all_df = aoDf
+    all_df['geo&groom'] = all_df['geo'] + all_df['groom']
+    all_df['geo&groom&furn'] = all_df['geo'] + all_df['groom'] + all_df['furn']
+#    all_df['geo&furn'] = all_df['geo'] + all_df['furn']
+#    all_df['groom&furn'] = all_df['groom'] + all_df['furn']
 
     #############
     # LOAD THE SRM MODEL
@@ -213,12 +220,30 @@ if __name__ == "__main__":
         in_dir, f'{subj}_srm_feat{n_feat}-iter{n_iter}.npz'
     )
 
+    # load the SRM from file
     srm = load_srm(in_fpath)
     # slice SRM model for the TRs of the audio-description
-    srm_array = srm.s_.T[:3599, :]
+    srm_array = srm.s_.T
 
+    # create pandas dataframe from array and name the columns
+    columns = [f'Feature {x}' for x in range(srm_array.shape[1])]
+    srm_df = pd.DataFrame(data=srm_array,
+                          columns=columns)
+
+    # a) plot correlation of time-series of features (AO & AV)
+    # create name of path and file (must not include file extension)
+    out_fpath = os.path.join(outDir, 'corr-mat-features')
+    # create the correlation matrix for all columns
+    regCorrMat = srm_df.corr()
+    # plot it
+    plot_heatmap(regCorrMat, out_fpath)
+
+    # b) plot the correlation of AO regressors and features (only AO TRs)
+    # concat dataframes containing the regressors and the features
+    all_df = pd.concat([aoDf, srm_df[:3599]], axis=1)
     # create the correlation matrix for all columns
     regCorrMat = all_df.corr()
-
+    # create name of path and file (must not include ".{extension}"
+    out_fpath = os.path.join(outDir, 'corr-mat-ao-regressors-features')
     # plot it
-    plot_heatmap(regCorrMat, outDir)
+    plot_heatmap(regCorrMat, out_fpath)
