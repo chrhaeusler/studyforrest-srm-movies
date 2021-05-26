@@ -74,6 +74,11 @@ def parse_arguments():
                         'sub-01/run-1_movie-ppa-grp.feat/design.mat',
                         help='pattern of path/file for 1st lvl (AV) design files')
 
+    parser.add_argument('-i',
+                        default='test',
+                        help='the output directory for the PDF and SVG file')
+
+
     parser.add_argument('-o',
                         default='test',
                         help='the output directory for the PDF and SVG file')
@@ -82,9 +87,10 @@ def parse_arguments():
 
     aoExample = args.ao
     avExample = args.av
+    inDir = args.i
     outDir = args.o
 
-    return aoExample, avExample, outDir
+    return aoExample, avExample, inDir, outDir
 
 
 def find_design_files(example):
@@ -170,11 +176,9 @@ def plot_heatmap(matrix, outFpath):
 
 
 
-
-
 if __name__ == "__main__":
     # get the command line inputs
-    aoExample, avExample, outDir = parse_arguments()
+    aoExample, avExample, inDir, outDir = parse_arguments()
 
     # get design.mat files for the 8 runs of the AO & AV stimulus
     aofPathes = find_design_files(aoExample)
@@ -215,7 +219,7 @@ if __name__ == "__main__":
 
     #############
     # LOAD THE SRM MODEL
-    subj, in_dir, n_feat, n_iter = 'sub-02', 'test', 10, 20
+    subj, in_dir, n_feat, n_iter = 'sub-02', inDir, 10, 20
     in_fpath = os.path.join(
         in_dir, f'{subj}_srm_feat{n_feat}-iter{n_iter}.npz'
     )

@@ -9,8 +9,10 @@ from glob import glob
 import brainiak.funcalign.srm
 import argparse
 # import nibabel as nib
+import ipdb
 import numpy as np
 import os
+import random
 import re
 
 
@@ -102,11 +104,22 @@ def array_cutting(in_fpath):
     array = np.load(in_fpath)
     dim = array.shape
 
-    if dim[1] > 7123:
-        # slice the array to length of 7123 TRs
-        return_array = array[:, :7123]
+    if dim[1] > 7123:  # all except sub-04
+        print(in_fpath[:6], dim, '(before cutting)')
+        # in case AO data come before the AV data
+        # cut the last 75 TRs from the audio-description's data
+        ao = array[:, :3599-75]
+        # take all of the movie's data
+        av = array[:, 3599:]
+        return_array = np.concatenate([ao, av], axis=1)
+
+#         # in case the ao data follow the av dats
+#         # slice the array to length of 7123 TRs
+#         return_array = array[:, :7123]
+
         new_dim = return_array.shape
         print(in_fpath[:6], new_dim, '(after cutting)')
+
     elif dim[1] == 7123:
         # correct length -> do noting
         return_array = array
@@ -144,6 +157,37 @@ def fit_srm_and_save(list_of_arrays, out_dir):
     return None
 
 
+def shuffle_all_arrays(all_arrays):
+    '''
+    '''
+    timings = [0, 451, 441, 438, 488, 462, 439, 542, 338-75]
+    timings = timings + timings[1:-1] + [338]  # add AO to AO
+    starts = [sum(timings[0:idx+1]) for idx, value in enumerate(timings)]
+    starts_ends = [[x, y] for x, y in zip(starts[:-1], starts[1:])]
+    # substitute the last index for '-1'
+    starts_ends[-1][1] = ''
+
+    shuffled_subjs = []
+    for subject, array in enumerate(all_arrays):
+        random.shuffle(starts_ends)
+
+        shuffled_blocks_arrays = []
+        for start, end in starts_ends:
+            # print(start, end)
+            # append the current block
+            if end:
+                shuffled_blocks_arrays.append(array[:, start:end])
+            else:
+                shuffled_blocks_arrays.append(array[:, start:])
+
+        # manipulate the array
+        shuffled_blocks = np.concatenate(shuffled_blocks_arrays, axis=1)
+        # concatenate the blocks
+        shuffled_subjs.append(shuffled_blocks)
+
+    return shuffled_subjs
+
+
 if __name__ == "__main__":
     # read command line arguments
     subj, out_dir, n_feat, n_iter = parse_arguments()
@@ -153,7 +197,8 @@ if __name__ == "__main__":
     # filter for non-current subject
     in_fpathes = [fpath for fpath in in_fpathes if subj not in fpath]
 
-    movie_arrays = []
+    all_arrays = []
+    # loops through subjects (one concatenated / masked time-series per sub)
     for in_fpath in in_fpathes:
         # ~75 TRs of run-8 in sub-04 are missing
         # Do:
@@ -162,7 +207,15 @@ if __name__ == "__main__":
         # b) cutting of all other arrays
         corrected_array = array_cutting(in_fpath)
         # populate the list of arrays (as expected by brainiac)
-        movie_arrays.append(corrected_array)
+        all_arrays.append(corrected_array)
+
+        # shuffle the current subject's array
 
     # Create the SRM object
-    # fit_srm_and_save(movie_arrays, out_dir)
+    fit_srm_and_save(all_arrays, out_dir)
+
+    # for every subject, always take the same seed
+    random.seed(int(subj[-2:]))
+
+    # shuffled_arrays = shuffle_all_arrays(all_arrays)
+    # fit_srm_and_save(shuffled_arrays, out_dir)
