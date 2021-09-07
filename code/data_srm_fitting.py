@@ -214,8 +214,11 @@ if __name__ == "__main__":
     # Create the SRM object
     fit_srm_and_save(all_arrays, out_dir)
 
-    # for every subject, always take the same seed
-    random.seed(int(subj[-2:]))
+    # negative control:
+    # shuffle the arrays before fitting the model
+    # always take the same seed for every subject
+    # by deriving it from the subject's number
+    # random.seed(int(subj[-2:]))
 
     # shuffled_arrays = shuffle_all_arrays(all_arrays)
     # fit_srm_and_save(shuffled_arrays, out_dir)

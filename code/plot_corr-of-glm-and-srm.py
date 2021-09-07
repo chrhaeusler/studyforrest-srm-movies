@@ -236,7 +236,7 @@ if __name__ == "__main__":
 
     # a) plot correlation of time-series of features (AO & AV)
     # create name of path and file (must not include file extension)
-    out_fpath = os.path.join(outDir, 'corr-mat-features')
+    out_fpath = os.path.join(outDir, 'corr-features-ao-av-trs')
     # create the correlation matrix for all columns
     regCorrMat = srm_df.corr()
     # plot it
@@ -248,6 +248,6 @@ if __name__ == "__main__":
     # create the correlation matrix for all columns
     regCorrMat = all_df.corr()
     # create name of path and file (must not include ".{extension}"
-    out_fpath = os.path.join(outDir, 'corr-mat-ao-regressors-features')
+    out_fpath = os.path.join(outDir, 'corr-ao-regressors-vs-features-ao-trs')
     # plot it
     plot_heatmap(regCorrMat, out_fpath)
