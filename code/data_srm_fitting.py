@@ -17,7 +17,7 @@ import re
 
 
 # constants
-IN_PATTERN = 'sub-??/sub-??_task_aomovie-avmovie_run-1-8_bold-filtered.npy'
+TRAIN_PATTERN = 'sub-??/sub-??_task_aomovie-avmovie_run-1-8_bold-filtered.npy'
 
 
 def parse_arguments():
@@ -130,7 +130,7 @@ def array_cutting(in_fpath):
     return return_array
 
 
-def fit_srm_and_save(list_of_arrays, out_dir):
+def fit_srm(list_of_arrays, out_dir):
     '''Fits the SRM and saves it to files
 
     To Do: change from global to local variables
@@ -145,16 +145,9 @@ def fit_srm_and_save(list_of_arrays, out_dir):
     # actuall model fitting
     srm.fit(list_of_arrays)
 
-    # prepare saving results as pickle
-    out_file = f'{subj}_srm_feat{n_feat}-iter{n_iter}.npz'
-    out_fpath = os.path.join(out_dir, out_file)
-    # create (sub)directories
-    os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
-    # save it
-    srm.save(out_fpath)
-    print('SRM saved to', out_fpath)
 
-    return None
+
+    return srm
 
 
 def shuffle_all_arrays(all_arrays):
@@ -193,32 +186,56 @@ if __name__ == "__main__":
     subj, out_dir, n_feat, n_iter = parse_arguments()
 
     # find all input files
-    in_fpathes = find_files(IN_PATTERN)
+    train_fpathes = find_files(TRAIN_PATTERN)
     # filter for non-current subject
-    in_fpathes = [fpath for fpath in in_fpathes if subj not in fpath]
+    train_fpathes = [fpath for fpath in train_fpathes if subj not in fpath]
 
     all_arrays = []
     # loops through subjects (one concatenated / masked time-series per sub)
-    for in_fpath in in_fpathes:
+    for train_fpath in train_fpathes:
         # ~75 TRs of run-8 in sub-04 are missing
         # Do:
         # a) perform zero padding
         # corrected_array = zero_padding(in_fpath)
         # b) cutting of all other arrays
-        corrected_array = array_cutting(in_fpath)
+        corrected_array = array_cutting(train_fpath)
         # populate the list of arrays (as expected by brainiac)
         all_arrays.append(corrected_array)
 
         # shuffle the current subject's array
 
     # Create the SRM object
-    fit_srm_and_save(all_arrays, out_dir)
+    srm = fit_srm(all_arrays, out_dir)
+
+    # prepare saving results as pickle
+    model = 'srm-ao-av'
+    out_file = f'{subj}_{model}_feat{n_feat}-iter{n_iter}.npz'
+    out_fpath = os.path.join(out_dir, out_file)
+    # create (sub)directories
+    os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
+    # save it
+    srm.save(out_fpath)
+    print('SRM saved to', out_fpath)
 
     # negative control:
     # shuffle the arrays before fitting the model
     # always take the same seed for every subject
     # by deriving it from the subject's number
-    # random.seed(int(subj[-2:]))
+    random.seed(int(subj[-2:]))
+    shuffled_arrays = shuffle_all_arrays(all_arrays)
+    srm = fit_srm(shuffled_arrays, out_dir)
 
-    # shuffled_arrays = shuffle_all_arrays(all_arrays)
-    # fit_srm_and_save(shuffled_arrays, out_dir)
+    # prepare saving results as pickle
+    out_file = f'{subj}_{model}_feat{n_feat}-iter{n_iter}_shuffled.npz'
+    out_fpath = os.path.join(out_dir, out_file)
+    # create (sub)directories
+    os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
+    # save it
+    srm.save(out_fpath)
+    print('SRM saved to', out_fpath)
+
+    #### EXTEND THE ARRAY PER SUBJECT WITH THE DATA OF THE VIS EXPERIMENT HERE
+
+    ### FIT THE MODEL
+
+    ### SAVE THE MODEL

@@ -27,15 +27,17 @@ def parse_arguments():
         description='load a pickled SRM and do some plotting'
     )
 
-    parser.add_argument('-sub',
-                        required=False,
-                        default='sub-02',
-                        help='subject to leave out (e.g. "subj-01")')
+
 
     parser.add_argument('-indir',
                         required=False,
                         default='test',
                         help='output directory (e.g. "sub-01")')
+
+    parser.add_argument('-model',
+                        required=False,
+                        default='srm',
+                        help='the model (e.g. "srm")')
 
     parser.add_argument('-nfeat',
                         required=False,
@@ -49,12 +51,12 @@ def parse_arguments():
 
     args = parser.parse_args()
 
-    sub = args.sub
     indir = args.indir
+    model = args.model
     n_feat = int(args.nfeat)
     n_iter = int(args.niter)
 
-    return sub, indir, n_feat, n_iter
+    return indir, model, n_feat, n_iter
 
 def find_files(pattern):
     '''
@@ -91,7 +93,8 @@ def load_srm(in_fpath):
 
 if __name__ == "__main__":
     # read command line arguments
-    subj, in_dir, n_feat, n_iter = parse_arguments()
+    ### subj NOT NEEDED CAUSE THE SCRIPTS IST FAST ENOUGH TO PROCESS ALL SUBJECTS
+    in_dir, model, n_feat, n_iter = parse_arguments()
 
     SUBJS_PATH_PATTERN = 'sub-??'
     subjs_pathes = find_files(SUBJS_PATH_PATTERN)
@@ -101,7 +104,7 @@ if __name__ == "__main__":
 
     for subj in subjs:
         in_fpath = os.path.join(
-            in_dir, f'{subj}_srm_feat{n_feat}-iter{n_iter}.npz'
+            in_dir, f'{subj}_{model}_feat{n_feat}-iter{n_iter}.npz'
         )
 
         # load the srm from file
