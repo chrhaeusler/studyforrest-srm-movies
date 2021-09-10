@@ -141,5 +141,3 @@ if __name__ == "__main__":
         for av_img_fpath in subj_av_fpathes:
             # normalize the data
             normalize_4d_file(av_img_fpath, 'avmovie')
-
-
