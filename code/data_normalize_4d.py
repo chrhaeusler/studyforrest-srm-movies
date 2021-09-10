@@ -15,14 +15,14 @@ import subprocess
 from sklearn import preprocessing
 
 # constants
+VIS_FILTERED_PATTERN = 'inputs/studyforrest-data-visualrois/' + \
+    'sub-??/run-?.feat/filtered_func_data.nii.gz'
+
 AO_FILTERED_PATTERN = 'inputs/studyforrest-ppa-analysis/' + \
     'sub-??/run-?_audio-ppa-ind.feat/filtered_func_data.nii.gz'
 
 AV_FILTERED_PATTERN = 'inputs/studyforrest-ppa-analysis/' + \
     'sub-??/run-?_movie-ppa-ind.feat/filtered_func_data.nii.gz'
-
-VIS_FILTERED_PATTERN = 'inputs/studyforrest-data-visualrois/' + \
-    'sub-??/run-?.feat/filtered_func_data.nii.gz'
 
 
 def find_files(pattern):
@@ -104,9 +104,9 @@ def normalize_4d_file(in_fpath, stimulus='aomovie'):
 
 if __name__ == "__main__":
     # find filtered_func_data.nii.gz for all subjects/runs
+    vis_filtered_fpathes = find_files(VIS_FILTERED_PATTERN)
     ao_filtered_fpathes = find_files(AO_FILTERED_PATTERN)
     av_filtered_fpathes = find_files(AV_FILTERED_PATTERN)
-    vis_filtered_fpathes = find_files(VIS_FILTERED_PATTERN)
 
     # slice the subject string from the file pathes
     subjs_pathes = ao_filtered_fpathes
@@ -120,10 +120,17 @@ if __name__ == "__main__":
         os.makedirs(os.path.join(subj), exist_ok=True)
 
         # filter file pathes for current subject
+        subj_vis_fpathes = [fpath for fpath in vis_filtered_fpathes
+                           if subj in fpath]
         subj_ao_fpathes = [fpath for fpath in ao_filtered_fpathes
                            if subj in fpath]
         subj_av_fpathes = [fpath for fpath in av_filtered_fpathes
                            if subj in fpath]
+
+        # loop through the 4d data of the visual localizer
+        for vis_img_fpath in subj_vis_fpathes:
+            # normalize the data
+            normalize_4d_file(vis_img_fpath, 'visloc')
 
         # loop through the 4d data of the audio-description
         for ao_img_fpath in subj_ao_fpathes:
@@ -135,7 +142,4 @@ if __name__ == "__main__":
             # normalize the data
             normalize_4d_file(av_img_fpath, 'avmovie')
 
-        # loop through the 4d data of the visual localizer
-        for av_img_fpath in subj_av_fpathes:
-            # normalize the data
-            normalize_4d_file(av_img_fpath, 'visloc')
+
