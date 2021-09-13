@@ -17,7 +17,7 @@ import re
 MASK_PTTRN = 'sub-??/masks/in_bold3Tp2/grp_PPA_bin.nii.gz'
 GM_MASK = 'sub-??/masks/in_bold3Tp2/gm_bin_dil_fov.nii.gz'
 IN_FILE_PTTRN = 'sub-??/sub-??_task-a?movie_run-?_bold_filtered.nii.gz'
-VIS_FILE_PTTRN = 'sub-??/sub-??_task-visloc_run-1_bold_filtered.nii.gz'
+VIS_FILE_PTTRN = 'sub-??/sub-??_task-visloc_run-?_bold_filtered.nii.gz'
 
 def parse_arguments():
     '''
@@ -163,7 +163,7 @@ if __name__ == "__main__":
     print(masked_data.shape)
 
     # concatenate remaining runs from visual localizer
-    for run, vis_fpath in enumerate(vis_fpathes):  # first index is 'first_img'
+    for run, vis_fpath in enumerate(vis_fpathes[1:]):  # first index is 'first_img'
         run = run + 2
         # DEBUGGING / CHECK
         print(vis_fpath)
@@ -171,7 +171,7 @@ if __name__ == "__main__":
         new_img = nib.load(vis_fpath)
         # mask the image and get the data as np.ndarray
         # nifti_masker = NiftiMasker(mask_img=mask_fpath)
-        # nifti_masker ist the same as above anyway
+        # nifti_masker is the same as above anyway
         masked_new_data = nifti_masker.fit_transform(new_img)  # returns numpy.ndarray
         masked_new_data = np.transpose(masked_new_data)
 
