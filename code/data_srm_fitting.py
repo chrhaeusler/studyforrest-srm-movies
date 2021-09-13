@@ -17,8 +17,8 @@ import re
 
 
 # constants
-TRAIN_PATTERN = 'sub-??/sub-??_task_aomovie-avmovie_run-1-8_bold-filtered.npy'
-
+AOAV_TRAIN_PATTERN = 'sub-??/sub-??_task_aomovie-avmovie_run-1-8_bold-filtered.npy'
+VIS_TRAIN_PATTERN = 'sub-??/sub-??_task_visloc_run-1-4_bold-filtered.npy'
 
 def parse_arguments():
     '''
@@ -185,14 +185,15 @@ if __name__ == "__main__":
     # read command line arguments
     subj, out_dir, n_feat, n_iter = parse_arguments()
 
+    # a) SRM with data from AO & AV
     # find all input files
-    train_fpathes = find_files(TRAIN_PATTERN)
+    train_fpathes = find_files(AOAV_TRAIN_PATTERN)
     # filter for non-current subject
     train_fpathes = [fpath for fpath in train_fpathes if subj not in fpath]
 
-    all_arrays = []
+    aoav_arrays = []
     # loops through subjects (one concatenated / masked time-series per sub)
-    for train_fpath in train_fpathes:
+    for train_fpath in train_fpathes[:2]:
         # ~75 TRs of run-8 in sub-04 are missing
         # Do:
         # a) perform zero padding
@@ -200,30 +201,32 @@ if __name__ == "__main__":
         # b) cutting of all other arrays
         corrected_array = array_cutting(train_fpath)
         # populate the list of arrays (as expected by brainiac)
-        all_arrays.append(corrected_array)
+        aoav_arrays.append(corrected_array)
 
         # shuffle the current subject's array
 
-    # Create the SRM object
-    srm = fit_srm(all_arrays, out_dir)
+    # fit the SRM model
+    model = 'srm-ao-av'
+    aoav_srm = fit_srm(aoav_arrays, out_dir)
 
     # prepare saving results as pickle
-    model = 'srm-ao-av'
     out_file = f'{subj}_{model}_feat{n_feat}-iter{n_iter}.npz'
     out_fpath = os.path.join(out_dir, out_file)
     # create (sub)directories
     os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
     # save it
-    srm.save(out_fpath)
+    aoav_srm.save(out_fpath)
     print('SRM saved to', out_fpath)
 
-    # negative control:
+    # b) SRM with shuffled AO & AV data (negative control):
+    model = 'srm-ao-av-shuffled'
     # shuffle the arrays before fitting the model
     # always take the same seed for every subject
     # by deriving it from the subject's number
     random.seed(int(subj[-2:]))
-    shuffled_arrays = shuffle_all_arrays(all_arrays)
-    srm = fit_srm(shuffled_arrays, out_dir)
+    shuffled_aoav_arrays = shuffle_all_arrays(aoav_arrays)
+    # fit the SRM model
+    shuffled_aoav_srm = fit_srm(shuffled_aoav_arrays, out_dir)
 
     # prepare saving results as pickle
     out_file = f'{subj}_{model}_feat{n_feat}-iter{n_iter}_shuffled.npz'
@@ -231,11 +234,37 @@ if __name__ == "__main__":
     # create (sub)directories
     os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
     # save it
-    srm.save(out_fpath)
+    shuffled_aoav_srm.save(out_fpath)
     print('SRM saved to', out_fpath)
 
-    #### EXTEND THE ARRAY PER SUBJECT WITH THE DATA OF THE VIS EXPERIMENT HERE
 
-    ### FIT THE MODEL
+    # c) SRM with data from AO, AV, VIS
+    # find all input files
+    train_fpathes = find_files(VIS_TRAIN_PATTERN)
+    # filter for non-current subject
+    train_fpathes = [fpath for fpath in train_fpathes if subj not in fpath]
+
+    # extend the data of AO & AV with the VIS data
+    aoavvis_arrays = []
+    # loops through subjects (one concatenated / masked time-series per sub)
+    for train_fpath, aoav_array in zip(train_fpathes, aoav_arrays):
+        print(train_fpath, '\n', aoav_array.shape)
+        vis_array = np.load(train_fpath)
+        dim = vis_array.shape
+        aoavvis_array = np.concatenate([aoav_array, vis_array], axis=1)
+        aoavvis_arrays.append(aoavvis_array)
+
+    # fit the SRM model
+    aoavvis_srm = fit_srm(aoavvis_arrays, out_dir)
+
+    # prepare saving results as pickle
+    out_file = f'{subj}_{model}_feat{n_feat}-iter{n_iter}.npz'
+    out_fpath = os.path.join(out_dir, out_file)
+    # create (sub)directories
+    os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
+    # save it
+    aoavvis_srm.save(out_fpath)
+    print('SRM (AO, AV, VIS) saved to', out_fpath)
+
 
     ### SAVE THE MODEL

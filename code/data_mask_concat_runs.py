@@ -163,7 +163,7 @@ if __name__ == "__main__":
     print(masked_data.shape)
 
     # concatenate remaining runs from visual localizer
-    for run, vis_fpath in enumerate(vis_fpathes[1:]):  # first index is 'first_img'
+    for run, vis_fpath in enumerate(vis_fpathes):  # first index is 'first_img'
         run = run + 2
         # DEBUGGING / CHECK
         print(vis_fpath)
