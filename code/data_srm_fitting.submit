@@ -14,115 +14,143 @@ executable = /bin/bash
 transfer_executable = False
 should_transfer_files = NO
 
-arguments = ./code/data_srm_fitting_venv.sh sub-01 test 10 20
+arguments = ./code/data_srm_fitting_venv.sh sub-01 test 10 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-01 test 20 20
+arguments = ./code/data_srm_fitting_venv.sh sub-01 test 20 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-01 test 30 20
+arguments = ./code/data_srm_fitting_venv.sh sub-01 test 30 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-01 test 40 20
+arguments = ./code/data_srm_fitting_venv.sh sub-01 test 40 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-02 test 10 20
+arguments = ./code/data_srm_fitting_venv.sh sub-01 test 50 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-02 test 20 20
+arguments = ./code/data_srm_fitting_venv.sh sub-02 test 10 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-02 test 30 20
+arguments = ./code/data_srm_fitting_venv.sh sub-02 test 20 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-02 test 40 20
+arguments = ./code/data_srm_fitting_venv.sh sub-02 test 30 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-03 test 10 20
+arguments = ./code/data_srm_fitting_venv.sh sub-02 test 40 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-03 test 20 20
+arguments = ./code/data_srm_fitting_venv.sh sub-02 test 50 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-03 test 30 20
+arguments = ./code/data_srm_fitting_venv.sh sub-03 test 10 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-03 test 40 20
+arguments = ./code/data_srm_fitting_venv.sh sub-03 test 20 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-04 test 10 20
+arguments = ./code/data_srm_fitting_venv.sh sub-03 test 30 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-04 test 20 20
+arguments = ./code/data_srm_fitting_venv.sh sub-03 test 40 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-04 test 30 20
+arguments = ./code/data_srm_fitting_venv.sh sub-03 test 50 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-04 test 40 20
+arguments = ./code/data_srm_fitting_venv.sh sub-04 test 10 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-05 test 10 20
+arguments = ./code/data_srm_fitting_venv.sh sub-04 test 20 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-05 test 20 20
+arguments = ./code/data_srm_fitting_venv.sh sub-04 test 30 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-05 test 30 20
+arguments = ./code/data_srm_fitting_venv.sh sub-04 test 40 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-05 test 40 20
+arguments = ./code/data_srm_fitting_venv.sh sub-04 test 50 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-06 test 10 20
+arguments = ./code/data_srm_fitting_venv.sh sub-05 test 10 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-06 test 20 20
+arguments = ./code/data_srm_fitting_venv.sh sub-05 test 20 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-06 test 30 20
+arguments = ./code/data_srm_fitting_venv.sh sub-05 test 30 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-06 test 40 20
+arguments = ./code/data_srm_fitting_venv.sh sub-05 test 40 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-09 test 10 20
+arguments = ./code/data_srm_fitting_venv.sh sub-05 test 50 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-09 test 20 20
+arguments = ./code/data_srm_fitting_venv.sh sub-06 test 10 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-09 test 30 20
+arguments = ./code/data_srm_fitting_venv.sh sub-06 test 20 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-09 test 40 20
+arguments = ./code/data_srm_fitting_venv.sh sub-06 test 30 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-14 test 10 20
+arguments = ./code/data_srm_fitting_venv.sh sub-06 test 40 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-14 test 20 20
+arguments = ./code/data_srm_fitting_venv.sh sub-06 test 50 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-14 test 30 20
+arguments = ./code/data_srm_fitting_venv.sh sub-09 test 10 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-14 test 40 20
+arguments = ./code/data_srm_fitting_venv.sh sub-09 test 20 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-15 test 10 20
+arguments = ./code/data_srm_fitting_venv.sh sub-09 test 30 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-15 test 20 20
+arguments = ./code/data_srm_fitting_venv.sh sub-09 test 40 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-15 test 30 20
+arguments = ./code/data_srm_fitting_venv.sh sub-09 test 50 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-15 test 40 20
+arguments = ./code/data_srm_fitting_venv.sh sub-14 test 10 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-16 test 10 20
+arguments = ./code/data_srm_fitting_venv.sh sub-14 test 20 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-16 test 20 20
+arguments = ./code/data_srm_fitting_venv.sh sub-14 test 30 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-16 test 30 20
+arguments = ./code/data_srm_fitting_venv.sh sub-14 test 40 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-16 test 40 20
+arguments = ./code/data_srm_fitting_venv.sh sub-14 test 50 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-17 test 10 20
+arguments = ./code/data_srm_fitting_venv.sh sub-15 test 10 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-17 test 20 20
+arguments = ./code/data_srm_fitting_venv.sh sub-15 test 20 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-17 test 30 20
+arguments = ./code/data_srm_fitting_venv.sh sub-15 test 30 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-17 test 40 20
+arguments = ./code/data_srm_fitting_venv.sh sub-15 test 40 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-18 test 10 20
+arguments = ./code/data_srm_fitting_venv.sh sub-15 test 50 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-18 test 20 20
+arguments = ./code/data_srm_fitting_venv.sh sub-16 test 10 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-18 test 30 20
+arguments = ./code/data_srm_fitting_venv.sh sub-16 test 20 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-18 test 40 20
+arguments = ./code/data_srm_fitting_venv.sh sub-16 test 30 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-19 test 10 20
+arguments = ./code/data_srm_fitting_venv.sh sub-16 test 40 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-19 test 20 20
+arguments = ./code/data_srm_fitting_venv.sh sub-16 test 50 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-19 test 30 20
+arguments = ./code/data_srm_fitting_venv.sh sub-17 test 10 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-19 test 40 20
+arguments = ./code/data_srm_fitting_venv.sh sub-17 test 20 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-20 test 10 20
+arguments = ./code/data_srm_fitting_venv.sh sub-17 test 30 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-20 test 20 20
+arguments = ./code/data_srm_fitting_venv.sh sub-17 test 40 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-20 test 30 20
+arguments = ./code/data_srm_fitting_venv.sh sub-17 test 50 30
 queue
-arguments = ./code/data_srm_fitting_venv.sh sub-20 test 40 20
+arguments = ./code/data_srm_fitting_venv.sh sub-18 test 10 30
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-18 test 20 30
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-18 test 30 30
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-18 test 40 30
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-18 test 50 30
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-19 test 10 30
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-19 test 20 30
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-19 test 30 30
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-19 test 40 30
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-19 test 50 30
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-20 test 10 30
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-20 test 20 30
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-20 test 30 30
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-20 test 40 30
+queue
+arguments = ./code/data_srm_fitting_venv.sh sub-20 test 50 30
 queue

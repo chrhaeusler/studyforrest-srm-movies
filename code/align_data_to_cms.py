@@ -21,6 +21,15 @@ import re
 # constants
 IN_PATTERN = 'sub-??/sub-??_task_aomovie-avmovie_run-1-8_bold-filtered.npy'
 
+
+# which TRs do we wanna use?
+# AO indice: 0 to 3598
+# AV indices: 3599 to 7122
+# the last 75 TRs of AV were cutted because they are missing in sub-04
+start = 3599
+end = 3599 + 451 + 441 + 438 + 488 + 462 + 439 + 542 + (338-75)
+
+
 VIS_ZMAP_PATTERN = 'inputs/studyforrest-data-visualrois/'\
     'sub-*/2ndlvl.gfeat/cope*.feat/stats/zstat1.nii.gz'
 
@@ -66,24 +75,31 @@ def parse_arguments():
                         default='test',
                         help='output directory (e.g. "sub-01")')
 
+    parser.add_argument('-model',
+                        required=False,
+                        default='srm-ao-av-vis',
+                        help='the fitted model')
+
     parser.add_argument('-nfeat',
                         required=False,
-                        default='30',
+                        default='10',
                         help='number of features (shared responses)')
 
     parser.add_argument('-niter',
                         required=False,
-                        default='20',
+                        default='30',
                         help='number of iterations')
 
     args = parser.parse_args()
 
     sub = args.sub
     indir = args.indir
+    model = args.model
     n_feat = int(args.nfeat)
     n_iter = int(args.niter)
 
-    return sub, indir, n_feat, n_iter
+    return sub, indir, model, n_feat, n_iter
+
 
 def find_files(pattern):
     '''
@@ -148,7 +164,7 @@ def load_mask(subj):
 
 if __name__ == "__main__":
     # read command line arguments
-    left_out_subj, in_dir, n_feat, n_iter = parse_arguments()
+    left_out_subj, in_dir, model, n_feat, n_iter = parse_arguments()
 
     # get the subjects for which data are available
     SUBJS_PATH_PATTERN = 'sub-??'
@@ -163,7 +179,7 @@ if __name__ == "__main__":
 
         # prepare loading the SRM
         srm_fpath = os.path.join(
-            in_dir, f'{left_out_subj}_srm_feat{n_feat}-iter{n_iter}.npz'
+            in_dir, f'{left_out_subj}_{model}_feat{n_feat}-iter{n_iter}.npz'
         )
 
         # load the srm from file
@@ -171,13 +187,13 @@ if __name__ == "__main__":
         srm = load_srm(srm_fpath)
 
         # get the z-maps for the subjects that were used to create the CMS
-        zmap_fpathes = [
-            (VIS_ZMAP_PATTERN.replace('sub-*', x[0]).replace('cope*', x[1]))
-            for x in VIS_VPN_COPES.items()]
-
 #         zmap_fpathes = [
-#             (AO_ZMAP_PATTERN.replace('sub-*', x[0]).replace('cope*', x[1]))
+#             (VIS_ZMAP_PATTERN.replace('sub-*', x[0]).replace('cope*', x[1]))
 #             for x in VIS_VPN_COPES.items()]
+
+        zmap_fpathes = [
+            (AO_ZMAP_PATTERN.replace('sub-*', x[0]).replace('cope*', x[1]))
+            for x in VIS_VPN_COPES.items()]
 
         masked_zmaps = []
         for other_subj, zmap_fpath in zip(other_subjs, zmap_fpathes):
@@ -215,11 +231,10 @@ if __name__ == "__main__":
 
         # get the mean of features x t time-points
         matrix = np.stack(zmaps_in_cms)
+        ### THIS IS TAKING THE MEAN OF 'zmaps' aligned in CMS
         zmaps_cms_mean = np.mean(matrix, axis=0)
 
-        start = 0
-        end = 451
-        in_fpath = os.path.join(in_dir, f'{left_out_subj}_wmatrix_{start}-{end}.npy')
+        in_fpath = os.path.join(in_dir, f'{left_out_subj}_wmatrix_{model}_feat{n_feat}_{start}-{end}.npy')
         wmatrix = np.load(in_fpath)
 
         predicted = np.matmul(wmatrix, zmaps_cms_mean)
@@ -249,9 +264,11 @@ if __name__ == "__main__":
 
         # adjust the name of the output file according to the input:
         if 'studyforrest-data-visualrois' in zmap_fpathes[0]:
-            out_fpath = os.path.join(in_dir, f'{left_out_subj}_predicted_VIS_PPA.nii.gz')
+            out_fpath = os.path.join(in_dir,
+                                     f'{left_out_subj}_predicted_VIS_PPA_from_{model}-feat{n_feat}_{start}-{end}.nii.gz')
         elif 'studyforrest-ppa-analysis' in zmap_fpathes[0]:
-            out_fpath = os.path.join(in_dir, f'{left_out_subj}_predicted_AO_PPA.nii.gz')
+            out_fpath = os.path.join(in_dir,
+                                     f'{left_out_subj}_predicted_AO_PPA_from_{model}-feat{n_feat}_{start}-{end}.nii.gz')
 
         # save it
         nib.save(predicted_img, out_fpath)

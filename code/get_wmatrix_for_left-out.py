@@ -19,6 +19,13 @@ import re
 # constants
 IN_PATTERN = 'sub-??/sub-??_task_aomovie-avmovie_run-1-8_bold-filtered.npy'
 
+# which TRs do we wanna use?
+# AO indice: 0 to 3598
+# AV indices: 3599 to 7122
+# the last 75 TRs of AV were cutted because they are missing in sub-04
+start = 0  # 3599
+end = 451  # 3599 + 451 + 441 + 438 + 488 + 462 + 439 + 542 + (338-75)
+
 
 def parse_arguments():
     '''
@@ -28,7 +35,6 @@ def parse_arguments():
     )
 
 
-
     parser.add_argument('-indir',
                         required=False,
                         default='test',
@@ -36,17 +42,17 @@ def parse_arguments():
 
     parser.add_argument('-model',
                         required=False,
-                        default='srm',
+                        default='srm-ao-av-vis',
                         help='the model (e.g. "srm")')
 
     parser.add_argument('-nfeat',
                         required=False,
-                        default='10',
+                        default='30',
                         help='number of features (shared responses)')
 
     parser.add_argument('-niter',
                         required=False,
-                        default='20',
+                        default='30',
                         help='number of iterations')
 
     args = parser.parse_args()
@@ -111,12 +117,6 @@ if __name__ == "__main__":
         print('Loading', in_fpath)
         srm = load_srm(in_fpath)
 
-        # which TRs do we wanna use?
-        # AO indice: 0 to 3598
-        # AV indices: 3599 to 7122
-        # the last 75 TRs of AV were cutted because they are missing in sub-04
-        start = 0
-        end = 451
 
         # leave the original srm untouched but copy it
         import copy
@@ -129,7 +129,7 @@ if __name__ == "__main__":
         w_matrix = srm_sliced.transform_subject(array)
 
         # save the matrix
-        out_file = f'{subj}_wmatrix_{start}-{end}.npy'
+        out_file = f'{subj}_wmatrix_{model}_feat{n_feat}_{start}-{end}.npy'
         out_fpath = os.path.join(in_dir, out_file)
         # create (sub)directories
         os.makedirs(os.path.dirname(out_fpath), exist_ok=True)

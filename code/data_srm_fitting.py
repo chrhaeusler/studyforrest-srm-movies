@@ -193,7 +193,7 @@ if __name__ == "__main__":
 
     aoav_arrays = []
     # loops through subjects (one concatenated / masked time-series per sub)
-    for train_fpath in train_fpathes[:2]:
+    for train_fpath in train_fpathes:
         # ~75 TRs of run-8 in sub-04 are missing
         # Do:
         # a) perform zero padding
@@ -207,7 +207,7 @@ if __name__ == "__main__":
 
     # fit the SRM model
     model = 'srm-ao-av'
-    # aoav_srm = fit_srm(aoav_arrays, out_dir)
+    aoav_srm = fit_srm(aoav_arrays, out_dir)
 
     # prepare saving results as pickle
     out_file = f'{subj}_{model}_feat{n_feat}-iter{n_iter}.npz'
@@ -215,7 +215,7 @@ if __name__ == "__main__":
     # create (sub)directories
     os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
     # save it
-    # aoav_srm.save(out_fpath)
+    aoav_srm.save(out_fpath)
     print('SRM saved to', out_fpath)
 
     # b) SRM with shuffled AO & AV data (negative control):
@@ -226,7 +226,7 @@ if __name__ == "__main__":
     random.seed(int(subj[-2:]))
     shuffled_aoav_arrays = shuffle_all_arrays(aoav_arrays)
     # fit the SRM model
-    # shuffled_aoav_srm = fit_srm(shuffled_aoav_arrays, out_dir)
+    shuffled_aoav_srm = fit_srm(shuffled_aoav_arrays, out_dir)
 
     # prepare saving results as pickle
     out_file = f'{subj}_{model}_feat{n_feat}-iter{n_iter}_shuffled.npz'
@@ -234,11 +234,12 @@ if __name__ == "__main__":
     # create (sub)directories
     os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
     # save it
-    # shuffled_aoav_srm.save(out_fpath)
+    shuffled_aoav_srm.save(out_fpath)
     print('SRM saved to', out_fpath)
 
 
     # c) SRM with data from AO, AV, VIS
+    model = 'srm-ao-av-vis'
     # find all input files
     train_fpathes = find_files(VIS_TRAIN_PATTERN)
     # filter for non-current subject
