@@ -64,6 +64,7 @@ def parse_arguments():
 
     return indir, model, n_feat, n_iter
 
+
 def find_files(pattern):
     '''
     '''
@@ -99,7 +100,6 @@ def load_srm(in_fpath):
 
 if __name__ == "__main__":
     # read command line arguments
-    ### subj NOT NEEDED CAUSE THE SCRIPTS IST FAST ENOUGH TO PROCESS ALL SUBJECTS
     in_dir, model, n_feat, n_iter = parse_arguments()
 
     SUBJS_PATH_PATTERN = 'sub-??'
@@ -110,7 +110,7 @@ if __name__ == "__main__":
 
     for subj in subjs:
         in_fpath = os.path.join(
-            in_dir, f'{subj}_{model}_feat{n_feat}-iter{n_iter}.npz'
+            in_dir, subj, f'{model}_feat{n_feat}-iter{n_iter}.npz'
         )
 
         # load the srm from file
@@ -129,8 +129,8 @@ if __name__ == "__main__":
         w_matrix = srm_sliced.transform_subject(array)
 
         # save the matrix
-        out_file = f'{subj}_wmatrix_{model}_feat{n_feat}_{start}-{end}.npy'
-        out_fpath = os.path.join(in_dir, out_file)
+        out_file = f'wmatrix_{model}_feat{n_feat}_{start}-{end}.npy'
+        out_fpath = os.path.join(in_dir, subj, out_file)
         # create (sub)directories
         os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
         # save it

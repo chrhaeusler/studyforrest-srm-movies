@@ -14,30 +14,27 @@ import nibabel as nib
 import ipdb
 import numpy as np
 import os
-import random
 import re
 
 
 # constants
 IN_PATTERN = 'sub-??/sub-??_task_aomovie-avmovie_run-1-8_bold-filtered.npy'
 
-
 # which TRs do we wanna use?
-# AO indice: 0 to 3598
+# AO indices: 0 to 3598
 # AV indices: 3599 to 7122
 # the last 75 TRs of AV were cutted because they are missing in sub-04
-start = 3599
-end = 3599 + 451 + 441 + 438 + 488 + 462 + 439 + 542 + (338-75)
+start = 0  # 3599
+end = 451  # 3599 + 451 + 441 + 438 + 488 + 462 + 439 + 542 + (338-75)
 
-
-VIS_ZMAP_PATTERN = 'inputs/studyforrest-data-visualrois/'\
-    'sub-*/2ndlvl.gfeat/cope*.feat/stats/zstat1.nii.gz'
+MASK_PTTRN = 'sub-??/masks/in_bold3Tp2/grp_PPA_bin.nii.gz'
+GM_MASK = 'sub-??/masks/in_bold3Tp2/gm_bin_dil_fov.nii.gz'
 
 AO_ZMAP_PATTERN = 'inputs/studyforrest-ppa-analysis/'\
     'sub-*/2nd-lvl_audio-ppa-ind.gfeat/cope1.feat/stats/zstat1.nii.gz'
 
-MASK_PTTRN = 'sub-??/masks/in_bold3Tp2/grp_PPA_bin.nii.gz'
-GM_MASK = 'sub-??/masks/in_bold3Tp2/gm_bin_dil_fov.nii.gz'
+VIS_ZMAP_PATTERN = 'inputs/studyforrest-data-visualrois/'\
+    'sub-*/2ndlvl.gfeat/cope*.feat/stats/zstat1.nii.gz'
 
 # contrast used by Sengupta et al. (2016) to create the PPA mask
 VIS_VPN_COPES = OrderedDict({  # dicts are ordered from Python 3.7
@@ -174,30 +171,30 @@ if __name__ == "__main__":
     subjs = sorted(list(set(subjs)))
 
     for left_out_subj in subjs:
+        print(f'\nProcessing {left_out_subj} as left-out subject')
         # remove the currently processed subject from the list
         other_subjs = [x for x in subjs if x != left_out_subj]
 
         # prepare loading the SRM
         srm_fpath = os.path.join(
-            in_dir, f'{left_out_subj}_{model}_feat{n_feat}-iter{n_iter}.npz'
+            in_dir, left_out_subj, f'{model}_feat{n_feat}-iter{n_iter}.npz'
         )
 
         # load the srm from file
-        print('Loading', srm_fpath)
+        print(f'Loading {srm_fpath}')
         srm = load_srm(srm_fpath)
 
         # get the z-maps for the subjects that were used to create the CMS
-#         zmap_fpathes = [
-#             (VIS_ZMAP_PATTERN.replace('sub-*', x[0]).replace('cope*', x[1]))
-#             for x in VIS_VPN_COPES.items()]
-
         zmap_fpathes = [
-            (AO_ZMAP_PATTERN.replace('sub-*', x[0]).replace('cope*', x[1]))
+            (VIS_ZMAP_PATTERN.replace('sub-*', x[0]).replace('cope*', x[1]))
             for x in VIS_VPN_COPES.items()]
+
+#         zmap_fpathes = [
+#             (AO_ZMAP_PATTERN.replace('sub-*', x[0]).replace('cope*', x[1]))
+#             for x in VIS_VPN_COPES.items()]
 
         masked_zmaps = []
         for other_subj, zmap_fpath in zip(other_subjs, zmap_fpathes):
-            print(other_subj)
 
             mask_img = load_mask(other_subj)
             # create instance of NiftiMasker used to mask the 4D time-series
@@ -205,7 +202,7 @@ if __name__ == "__main__":
             nifti_masker = NiftiMasker(mask_img=mask_img)
 
             # load the subject's zmap of the PPA contrast
-            print(zmap_fpath)
+            print(f'\nz-map for {other_subj}: {zmap_fpath}')
             zmap_img = nib.load(zmap_fpath)
             zmap_img_affine = zmap_img.affine
             zmap_img_header = zmap_img.header
@@ -215,12 +212,10 @@ if __name__ == "__main__":
 
             # mask the image and get the data as np.ndarray
             nifti_masker.fit(zmap_img)
-            print('before transform:', zmap_img_data.shape)
             masked_data = nifti_masker.transform(zmap_img)
-            print('after transform:', masked_data.shape)
             masked_data = np.transpose(masked_data)
-            print(f'zmap shape: {masked_data.shape}')
-            print(f'subjects weight matrix: {srm.w_[other_subjs.index(other_subj)].shape}')
+            print(f'shape of z-map (transposed): {masked_data.shape}')
+            print(f'shape of weight matrix: {srm.w_[other_subjs.index(other_subj)].shape}')
 
             masked_zmaps.append(masked_data)
 
@@ -229,15 +224,19 @@ if __name__ == "__main__":
         # (1 time-point cause it's a zmap no time-series)
         zmaps_in_cms = srm.transform(masked_zmaps)
 
+        ### THIS IS TAKING THE MEAN OF 'zmaps' aligned in CMS
         # get the mean of features x t time-points
         matrix = np.stack(zmaps_in_cms)
-        ### THIS IS TAKING THE MEAN OF 'zmaps' aligned in CMS
         zmaps_cms_mean = np.mean(matrix, axis=0)
 
-        in_fpath = os.path.join(in_dir, f'{left_out_subj}_wmatrix_{model}_feat{n_feat}_{start}-{end}.npy')
+        # get the left-out subjects transformation matrix
+        in_fpath = os.path.join(in_dir, left_out_subj,
+                                f'wmatrix_{model}_feat{n_feat}_{start}-{end}.npy')
         wmatrix = np.load(in_fpath)
 
+        # transform from CMS into vol
         predicted = np.matmul(wmatrix, zmaps_cms_mean)
+        predicted_data = np.transpose(predicted)
 
         # get the mask to perform its inverse transform
         mask_img = load_mask(left_out_subj)
@@ -246,35 +245,16 @@ if __name__ == "__main__":
         # which will be loaded next
         nifti_masker = NiftiMasker(mask_img=mask_img)
 
-        # initialize image
-        print(zmap_fpath)
-        zmap_img = nib.load(zmap_fpath)
-        zmap_img_affine = zmap_img.affine
-        zmap_img_header = zmap_img.header
-
-        zmap_img_data = zmap_img.get_fdata()
-        # print(zmap_img_data.shape)
-
-        # mask the image and get the data as np.ndarray
+        # fit the masker
         nifti_masker.fit(zmap_img)
 
-        # get the data back in shape of the volume
-        predicted_data = np.transpose(predicted)
+        # transform the predicted data from array to volume
         predicted_img = nifti_masker.inverse_transform(predicted_data)
 
         # adjust the name of the output file according to the input:
         if 'studyforrest-data-visualrois' in zmap_fpathes[0]:
-            out_fpath = os.path.join(in_dir,
-                                     f'{left_out_subj}_predicted_VIS_PPA_from_{model}-feat{n_feat}_{start}-{end}.nii.gz')
+            out_fpath = os.path.join(in_dir, left_out_subj,
+                                     f'predicted_VIS_PPA_from_{model}_feat{n_feat}_{start}-{end}.nii.gz')
         elif 'studyforrest-ppa-analysis' in zmap_fpathes[0]:
-            out_fpath = os.path.join(in_dir,
-                                     f'{left_out_subj}_predicted_AO_PPA_from_{model}-feat{n_feat}_{start}-{end}.nii.gz')
-
-        # save it
-        nib.save(predicted_img, out_fpath)
-
-
-    ### Z-SCORING OF TRANSFORMED DATA???
-#     from scipy import stats
-#     for subject in range(len(other_subjs)):
-#         shared_zmaps[subject] = stats.zscore(shared_zmaps[subject], axis=1, ddof=1)
+            out_fpath = os.path.join(in_dir, left_out_subj,
+                                     f'predicted_AO_PPA_from_{model}_feat{n_feat}_{start}-{end}.nii.gz')
