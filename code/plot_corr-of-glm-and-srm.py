@@ -219,9 +219,9 @@ if __name__ == "__main__":
 
     #############
     # LOAD THE SRM MODEL
-    subj, in_dir, n_feat, n_iter = 'sub-02', inDir, 10, 20
+    subj, in_dir, n_feat, n_iter = 'sub-02', inDir, 10, 30
     in_fpath = os.path.join(
-        in_dir, f'{subj}_srm_feat{n_feat}-iter{n_iter}.npz'
+        in_dir, subj, f'srm-ao-av_feat{n_feat}-iter{n_iter}.npz'
     )
 
     # load the SRM from file
@@ -236,7 +236,7 @@ if __name__ == "__main__":
 
     # a) plot correlation of time-series of features (AO & AV)
     # create name of path and file (must not include file extension)
-    out_fpath = os.path.join(outDir, 'corr-features-ao-av-trs')
+    out_fpath = os.path.join(outDir, 'corr_ao-regressors-vs-shared-resp')
     # create the correlation matrix for all columns
     regCorrMat = srm_df.corr()
     # plot it
@@ -248,6 +248,6 @@ if __name__ == "__main__":
     # create the correlation matrix for all columns
     regCorrMat = all_df.corr()
     # create name of path and file (must not include ".{extension}"
-    out_fpath = os.path.join(outDir, 'corr-ao-regressors-vs-features-ao-trs')
+    out_fpath = os.path.join(outDir, 'corr_ao-regressors-vs-shared-resp (only AO TRs)')
     # plot it
     plot_heatmap(regCorrMat, out_fpath)

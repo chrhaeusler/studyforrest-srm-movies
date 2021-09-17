@@ -230,7 +230,7 @@ if __name__ == "__main__":
     shuffled_aoav_srm = fit_srm(shuffled_aoav_arrays, out_dir)
 
     # prepare saving results as pickle
-    out_file = f'{model}_feat{n_feat}-iter{n_iter}_shuffled.npz'
+    out_file = f'{model}_feat{n_feat}-iter{n_iter}.npz'
     out_fpath = os.path.join(out_dir, subj, out_file)
     # create (sub)directories
     os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
