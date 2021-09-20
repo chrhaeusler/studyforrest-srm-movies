@@ -17,6 +17,7 @@ import re
 GRP_PPA_PTTRN = 'sub-??/masks/in_bold3Tp2/grp_PPA_bin.nii.gz'
 GM_MASK = 'sub-??/masks/in_bold3Tp2/gm_bin_dil_fov.nii.gz'
 AO_FOV_MASK = 'sub-??/masks/in_bold3Tp2/audio_fov.nii.gz'
+
 IN_FILE_PTTRN = 'sub-??/sub-??_task-a?movie_run-?_bold_filtered.nii.gz'
 VIS_FILE_PTTRN = 'sub-??/sub-??_task-visloc_run-?_bold_filtered.nii.gz'
 
@@ -30,7 +31,7 @@ def parse_arguments():
     parser.add_argument('-sub',
                         required=False,
                         default='sub-01',
-                        help='subject to process (e.g. "subj-01")')
+                        help='subject to process (e.g. "sub-01")')
 
     parser.add_argument('-outdir',
                         required=False,
@@ -64,16 +65,9 @@ def sort_nicely(l):
     return l
 
 
-if __name__ == "__main__":
-    # read command line arguments
-    subj, out_dir = parse_arguments()
-    subj = subj.strip('/')
-
-    print('\nProcessing', subj)
-
-    in_pattern = IN_FILE_PTTRN.replace('sub-??', subj)
-    in_fpathes = find_files(in_pattern)
-
+def load_mask(subj):
+    '''
+    '''
     # open the mask of cortices (at the moment it justs the union of
     # individual PPAs)
     grp_ppa_fpath = GRP_PPA_PTTRN.replace('sub-??', subj)
@@ -96,9 +90,24 @@ if __name__ == "__main__":
                                      grp_ppa_img.affine,
                                      header=grp_ppa_img.header)
 
+    return final_mask_img
+
+
+if __name__ == "__main__":
+    # read command line arguments
+    subj, out_dir = parse_arguments()
+    subj = subj.strip('/')
+
+    print('\nProcessing', subj)
+
+    in_pattern = IN_FILE_PTTRN.replace('sub-??', subj)
+    in_fpathes = find_files(in_pattern)
+
+    # load and mask the empirical zmap
+    mask_img = load_mask(subj)
     # create instance of NiftiMasker used to mask the 4D time-series
     # which will be loaded next
-    nifti_masker = NiftiMasker(mask_img=final_mask_img)
+    nifti_masker = NiftiMasker(mask_img=mask_img)
 
     # start with the first run of the AO stimulus
     print('Processing data of audio-description & movie')

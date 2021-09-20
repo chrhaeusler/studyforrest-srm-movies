@@ -50,6 +50,7 @@ AO_ZMAP_PATTERN = 'inputs/studyforrest-ppa-analysis/'\
 VIS_ZMAP_PATTERN = 'inputs/studyforrest-data-visualrois/'\
     'sub-*/2ndlvl.gfeat/cope*.feat/stats/zstat1.nii.gz'
 
+
 # contrast used by Sengupta et al. (2016) to create the PPA mask
 VIS_VPN_COPES = OrderedDict({  # dicts are ordered from Python 3.7
     'sub-01': 'cope8',
