@@ -34,7 +34,7 @@ PPA_MASK_PATTERN = 'inputs/studyforrest-data-visualrois/'\
     'sub-*/rois/?PPA_?_mask.nii.gz'
 
 # individual 2nd level results (primary cope in subject space)
-PREDICTED_ZMAP_PATTERN = 'predicted_VIS_PPA_from_srm-ao-av_feat10_0-451.nii.gz'
+PREDICTED_ZMAP_PATTERN = 'predicted-VIS-PPA_from_anatomy.nii.gz'
 
 VIS_ZMAP_PATTERN = 'inputs/studyforrest-data-visualrois/'\
     'sub-??/2ndlvl.gfeat/cope*.feat/stats/zstat1.nii.gz'

@@ -14,8 +14,9 @@ import re
 
 
 # constants
-MASK_PTTRN = 'sub-??/masks/in_bold3Tp2/grp_PPA_bin.nii.gz'
+GRP_PPA_PTTRN = 'sub-??/masks/in_bold3Tp2/grp_PPA_bin.nii.gz'
 GM_MASK = 'sub-??/masks/in_bold3Tp2/gm_bin_dil_fov.nii.gz'
+AO_FOV_MASK = 'sub-??/masks/in_bold3Tp2/audio_fov.nii.gz'
 IN_FILE_PTTRN = 'sub-??/sub-??_task-a?movie_run-?_bold_filtered.nii.gz'
 VIS_FILE_PTTRN = 'sub-??/sub-??_task-visloc_run-?_bold_filtered.nii.gz'
 
@@ -76,23 +77,28 @@ if __name__ == "__main__":
     # open the mask of cortices (at the moment it justs the union of
     # individual PPAs) and mask that with the individual (dilated) gray matter
     # in the audio-descriptions FoV
-    mask_fpath = MASK_PTTRN.replace('sub-??', subj)
+    grp_ppa_fpath = GRP_PPA_PTTRN.replace('sub-??', subj)
 
     # DEBUG / TO DO
     # MERGE PPA and (e.g.) FFA here before masking with GM in Fov
 
     # (dilated) gray matter mask; see constat at script's top
-    gm_mask = GM_MASK.replace('sub-??', subj)
+    gm_fpath = GM_MASK.replace('sub-??', subj)
+
+    # (dilated) gray matter mask; see constat at script's top
+    ao_fov_mask = AO_FOV_MASK.replace('sub-??', subj)
 
     # mask the area with individual (dilated) gray matter in FoV
     # of audio-description
-    area_img = nib.load(mask_fpath)
-    gm_img = nib.load(gm_mask)
+    grp_ppa_img = nib.load(grp_ppa_fpath)
+    gm_img = nib.load(gm_fpath)
+    ao_fov_img = nib.load(ao_fov_mask)
 
-    final_mask_data = area_img.get_fdata() * gm_img.get_fdata()
+#    final_mask_data = grp_ppa_img.get_fdata() * gm_img.get_fdata()
+    final_mask_data = grp_ppa_img.get_fdata() * ao_fov_img.get_fdata()
     final_mask_img = nib.Nifti1Image(final_mask_data,
-                                     area_img.affine,
-                                     header=area_img.header)
+                                     grp_ppa_img.affine,
+                                     header=grp_ppa_img.header)
 
     # create instance of NiftiMasker used to mask the 4D time-series
     # which will be loaded next
