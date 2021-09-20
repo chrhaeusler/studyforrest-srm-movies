@@ -40,8 +40,9 @@ XFM_MAT = os.path.join(TNT_DIR,
                        'mni2tmpl_12dof.mat'
                        )
 
-MASK_PTTRN = 'sub-??/masks/in_bold3Tp2/grp_PPA_bin.nii.gz'
+GRP_PPA_PTTRN = 'sub-??/masks/in_bold3Tp2/grp_PPA_bin.nii.gz'
 GM_MASK = 'sub-??/masks/in_bold3Tp2/gm_bin_dil_fov.nii.gz'
+AO_FOV_MASK = 'sub-??/masks/in_bold3Tp2/audio_fov.nii.gz'
 
 AO_ZMAP_PATTERN = 'inputs/studyforrest-ppa-analysis/'\
     'sub-*/2nd-lvl_audio-ppa-ind.gfeat/cope1.feat/stats/zstat1.nii.gz'
@@ -248,25 +249,26 @@ def load_mask(subj):
     '''
     '''
     # open the mask of cortices (at the moment it justs the union of
-    # individual PPAs) and mask that with the individual (dilated) gray matter
-    # in the audio-descriptions FoV
-    mask_fpath = MASK_PTTRN.replace('sub-??', subj)
-
-    # DEBUG / TO DO
-    # MERGE PPA and (e.g.) FFA here before masking with GM in Fov
+    # individual PPAs)
+    grp_ppa_fpath = GRP_PPA_PTTRN.replace('sub-??', subj)
 
     # (dilated) gray matter mask; see constat at script's top
-    gm_mask = GM_MASK.replace('sub-??', subj)
+#     gm_fpath = GM_MASK.replace('sub-??', subj)
+
+    # subject-specific field of view in audio-description
+    ao_fov_mask = AO_FOV_MASK.replace('sub-??', subj)
 
     # mask the area with individual (dilated) gray matter in FoV
     # of audio-description
-    area_img = nib.load(mask_fpath)
-    gm_img = nib.load(gm_mask)
+    grp_ppa_img = nib.load(grp_ppa_fpath)
+#     gm_img = nib.load(gm_fpath)
+    ao_fov_img = nib.load(ao_fov_mask)
 
-    final_mask_data = area_img.get_fdata() * gm_img.get_fdata()
+#    final_mask_data = grp_ppa_img.get_fdata() * gm_img.get_fdata()
+    final_mask_data = grp_ppa_img.get_fdata() * ao_fov_img.get_fdata()
     final_mask_img = nib.Nifti1Image(final_mask_data,
-                                     area_img.affine,
-                                     header=area_img.header)
+                                     grp_ppa_img.affine,
+                                     header=grp_ppa_img.header)
 
     return final_mask_img
 
@@ -300,8 +302,6 @@ def predict_from_cms(left_out_subj, subjs, zmap_fpathes):
     # load the srm from file
     srm = load_srm(srm_fpath)
 
-
-
     masked_zmaps = []
     for other_subj, zmap_fpath in zip(other_subjs, zmap_fpathes):
 
@@ -312,21 +312,24 @@ def predict_from_cms(left_out_subj, subjs, zmap_fpathes):
         nifti_masker = NiftiMasker(mask_img=mask_img)
 
         # load the subject's zmap of the PPA contrast
-#        print(f'\nz-map for {other_subj}: {zmap_fpath}')
+        print(f'\nz-map for {other_subj}: {zmap_fpath}')
         zmap_img = nib.load(zmap_fpath)
 
         # mask the image and get the data as np.ndarray
         nifti_masker.fit(zmap_img)
         masked_data = nifti_masker.transform(zmap_img)
         masked_data = np.transpose(masked_data)
-#        print(f'shape of z-map (transposed): {masked_data.shape}')
-#        print(f'shape of weight matrix: {srm.w_[other_subjs.index(other_subj)].shape}')
+        print(f'shape of z-map (transposed): {masked_data.shape}')
+        print(f'shape of weight matrix: {srm.w_[other_subjs.index(other_subj)].shape}')
 
         masked_zmaps.append(masked_data)
 
     # aligned zmap to shared space
     # k feautures x t time-points
     # (1 time-point cause it's a zmap no time-series)
+
+    import ipdb; ipdb.set_trace() # BREAKPOINT
+
     zmaps_in_cms = srm.transform(masked_zmaps)
 
     ### THIS IS TAKING THE MEAN OF 'zmaps' aligned in CMS
@@ -404,12 +407,22 @@ def predict_from_ana(left_out_subj, subjs):
     return mean_anat_arr
 
 
-
 if __name__ == "__main__":
     # read command line arguments
     in_dir, model, n_feat, n_iter = parse_arguments()
-    print(f'{model}_feat{n_feat}_iter{n_iter}.npz used as model')
-    print(f'TRs {start}-{end} used to get transformation matrices')
+
+    # loob through the models
+    models = [
+        'srm-ao-av',
+        'srm-ao-av-vis'
+    ]
+    # and vary the amount of TRs used for alignment
+    starts_ends = [
+        (0, 451),
+        (0, 3599),
+        (3599, 4050),
+        (3599, 7123)
+    ]
 
     # get the subjects for which data are available
     subjs_path_pattern = 'sub-??'
@@ -423,65 +436,71 @@ if __name__ == "__main__":
         (VIS_ZMAP_PATTERN.replace('sub-*', x[0]).replace('cope*', x[1]))
         for x in VIS_VPN_COPES.items()]
 
-    ### just in case I wanna predict the AO PPA again
-#         zmap_fpathes = [
-#             (AO_ZMAP_PATTERN.replace('sub-*', x[0]).replace('cope*', x[1]))
-#             for x in VIS_VPN_COPES.items()]
+    for model in models:
+        for start, end in starts_ends:
+            print(f'{model}_feat{n_feat}_iter{n_iter}.npz used as model')
+            print(f'TRs {start}-{end} used to get transformation matrices')
 
-    # for later prediction from anatomy, we need to transform the
-    # subject-specific z-maps from the localizer into MNI space
-    # (and later transform then into the subject-space of the left-out subject
-    print('\nTransforming VIS z-maps into MNI and into other subjects\' space')
-#    tranform_ind_vis_ppas(subjs)
 
-    # the containers to store the masked & flattened zmaps from all subjects
-    empirical_arrays = []
-    anat_pred_arrays = []
-    func_pred_arrays = []
+            ### just in case I wanna predict the AO PPA again
+        #         zmap_fpathes = [
+        #             (AO_ZMAP_PATTERN.replace('sub-*', x[0]).replace('cope*', x[1]))
+        #             for x in VIS_VPN_COPES.items()]
 
-    for left_out_subj in subjs[:]:
-        print(f'\nDoing predictions for {left_out_subj} as left-out subject')
-        # load the subject's zmap of the PPA contrast
-        zmap_fpath = [x for x in zmap_fpathes if left_out_subj in x][0]
-        zmap_img = nib.load(zmap_fpath)
+            # for later prediction from anatomy, we need to transform the
+            # subject-specific z-maps from the localizer into MNI space
+            # (and later transform then into the subject-space of the left-out subject
+            print('\nTransforming VIS z-maps into MNI and into other subjects\' space')
+        #    tranform_ind_vis_ppas(subjs)
 
-        # load the mask (combines PPA + gray matter)
-        mask_img = load_mask(left_out_subj)
-        # create instance of NiftiMasker used to mask the 4D time-series
-        nifti_masker = NiftiMasker(mask_img=mask_img)
-        nifti_masker.fit(zmap_img)
+            # the containers to store the masked & flattened zmaps from all subjects
+            empirical_arrays = []
+            anat_pred_arrays = []
+            func_pred_arrays = []
 
-        # mask the VIS z-map
-        masked_data = nifti_masker.transform(zmap_img)
-        masked_data = np.transpose(masked_data)
-        empirical_arrays.append(masked_data.flatten())
+            for left_out_subj in subjs[:]:
+#                 print(f'\nDoing predictions for {left_out_subj} as left-out subject')
+                # load the subject's zmap of the PPA contrast
+                zmap_fpath = [x for x in zmap_fpathes if left_out_subj in x][0]
+                zmap_img = nib.load(zmap_fpath)
 
-        # predict from anatomy
-        anat_pred_array = predict_from_ana(left_out_subj, subjs)
-        # append to the list of arrays
-        anat_pred_arrays.append(anat_pred_array.flatten())
-        # get the anat_pred_array as return
+                # load the mask (combines PPA + gray matter)
+                mask_img = load_mask(left_out_subj)
+                # create instance of NiftiMasker used to mask the 4D time-series
+                nifti_masker = NiftiMasker(mask_img=mask_img)
+                nifti_masker.fit(zmap_img)
 
-        # predict from CMS
-        func_pred_array = predict_from_cms(left_out_subj, subjs, zmap_fpathes)
-        # append to the list of arrays
-        func_pred_arrays.append(func_pred_array.flatten())
+                # mask the VIS z-map
+                masked_data = nifti_masker.transform(zmap_img)
+                masked_data = np.transpose(masked_data)
+                empirical_arrays.append(masked_data.flatten())
 
-    # show results
-    emp_vs_func = [stats.pearsonr(empirical_arrays[idx],
-                                  func_pred_arrays[idx]) for idx
-                                   in range(len(empirical_arrays))]
+                # predict from anatomy
+                anat_pred_array = predict_from_ana(left_out_subj, subjs)
+                # append to the list of arrays
+                anat_pred_arrays.append(anat_pred_array.flatten())
+                # get the anat_pred_array as return
 
-    emp_vs_anat = [stats.pearsonr(empirical_arrays[idx],
-                                  anat_pred_arrays[idx]) for idx
-                                  in range(len(empirical_arrays))]
+                # predict from CMS
+                func_pred_array = predict_from_cms(left_out_subj, subjs, zmap_fpathes)
+                # append to the list of arrays
+                func_pred_arrays.append(func_pred_array.flatten())
 
-    print('subject\temp. vs. anat\temp. vs. cms')
-    for idx, subj in enumerate(subjs):
-        print(f'{subj}\t{round(emp_vs_anat[idx][0], 2)}\t{round(emp_vs_func[idx][0], 2)}')
+            # show results
+            emp_vs_func = [stats.pearsonr(empirical_arrays[idx],
+                                        func_pred_arrays[idx]) for idx
+                                        in range(len(empirical_arrays))]
 
-    # calculate the pearson correlation between mean correlation of
-    # empirical vs. prediction via anatomy
-    # empirical vs. prediction via functional alignment
+            emp_vs_anat = [stats.pearsonr(empirical_arrays[idx],
+                                        anat_pred_arrays[idx]) for idx
+                                        in range(len(empirical_arrays))]
+
+            print('subject\temp. vs. anat\temp. vs. cms')
+            for idx, subj in enumerate(subjs):
+                print(f'{subj}\t{round(emp_vs_anat[idx][0], 2)}\t{round(emp_vs_func[idx][0], 2)}')
+
+            # calculate the pearson correlation between mean correlation of
+            # empirical vs. prediction via anatomy
+            # empirical vs. prediction via functional alignment
 
 print('End')

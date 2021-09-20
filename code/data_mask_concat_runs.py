@@ -75,23 +75,19 @@ if __name__ == "__main__":
     in_fpathes = find_files(in_pattern)
 
     # open the mask of cortices (at the moment it justs the union of
-    # individual PPAs) and mask that with the individual (dilated) gray matter
-    # in the audio-descriptions FoV
+    # individual PPAs)
     grp_ppa_fpath = GRP_PPA_PTTRN.replace('sub-??', subj)
 
-    # DEBUG / TO DO
-    # MERGE PPA and (e.g.) FFA here before masking with GM in Fov
-
     # (dilated) gray matter mask; see constat at script's top
-    gm_fpath = GM_MASK.replace('sub-??', subj)
+#     gm_fpath = GM_MASK.replace('sub-??', subj)
 
-    # (dilated) gray matter mask; see constat at script's top
+    # subject-specific field of view in audio-description
     ao_fov_mask = AO_FOV_MASK.replace('sub-??', subj)
 
     # mask the area with individual (dilated) gray matter in FoV
     # of audio-description
     grp_ppa_img = nib.load(grp_ppa_fpath)
-    gm_img = nib.load(gm_fpath)
+#     gm_img = nib.load(gm_fpath)
     ao_fov_img = nib.load(ao_fov_mask)
 
 #    final_mask_data = grp_ppa_img.get_fdata() * gm_img.get_fdata()

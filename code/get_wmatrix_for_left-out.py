@@ -9,6 +9,7 @@ from glob import glob
 import brainiak.funcalign.srm
 import argparse
 # import nibabel as nib
+import copy
 import ipdb
 import numpy as np
 import os
@@ -23,8 +24,9 @@ IN_PATTERN = 'sub-??/sub-??_task_aomovie-avmovie_run-1-8_bold-filtered.npy'
 # AO indice: 0 to 3598
 # AV indices: 3599 to 7122
 # the last 75 TRs of AV were cutted because they are missing in sub-04
-start = 0  # 3599
-end = 451  # 3599 + 451 + 441 + 438 + 488 + 462 + 439 + 542 + (338-75)
+# start = 0  # 3599
+# end = 451  # 3599 + 451 + 441 + 438 + 488 + 462 + 439 + 542 + (338-75)
+
 
 
 def parse_arguments():
@@ -108,31 +110,45 @@ if __name__ == "__main__":
     # some filtering
     subjs = sorted(list(set(subjs)))
 
-    for subj in subjs:
-        in_fpath = os.path.join(
-            in_dir, subj, f'{model}_feat{n_feat}-iter{n_iter}.npz'
-        )
+    # loob through the models
+    models = [
+        'srm-ao-av',
+        'srm-ao-av-vis'
+    ]
+    # and vary the amount of TRs used for alignment
+    starts_ends = [
+        (0, 451),
+        (0, 3599),
+        (3599, 4050),
+        (3599, 7123)
+    ]
 
-        # load the srm from file
-        print('Loading', in_fpath)
-        srm = load_srm(in_fpath)
+    for model in models:
+        for start, end in starts_ends:
+            print(f'using {model}, {start}-{end}')
+            for subj in subjs:
+                in_fpath = os.path.join(
+                    in_dir, subj, f'{model}_feat{n_feat}-iter{n_iter}.npz'
+                )
 
+                # load the srm from file
+                print('Loading', in_fpath)
+                srm = load_srm(in_fpath)
 
-        # leave the original srm untouched but copy it
-        import copy
-        srm_sliced = copy.copy(srm)
-        srm_sliced.s_ = srm_sliced.s_[:, start:end]
+                # leave the original srm untouched but copy it
+                srm_sliced = copy.copy(srm)
+                srm_sliced.s_ = srm_sliced.s_[:, start:end]
 
-        in_fpath = IN_PATTERN.replace('sub-??', subj)
-        array = np.load(in_fpath)
-        array = array[:, start:end]
-        w_matrix = srm_sliced.transform_subject(array)
+                in_fpath = IN_PATTERN.replace('sub-??', subj)
+                array = np.load(in_fpath)
+                array = array[:, start:end]
+                w_matrix = srm_sliced.transform_subject(array)
 
-        # save the matrix
-        out_file = f'wmatrix_{model}_feat{n_feat}_{start}-{end}.npy'
-        out_fpath = os.path.join(in_dir, subj, out_file)
-        # create (sub)directories
-        os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
-        # save it
-        np.save(out_fpath, w_matrix)
-        print(f'weight matrix for {subj} saved to', out_fpath, '\n')
+                # save the matrix
+                out_file = f'wmatrix_{model}_feat{n_feat}_{start}-{end}.npy'
+                out_fpath = os.path.join(in_dir, subj, out_file)
+                # create (sub)directories
+                os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
+                # save it
+                np.save(out_fpath, w_matrix)
+                print(f'weight matrix for {subj} saved to', out_fpath, '\n')
