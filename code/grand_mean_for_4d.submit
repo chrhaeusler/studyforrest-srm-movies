@@ -11,5 +11,5 @@ transfer_executable = False
 initialdir = /data/group/psyinf/studyforrest-srm-movies
 executable = /usr/bin/python3
 
-arguments = code/data_normalize_4d.py
+arguments = code/grand_mean_for_4d.py
 queue
