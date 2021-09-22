@@ -125,68 +125,70 @@ def find_files(pattern):
     return found_files
 
 
-def tranform_ind_vis_ppas(subjs):
+def transform_ind_vis_ppas(subjs):
     '''
     '''
     for source_subj in subjs:
-        # filter pathes for the current subject
-        zmap_fpath = [x for x in zmap_fpathes if source_subj in x][0]
-
-        print(f'{source_subj}: from bold3Tp to MNI using {zmap_fpath}')
-
-        subj2templWarp = os.path.join(TNT_DIR,
-                                      source_subj,
-                                      'bold3Tp2/in_grpbold3Tp2/'
-                                      'subj2tmpl_warp.nii.gz'
-                                      )
-
+        # name of output fule
         out_path = (os.path.join(in_dir, 'masks', 'in_mni'))
         out_file = f'{source_subj}_VIS-PPA.nii.gz'
         out_fpath = os.path.join(out_path, out_file)
         os.makedirs(out_path, exist_ok=True)
+        # filter pathes for the current subject
+        zmap_fpath = [x for x in zmap_fpathes if source_subj in x][0]
 
-        # warp the subjec-specific VIS PPA to MNI space
-        warp_subj_to_mni(zmap_fpath, out_fpath,
-                         subj2templWarp, XFM_REF)
+        if not os.path.exists(out_fpath):
+            print(f'{source_subj}: from bold3Tp to MNI using {zmap_fpath}')
+
+            subj2templWarp = os.path.join(TNT_DIR,
+                                        source_subj,
+                                        'bold3Tp2/in_grpbold3Tp2/'
+                                        'subj2tmpl_warp.nii.gz'
+                                        )
+
+            # warp the subjec-specific VIS PPA to MNI space
+            warp_subj_to_mni(zmap_fpath, out_fpath,
+                            subj2templWarp, XFM_REF)
 
         # warp from MNI to every other subject space
         ppa_in_mni_fpath = out_fpath
+        if not os.path.exists(out_fpath):
+            print(f'{source_subj}: from MNI to other subjs using {ppa_in_mni_fpath}')
+            for target_subj in subjs:
+                # do not transform the current's subject volume back
+                # into its own bold3Tp2
+                if target_subj != source_subj:
+                    # create the output path & filename
+                    out_path = os.path.join(in_dir,
+                                            target_subj,
+                                            'masks',
+                                            'in_bold3Tp2'
+                                            )
+                    os.makedirs(out_path, exist_ok=True)
+                    out_file = os.path.basename(ppa_in_mni_fpath)
+                    out_fpath = os.path.join(out_path, out_file)
 
-        print(f'{source_subj}: from MNI to other subjs using {ppa_in_mni_fpath}')
-        for target_subj in subjs:
-            # do not transform the current's subject volume back
-            # into its own bold3Tp2
-            if target_subj != source_subj:
-                # create the output path & filename
-                out_path = os.path.join(in_dir,
-                                        target_subj,
-                                        'masks',
-                                        'in_bold3Tp2'
-                                        )
-                os.makedirs(out_path, exist_ok=True)
-                out_file = os.path.basename(ppa_in_mni_fpath)
-                out_fpath = os.path.join(out_path, out_file)
+                    # the path of the (individual) reference image
+                    subj_ref = os.path.join(TNT_DIR,
+                                            target_subj,
+                                            'bold3Tp2/brain.nii.gz')
 
-                # the path of the (individual) reference image
-                subj_ref = os.path.join(TNT_DIR,
-                                        target_subj,
-                                        'bold3Tp2/brain.nii.gz')
+                    # the volume providing warp/coefficient
+                    subj_warp = os.path.join(TNT_DIR,
+                                            target_subj,
+                                            'bold3Tp2/in_grpbold3Tp2/'
+                                            'tmpl2subj_warp.nii.gz'
+                                            )
 
-                # the volume providing warp/coefficient
-                subj_warp = os.path.join(TNT_DIR,
-                                         target_subj,
-                                         'bold3Tp2/in_grpbold3Tp2/'
-                                         'tmpl2subj_warp.nii.gz'
-                                         )
-
-                print(out_fpath)
-                # do the warping from MNI to bold3Tp2 by calling the function
-                warp_mni_to_subj(
-                    ppa_in_mni_fpath,
-                    out_fpath,
-                    subj_ref,
-                    subj_warp
-                )
+                    # do the warping from MNI to bold3Tp2 by calling the function
+                    if not os.path.exists(out_fpath):
+                        print(out_fpath)
+                        warp_mni_to_subj(
+                            ppa_in_mni_fpath,
+                            out_fpath,
+                            subj_ref,
+                            subj_warp
+                        )
 
     return None
 
@@ -313,25 +315,26 @@ def predict_from_cms(left_out_subj, subjs, zmap_fpathes):
         nifti_masker = NiftiMasker(mask_img=mask_img)
 
         # load the subject's zmap of the PPA contrast
-        print(f'\nz-map for {other_subj}: {zmap_fpath}')
+#        print(f'\nz-map for {other_subj}: {zmap_fpath}')
         zmap_img = nib.load(zmap_fpath)
 
         # mask the image and get the data as np.ndarray
         nifti_masker.fit(zmap_img)
         masked_data = nifti_masker.transform(zmap_img)
         masked_data = np.transpose(masked_data)
-        print(f'shape of z-map (transposed): {masked_data.shape}')
-        print(f'shape of weight matrix: {srm.w_[other_subjs.index(other_subj)].shape}')
+#        print(f'shape of z-map (transposed): {masked_data.shape}')
+#        print(f'shape of weight matrix: {srm.w_[other_subjs.index(other_subj)].shape}')
 
         masked_zmaps.append(masked_data)
 
     # aligned zmap to shared space
     # k feautures x t time-points
     # (1 time-point cause it's a zmap no time-series)
-
-    import ipdb; ipdb.set_trace() # BREAKPOINT
-
     zmaps_in_cms = srm.transform(masked_zmaps)
+
+    # normalize the data
+    for subject in range(len(zmaps_in_cms)):
+        zmaps_in_cms[subject] = stats.zscore(zmaps_in_cms[subject], ddof=1)
 
     ### THIS IS TAKING THE MEAN OF 'zmaps' aligned in CMS
     # get the mean of features x t time-points
@@ -437,11 +440,10 @@ if __name__ == "__main__":
         (VIS_ZMAP_PATTERN.replace('sub-*', x[0]).replace('cope*', x[1]))
         for x in VIS_VPN_COPES.items()]
 
-    for model in models:
-        for start, end in starts_ends:
-            print(f'{model}_feat{n_feat}_iter{n_iter}.npz used as model')
-            print(f'TRs {start}-{end} used to get transformation matrices')
-
+    for start, end in starts_ends:
+        for model in models:
+            print(f'\nTRs:\t{start}-{end}')
+            print(f'model:\t{model}_feat{n_feat}_iter{n_iter}.npz')
 
             ### just in case I wanna predict the AO PPA again
         #         zmap_fpathes = [
@@ -451,8 +453,8 @@ if __name__ == "__main__":
             # for later prediction from anatomy, we need to transform the
             # subject-specific z-maps from the localizer into MNI space
             # (and later transform then into the subject-space of the left-out subject
-            print('\nTransforming VIS z-maps into MNI and into other subjects\' space')
-        #    tranform_ind_vis_ppas(subjs)
+#             print('\nTransforming VIS z-maps into MNI and into other subjects\' space')
+            transform_ind_vis_ppas(subjs)
 
             # the containers to store the masked & flattened zmaps from all subjects
             empirical_arrays = []

@@ -45,7 +45,7 @@ def find_files(pattern):
     return found_files
 
 
-def normalize_4d_file(in_fpath, stimulus='aomovie'):
+def grand_mean_for_4d_file(in_fpath, stimulus='aomovie'):
     '''
     '''
     print("loading", in_fpath)
@@ -55,49 +55,31 @@ def normalize_4d_file(in_fpath, stimulus='aomovie'):
 
     img = nib.load(in_fpath)
     img_data = img.get_fdata()
-    print('Data shape - before reshaping: ', img_data.shape)
 
-    # flatten the data
-    flat_data = np.reshape(
-        img_data,
-        (
-            img_data.shape[0] * img_data.shape[1] * img_data.shape[2],
-            img_data.shape[3]
-            )
-    )
-
-    flat_data = np.transpose(flat_data)
-    print('Data shape - after reshaping: ', flat_data.shape)
-
-    # normalize the data (Z-scoring)
-    # grand mean scaling for 4D data:
+    # grand mean scaling for 4D data (e.g. in FSL):
     # An analysis step in which the voxel values in every
     # image are divided by the average global mean intensity of the whole
     # session. This effectively removes any mean global differences in
     # intensity between sessions.
-    scaler = preprocessing.StandardScaler().fit(flat_data)
-    norm_flat_data = scaler.transform(flat_data)
 
-    # do some checks
-    voxel_mean = np.mean(norm_flat_data, axis=0)
-    voxel_std = np.std(norm_flat_data, axis=0)
-    print('Number of voxels is %d' % len(voxel_mean))
-    print('Mean of first few voxels: ', voxel_mean[0:10])
-    print('Std.Dev. of first few voxels: ', voxel_std[0:10])
+    # flatten the data
+    flat_data = np.matrix.flatten(img_data)
+    scaled_data = flat_data - flat_data.mean()
+    scaled_data = scaled_data * 10000  # do it like FSL
+    # reshape to volume * TRs
+    scaled_data = np.reshape(scaled_data, img_data.shape)
 
-    # get the data back into original 4D shape
-    normalized_data = np.transpose(norm_flat_data)
-    normalized_data = np.reshape(normalized_data, img_data.shape)
-    normalized_img = nib.Nifti1Image(normalized_data,
-                                     img.affine,
-                                     header=img.header)
+    # create Nifti image
+    scaled_img = nib.Nifti1Image(scaled_data,
+                                 img.affine,
+                                 header=img.header)
 
     # save it as file
     run = re.search(r'run-\d{1}', in_fpath).group()
     out_fpath = os.path.join(subj,
                              f'{subj}_task-{stimulus}_{run}_bold_filtered' +
                              '.nii.gz')
-    nib.save(normalized_img, out_fpath)
+    nib.save(scaled_img, out_fpath)
 
     return None
 
@@ -121,7 +103,7 @@ if __name__ == "__main__":
 
         # filter file pathes for current subject
         subj_vis_fpathes = [fpath for fpath in vis_filtered_fpathes
-                           if subj in fpath]
+                            if subj in fpath]
         subj_ao_fpathes = [fpath for fpath in ao_filtered_fpathes
                            if subj in fpath]
         subj_av_fpathes = [fpath for fpath in av_filtered_fpathes
@@ -130,14 +112,14 @@ if __name__ == "__main__":
         # loop through the 4d data of the visual localizer
         for vis_img_fpath in subj_vis_fpathes:
             # normalize the data
-            normalize_4d_file(vis_img_fpath, 'visloc')
+            grand_mean_for_4d_file(vis_img_fpath, 'visloc')
 
         # loop through the 4d data of the audio-description
         for ao_img_fpath in subj_ao_fpathes:
             # normalize the data
-            normalize_4d_file(ao_img_fpath, 'aomovie')
+            grand_mean_for_4d_file(ao_img_fpath, 'aomovie')
 
         # loop through the 4d data of the movie
         for av_img_fpath in subj_av_fpathes:
             # normalize the data
-            normalize_4d_file(av_img_fpath, 'avmovie')
+            grand_mean_for_4d_file(av_img_fpath, 'avmovie')

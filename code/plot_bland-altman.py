@@ -34,7 +34,20 @@ PPA_MASK_PATTERN = 'inputs/studyforrest-data-visualrois/'\
     'sub-*/rois/?PPA_?_mask.nii.gz'
 
 # individual 2nd level results (primary cope in subject space)
-PREDICTED_ZMAP_PATTERN = 'predicted-VIS-PPA_from_anatomy.nii.gz'
+PREDICTED_PREFIX = 'predicted-VIS-PPA_from_'
+
+PREDICTIONS = [
+    'anatomy.nii.gz',
+    'srm-ao-av_feat10_0-451.nii.gz',
+    'srm-ao-av_feat10_0-3599.nii.gz',
+    'srm-ao-av_feat10_3599-4050.nii.gz',
+    'srm-ao-av_feat10_3599-7123.nii.gz',
+    'srm-ao-av-vis_feat10_0-451.nii.gz',
+    'srm-ao-av-vis_feat10_0-3599.nii.gz',
+    'srm-ao-av-vis_feat10_3599-4050.nii.gz',
+    'srm-ao-av-vis_feat10_3599-7123.nii.gz'
+]
+
 
 VIS_ZMAP_PATTERN = 'inputs/studyforrest-data-visualrois/'\
     'sub-??/2ndlvl.gfeat/cope*.feat/stats/zstat1.nii.gz'
@@ -101,19 +114,6 @@ def sort_nicely(l):
     return l
 
 
-# def load_subj_ppa_mask(subj, combined_mask):
-#     '''
-#     '''
-#     # filter PPA masks of all subjects for current subject only
-#     ppa_fpathes = find_files(PPA_MASK_PATTERN.replace('###SUB###', subj))
-#
-#     # combine current subject's left & right PPA mask into one mask
-#     ppa_mask = fmri_dataset(ppa_fpathes,
-#                             mask=combined_mask).samples.sum(axis=0)
-#
-#     return ppa_mask
-
-
 def compute_means(data1, data2, log='n'):
     '''
     '''
@@ -150,7 +150,7 @@ def compute_diffs(data1, data2, log='n'):
     return diffs
 
 
-def process_df(subj, zmaps_df, out_path):
+def process_df(subj, zmaps_df, out_path, prediction):
     '''
     '''
     # get the contrasts' names from the column names
@@ -250,7 +250,7 @@ def process_df(subj, zmaps_df, out_path):
 #         print(subj, 'has no significant cluster in primary AO contrast')
 
     # save it
-    suffix = PREDICTED_ZMAP_PATTERN.split('from_')[1].split('.nii.gz')[0]
+    suffix = 'from_' + prediction.split('.nii')[0]
     out_file = ('%s_bland-altman_%s.png' % (subj, suffix))
     out_fpath = os.path.join(out_path, out_file)
 
@@ -363,55 +363,57 @@ if __name__ == "__main__":
     vis_fpathes = find_files(VIS_ZMAP_PATTERN)
 
     # get pathes & filenames of all available zmaps
-    pred_pattern = os.path.join(inDir, 'sub-??', PREDICTED_ZMAP_PATTERN)
-    pred_fpathes = find_files(pred_pattern)
-    subjs = [re.search(r'sub-..', string).group() for string in pred_fpathes]
+    subjs_pattern = os.path.join(inDir, 'sub-??')
+    subjs_pathes = find_files(subjs_pattern)
+    subjs = [re.search(r'sub-..', string).group() for string in subjs_pathes]
     subjs = sorted(list(set(subjs)))
 
-    for subj in subjs:
-        print('\nProcessing', subj)
+    for prediction in PREDICTIONS:
+        # loop over subjects
+        for subj in subjs:
+            print('\nProcessing', subj)
 
-        # initialize a dataframe
-        zmaps_df = pd.DataFrame()
+            # initialize a dataframe
+            zmaps_df = pd.DataFrame()
 
-        # load predicted z-map of current subject
-        pred_fpath = os.path.join(inDir, subj, PREDICTED_ZMAP_PATTERN)
-        pred_fpath = pred_fpath.replace('sub-??', subj)
-        pred_data = fmri_dataset(pred_fpath).samples.T
-        # put the array into the dataframe
-        zmaps_df['predicted'] = np.ndarray.flatten(pred_data)
+            # load predicted z-map of current subject
+            pred_fpath = os.path.join(inDir, subj, PREDICTED_PREFIX + prediction)
+            pred_fpath = pred_fpath.replace('sub-??', subj)
+            pred_data = fmri_dataset(pred_fpath).samples.T
+            # put the array into the dataframe
+            zmaps_df['predicted'] = np.ndarray.flatten(pred_data)
 
-        # load the visual localizer's z-map
-        # filter for current subject
-        fpathes = [x for x in vis_fpathes if subj in x]
-        # filter for the subject's correct cope
-        vis_fpath = [x for x in fpathes if VIS_VPN_COPES[subj] in x][0]
-        vis_data = fmri_dataset(vis_fpath).samples.T
-        # put the array into the dataframe
-        zmaps_df['vis'] = np.ndarray.flatten(vis_data)
+            # load the visual localizer's z-map
+            # filter for current subject
+            fpathes = [x for x in vis_fpathes if subj in x]
+            # filter for the subject's correct cope
+            vis_fpath = [x for x in fpathes if VIS_VPN_COPES[subj] in x][0]
+            vis_data = fmri_dataset(vis_fpath).samples.T
+            # put the array into the dataframe
+            zmaps_df['vis'] = np.ndarray.flatten(vis_data)
 
-        # create the mask by combining PPA group overlap (in bold3TP)
-        # and the subject-specific gray matter mask
-        grp_ppa_fpath = MASK_PTTRN.replace('sub-??', subj)
-        grp_ppa_img = nib.load(grp_ppa_fpath)
-        gm_mask = GM_MASK.replace('sub-??', subj)
-        gm_img = nib.load(gm_mask)
-        # combine the mask
-        final_mask_data = grp_ppa_img.get_fdata() * gm_img.get_fdata()
-        # put the array into the dataframe
-        zmaps_df['ppa_grp'] = np.ndarray.flatten(final_mask_data)
+            # create the mask by combining PPA group overlap (in bold3TP)
+            # and the subject-specific gray matter mask
+            grp_ppa_fpath = MASK_PTTRN.replace('sub-??', subj)
+            grp_ppa_img = nib.load(grp_ppa_fpath)
+            gm_mask = GM_MASK.replace('sub-??', subj)
+            gm_img = nib.load(gm_mask)
+            # combine the mask
+            final_mask_data = grp_ppa_img.get_fdata() * gm_img.get_fdata()
+            # put the array into the dataframe
+            zmaps_df['ppa_grp'] = np.ndarray.flatten(final_mask_data)
 
-        # load the subject-specific PPA mask (Sengupta et al., 2016)
-        ppa_fpathes = find_files(PPA_MASK_PATTERN.replace('sub-*', subj))
-        ppaIndData = fmri_dataset(ppa_fpathes).samples.sum(axis=0)
-        zmaps_df['ppa_ind'] = np.ndarray.flatten(ppaIndData)
+            # load the subject-specific PPA mask (Sengupta et al., 2016)
+            ppa_fpathes = find_files(PPA_MASK_PATTERN.replace('sub-*', subj))
+            ppaIndData = fmri_dataset(ppa_fpathes).samples.sum(axis=0)
+            zmaps_df['ppa_ind'] = np.ndarray.flatten(ppaIndData)
 
-        # let the function do the calculation and the plotting
-        process_df(subj, zmaps_df, outDir)
+            # let the function do the calculation and the plotting
+            process_df(subj, zmaps_df, outDir, prediction)
 
-    # create the mosaic
-    suffix = PREDICTED_ZMAP_PATTERN.split('from_')[1].split('.nii.gz')[0]
-    infile_pattern = os.path.join(outDir, ('sub-??_bland-altman_%s.png' % suffix))
-    out_fpath = os.path.join(outDir, 'subjs_bland-altman_%s.png' % suffix)
+        # create the mosaic
+        suffix = 'from_' + prediction.split('.nii')[0]
+        infile_pattern = os.path.join(outDir, ('sub-??_bland-altman_%s.png' % suffix))
+        out_fpath = os.path.join(outDir, 'subjs_bland-altman_%s.png' % suffix)
 
-    create_mosaic(infile_pattern, '3x5', out_fpath, 80)  # columns x rows
+        create_mosaic(infile_pattern, '3x5', out_fpath, 80)  # columns x rows
