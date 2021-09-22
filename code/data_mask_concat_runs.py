@@ -6,6 +6,8 @@ author: Christian Olaf Haeusler
 
 from glob import glob
 from nilearn.input_data import NiftiMasker, MultiNiftiMasker
+from scipy import stats
+from sklearn import preprocessing
 import argparse
 import nibabel as nib
 import numpy as np
@@ -115,11 +117,15 @@ if __name__ == "__main__":
     first_img = nib.load(in_fpathes[0])
     first_img_affine = first_img.affine
     first_img_header = first_img.header
-    # all_imgs_data = all_imgs.get_fdata()
-    # print(all_imgs_data.shape)
 
     # mask the 4D image and get the data as np.ndarray
     masked_data = nifti_masker.fit_transform(first_img)
+    # do z-scoring of the run
+    # masked_data = stats.zscore(masked_data, axis=1, ddof=1)
+    scaler = preprocessing.StandardScaler()
+    scaler.fit(masked_data)
+    masked_data = scaler.transform(masked_data)
+    # reshape to voxel x TRs
     masked_data = np.transpose(masked_data)
     print(masked_data.shape)
 
@@ -136,6 +142,12 @@ if __name__ == "__main__":
         # nifti_masker = NiftiMasker(mask_img=mask_fpath)
         # nifti_masker ist the same as above anyway
         masked_new_data = nifti_masker.fit_transform(new_img)  # returns numpy.ndarray
+
+        # perform z-scoring of the run
+        scaler = preprocessing.StandardScaler()
+        scaler.fit(masked_new_data)
+        masked_new_data = scaler.transform(masked_new_data)
+        # reshape to voxel x TRs
         masked_new_data = np.transpose(masked_new_data)
 
         # concatenate current time-series to previous time-series
@@ -170,6 +182,12 @@ if __name__ == "__main__":
 
     # mask the 4D image and get the data as np.ndarray
     masked_data = nifti_masker.fit_transform(first_img)
+    # do z-scoring of the run
+    # masked_data = stats.zscore(masked_data, axis=1, ddof=1)
+    scaler = preprocessing.StandardScaler()
+    scaler.fit(masked_data)
+    masked_data = scaler.transform(masked_data)
+    # reshape to voxel x TRs
     masked_data = np.transpose(masked_data)
     print(masked_data.shape)
 
@@ -184,12 +202,22 @@ if __name__ == "__main__":
         # nifti_masker = NiftiMasker(mask_img=mask_fpath)
         # nifti_masker is the same as above anyway
         masked_new_data = nifti_masker.fit_transform(new_img)  # returns numpy.ndarray
+
+        # perform z-scoring of the run
+        scaler = preprocessing.StandardScaler()
+        scaler.fit(masked_new_data)
+        masked_new_data = scaler.transform(masked_new_data)
+        # reshape to voxel x TRs
+
         masked_new_data = np.transpose(masked_new_data)
 
         # concatenate current time-series to previous time-series
         masked_data = np.concatenate(
             (masked_data, masked_new_data), axis=1
         )
+
+        # print current size of the now extended time-series
+        print(masked_data.shape)
 
         # print current size of the now extended time-series
         print(masked_data.shape)
