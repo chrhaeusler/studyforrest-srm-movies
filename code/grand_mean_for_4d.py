@@ -79,6 +79,7 @@ def grand_mean_for_4d_file(in_fpath, stimulus='aomovie'):
     out_fpath = os.path.join(subj,
                              f'{subj}_task-{stimulus}_{run}_bold_filtered' +
                              '.nii.gz')
+
     nib.save(scaled_img, out_fpath)
 
     return None
