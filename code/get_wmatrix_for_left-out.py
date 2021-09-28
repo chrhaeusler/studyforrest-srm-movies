@@ -28,7 +28,6 @@ IN_PATTERN = 'sub-??/sub-??_task_aomovie-avmovie_run-1-8_bold-filtered.npy'
 # end = 451  # 3599 + 451 + 441 + 438 + 488 + 462 + 439 + 542 + (338-75)
 
 
-
 def parse_arguments():
     '''
     '''
@@ -118,9 +117,10 @@ if __name__ == "__main__":
     # and vary the amount of TRs used for alignment
     starts_ends = [
         (0, 451),
-        (0, 3599),
-        (3599, 4050),
-        (3599, 7123)
+        (0, 3524),
+        (3524, 3975),
+        (3524, 7123),
+        (0, 7123)
     ]
 
     for model in models:

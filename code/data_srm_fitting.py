@@ -5,6 +5,7 @@ author: Christian Olaf Haeusler
 '''
 
 from glob import glob
+from scipy import stats
 # from nilearn.input_data import NiftiMasker, MultiNiftiMasker
 import brainiak.funcalign.srm
 import argparse
@@ -99,10 +100,12 @@ def zero_padding(in_fpath):
 
 
 def array_cutting(in_fpath):
-    '''performs zero padding of an array in case no. of columns is != 7198
+    '''cuts the last 75 TRs from the audio-description's 8th run in order to
+    have equal length across subjects (last 75 TRs are missing in sub-04)
     '''
     # check (hard coded) expected number of TRs
     array = np.load(in_fpath)
+    print('cutting', in_fpath)
     dim = array.shape
 
     if dim[1] > 7123:  # all except sub-04
@@ -114,17 +117,14 @@ def array_cutting(in_fpath):
         av = array[:, 3599:]
         return_array = np.concatenate([ao, av], axis=1)
 
-#         # in case the ao data follow the av dats
-#         # slice the array to length of 7123 TRs
-#         return_array = array[:, :7123]
-
         new_dim = return_array.shape
         print(in_fpath[:6], new_dim, '(after cutting)')
 
-    elif dim[1] == 7123:
+    elif dim[1] == 7123:  # sub-04
         # correct length -> do noting
         return_array = array
         print(in_fpath[:6], dim, '(unchanged)')
+
     else:
         raise ValueError('unexpected number of TRs')
 
@@ -133,20 +133,12 @@ def array_cutting(in_fpath):
 
 def fit_srm(list_of_arrays, out_dir):
     '''Fits the SRM and saves it to files
-
-    To Do: change from global to local variables
     '''
     srm = brainiak.funcalign.srm.SRM(features=n_feat, n_iter=n_iter)
 
-    # Fit the SRM data
-    # fit the model
+    # fit the SRM model
     print(f'Fitting SRM to data of all subjects except {subj}...')
-    # TESTING PURPOSE: take only a slice of all subjects data
-    # movie_arrays = [array[:, :150] for array in movie_arrays]
-    # actuall model fitting
     srm.fit(list_of_arrays)
-
-
 
     return srm
 
@@ -188,23 +180,27 @@ if __name__ == "__main__":
 
     # a) SRM with data from AO & AV
     # find all input files
-    train_fpathes = find_files(AOAV_TRAIN_PATTERN)
+    aoav_fpathes = find_files(AOAV_TRAIN_PATTERN)
     # filter for non-current subject
-    train_fpathes = [fpath for fpath in train_fpathes if subj not in fpath]
+    aoav_fpathes = [fpath for fpath in aoav_fpathes if subj not in fpath]
 
     aoav_arrays = []
     # loops through subjects (one concatenated / masked time-series per sub)
-    for train_fpath in train_fpathes:
+    for aoav_fpath in aoav_fpathes:
         # ~75 TRs of run-8 in sub-04 are missing
         # Do:
         # a) perform zero padding
         # corrected_array = zero_padding(in_fpath)
         # b) cutting of all other arrays
-        corrected_array = array_cutting(train_fpath)
-        # populate the list of arrays (as expected by brainiac)
-        aoav_arrays.append(corrected_array)
+        corrected_aoav_array = array_cutting(aoav_fpath)
 
-        # shuffle the current subject's array
+        # perform zscoring across concatenated experiments
+        zscored_aoav_array = stats.zscore(corrected_aoav_array,
+                                          axis=1,
+                                          ddof=1)
+
+        # append to the list of arrays (containing all subjects' arrays)
+        aoav_arrays.append(zscored_aoav_array)
 
     # fit the SRM model
     model = 'srm-ao-av'
@@ -238,23 +234,38 @@ if __name__ == "__main__":
     shuffled_aoav_srm.save(out_fpath)
     print('SRM saved to', out_fpath)
 
-
     # c) SRM with data from AO, AV, VIS
     model = 'srm-ao-av-vis'
     # find all input files
-    train_fpathes = find_files(VIS_TRAIN_PATTERN)
+    vis_fpathes = find_files(VIS_TRAIN_PATTERN)
     # filter for non-current subject
-    train_fpathes = [fpath for fpath in train_fpathes if subj not in fpath]
+    vis_fpathes = [fpath for fpath in vis_fpathes if subj not in fpath]
 
     # extend the data of AO & AV with the VIS data
     aoavvis_arrays = []
     # loops through subjects (one concatenated / masked time-series per sub)
-    for train_fpath, aoav_array in zip(train_fpathes, aoav_arrays):
-        print(train_fpath, '\n', aoav_array.shape)
-        vis_array = np.load(train_fpath)
+    for aoav_fpath, vis_fpath in zip(aoav_fpathes, vis_fpathes):
+        # load the data of AO & AV (again; not time-efficient but what ever)
+        # ~75 TRs of run-8 in sub-04 are missing
+        # Do:
+        # a) perform zero padding
+        # corrected_array = zero_padding(in_fpath)
+        # b) cutting of all other arrays
+        corrected_aoav_array = array_cutting(aoav_fpath)
+
+        # load the VIS data
+        print('loading', vis_fpath)
+        vis_array = np.load(vis_fpath)
         dim = vis_array.shape
-        aoavvis_array = np.concatenate([aoav_array, vis_array], axis=1)
-        aoavvis_arrays.append(aoavvis_array)
+        aoavvis_array = np.concatenate([corrected_aoav_array, vis_array], axis=1)
+
+        # perform zscoring across concatenated experiments
+        zscored_aoavvis_array = stats.zscore(aoavvis_array,
+                                             axis=1,
+                                             ddof=1)
+
+        # append to the list of arrays (containing all subjects' arrays)
+        aoavvis_arrays.append(zscored_aoavvis_array)
 
     # fit the SRM model
     aoavvis_srm = fit_srm(aoavvis_arrays, out_dir)
