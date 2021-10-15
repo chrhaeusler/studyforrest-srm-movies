@@ -1,0 +1,18 @@
+universe = vanilla
+getenv   = True
+request_cpus = 1
+request_memory = 4G
+
+# Outputs
+output = condor_logs/$(CLUSTER).$(PROCESS).out
+error = condor_logs/$(CLUSTER).$(PROCESS).err
+log = condor_logs/$(CLUSTER).$(PROCESS).log
+
+# Execution
+initialdir = /data/group/psyinf/studyforrest-srm-movies
+executable = /bin/bash
+transfer_executable = False
+should_transfer_files = NO
+
+arguments = ./code/code/predict_ppa.py -indir 'test' -nfeat '10'
+queue

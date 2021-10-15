@@ -20,13 +20,6 @@ import re
 # constants
 IN_PATTERN = 'sub-??/sub-??_task_aomovie-avmovie_run-1-8_bold-filtered.npy'
 
-# which TRs do we wanna use?
-# AO indice: 0 to 3598
-# AV indices: 3599 to 7122
-# the last 75 TRs of AV were cutted because they are missing in sub-04
-# start = 0  # 3599
-# end = 451  # 3599 + 451 + 441 + 438 + 488 + 462 + 439 + 542 + (338-75)
-
 
 def parse_arguments():
     '''
@@ -116,23 +109,36 @@ if __name__ == "__main__":
     ]
     # and vary the amount of TRs used for alignment
     starts_ends = [
-        (0, 451),
-        (0, 3524),
-        (3524, 3975),
-        (3524, 7123),
-        (0, 7123)
+        (0, 451),      # AO, 1 run
+        (0, 892),      # AO, 2 runs
+        (0, 1330),     # AO, 3 runs
+        (0, 1818),     # AO, 4 runs
+        (0, 2280),     # AO, 5 runs
+        (0, 2719),     # AO, 6 runs
+        (0, 3261),     # AO, 7 runs
+        (0, 3524),     # AO, 8 runs
+        (3524, 3975),  # AV, 1 run
+        (3524, 4416),  # AV, 2 runs
+        (3524, 4854),  # AV, 3 runs
+        (3524, 5342),  # AV, 4 runs
+        (3524, 5804),  # AV, 5 runs
+        (3524, 6243),  # AV, 6 runs
+        (3524, 6785),  # AV, 7 runs
+        (3524, 7123),  # AV, 8 runs
+        (0, 7123)      # AO & AV
     ]
 
     for model in models:
         for start, end in starts_ends:
-            print(f'using {model}, {start}-{end}')
+            print(f'\nUsing {model}, {start}-{end}')
             for subj in subjs:
+                print('Processing', subj)
                 in_fpath = os.path.join(
                     in_dir, subj, f'{model}_feat{n_feat}-iter{n_iter}.npz'
                 )
 
                 # load the srm from file
-                print('Loading', in_fpath)
+                print('Loading SRM:', in_fpath)
                 srm = load_srm(in_fpath)
 
                 # leave the original srm untouched but copy it
@@ -140,6 +146,7 @@ if __name__ == "__main__":
                 srm_sliced.s_ = srm_sliced.s_[:, start:end]
 
                 in_fpath = IN_PATTERN.replace('sub-??', subj)
+                print('Loading data:', in_fpath)
                 array = np.load(in_fpath)
                 array = array[:, start:end]
                 w_matrix = srm_sliced.transform_subject(array)
@@ -151,4 +158,4 @@ if __name__ == "__main__":
                 os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
                 # save it
                 np.save(out_fpath, w_matrix)
-                print(f'weight matrix for {subj} saved to', out_fpath, '\n')
+                print(f'weight matrix for {subj} saved to', out_fpath)

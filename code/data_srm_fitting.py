@@ -105,10 +105,10 @@ def array_cutting(in_fpath):
     '''
     # check (hard coded) expected number of TRs
     array = np.load(in_fpath)
-    print('cutting', in_fpath)
+    print('\nloading', in_fpath)
     dim = array.shape
 
-    if dim[1] > 7123:  # all except sub-04
+    if dim[1] == 7198:  # all except sub-04
         print(in_fpath[:6], dim, '(before cutting)')
         # in case AO data come before the AV data
         # cut the last 75 TRs from the audio-description's data
@@ -137,7 +137,7 @@ def fit_srm(list_of_arrays, out_dir):
     srm = brainiak.funcalign.srm.SRM(features=n_feat, n_iter=n_iter)
 
     # fit the SRM model
-    print(f'Fitting SRM to data of all subjects except {subj}...')
+    print(f'fitting SRM to data of all subjects except {subj}...')
     srm.fit(list_of_arrays)
 
     return srm
@@ -179,6 +179,8 @@ if __name__ == "__main__":
     subj, out_dir, n_feat, n_iter = parse_arguments()
 
     # a) SRM with data from AO & AV
+    model = 'srm-ao-av'
+    print('\nProcessing data for model', model)
     # find all input files
     aoav_fpathes = find_files(AOAV_TRAIN_PATTERN)
     # filter for non-current subject
@@ -187,11 +189,10 @@ if __name__ == "__main__":
     aoav_arrays = []
     # loops through subjects (one concatenated / masked time-series per sub)
     for aoav_fpath in aoav_fpathes:
-        # ~75 TRs of run-8 in sub-04 are missing
-        # Do:
-        # a) perform zero padding
-        # corrected_array = zero_padding(in_fpath)
-        # b) cutting of all other arrays
+        # 75 TRs of run-8 in sub-04 are missing
+        ### cutting of all other arrays
+        ### not necessarry anymore 'cause TRs got cutted in the script
+        ### that performed the masking but still here as 'sanity check'
         corrected_aoav_array = array_cutting(aoav_fpath)
 
         # perform zscoring across concatenated experiments
@@ -203,7 +204,6 @@ if __name__ == "__main__":
         aoav_arrays.append(zscored_aoav_array)
 
     # fit the SRM model
-    model = 'srm-ao-av'
     aoav_srm = fit_srm(aoav_arrays, out_dir)
 
     # prepare saving results as pickle
@@ -213,29 +213,11 @@ if __name__ == "__main__":
     os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
     # save it
     aoav_srm.save(out_fpath)
-    print('SRM saved to', out_fpath)
+    print('SRM (AO & AV) saved to', out_fpath)
 
-    # b) SRM with shuffled AO & AV data (negative control):
-    model = 'srm-ao-av-shuffled'
-    # shuffle the arrays before fitting the model
-    # always take the same seed for every subject
-    # by deriving it from the subject's number
-    random.seed(int(subj[-2:]))
-    shuffled_aoav_arrays = shuffle_all_arrays(aoav_arrays)
-    # fit the SRM model
-    shuffled_aoav_srm = fit_srm(shuffled_aoav_arrays, out_dir)
-
-    # prepare saving results as pickle
-    out_file = f'{model}_feat{n_feat}-iter{n_iter}.npz'
-    out_fpath = os.path.join(out_dir, subj, out_file)
-    # create (sub)directories
-    os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
-    # save it
-    shuffled_aoav_srm.save(out_fpath)
-    print('SRM saved to', out_fpath)
-
-    # c) SRM with data from AO, AV, VIS
+    # b) SRM with data from AO, AV, VIS
     model = 'srm-ao-av-vis'
+    print('\nProcessing data for model', model)
     # find all input files
     vis_fpathes = find_files(VIS_TRAIN_PATTERN)
     # filter for non-current subject
@@ -246,18 +228,20 @@ if __name__ == "__main__":
     # loops through subjects (one concatenated / masked time-series per sub)
     for aoav_fpath, vis_fpath in zip(aoav_fpathes, vis_fpathes):
         # load the data of AO & AV (again; not time-efficient but what ever)
-        # ~75 TRs of run-8 in sub-04 are missing
-        # Do:
-        # a) perform zero padding
-        # corrected_array = zero_padding(in_fpath)
-        # b) cutting of all other arrays
+        # 75 TRs of run-8 in sub-04 are missing
+        ###  cutting of all other arrays
+        ### not necessarry anymore 'cause TRs got cutted in the script
+        ### that performed the masking but still here as 'sanity check'
         corrected_aoav_array = array_cutting(aoav_fpath)
 
         # load the VIS data
         print('loading', vis_fpath)
         vis_array = np.load(vis_fpath)
         dim = vis_array.shape
-        aoavvis_array = np.concatenate([corrected_aoav_array, vis_array], axis=1)
+        print(vis_fpath[:6], dim)
+        # concat AOAV data and VIS data
+        aoavvis_array = np.concatenate([corrected_aoav_array, vis_array],
+                                       axis=1)
 
         # perform zscoring across concatenated experiments
         zscored_aoavvis_array = stats.zscore(aoavvis_array,
@@ -278,3 +262,23 @@ if __name__ == "__main__":
     # save it
     aoavvis_srm.save(out_fpath)
     print('SRM (AO, AV, VIS) saved to', out_fpath)
+
+    # c) SRM with shuffled AO & AV data (negative control):
+    model = 'srm-ao-av-shuffled'
+    print('\nProcessing data for model', model)
+    # shuffle the arrays before fitting the model
+    # always take the same seed for every subject
+    # by deriving it from the subject's number
+    random.seed(int(subj[-2:]))
+    shuffled_aoav_arrays = shuffle_all_arrays(aoav_arrays)
+    # fit the SRM model
+    shuffled_aoav_srm = fit_srm(shuffled_aoav_arrays, out_dir)
+
+    # prepare saving results as pickle
+    out_file = f'{model}_feat{n_feat}-iter{n_iter}.npz'
+    out_fpath = os.path.join(out_dir, subj, out_file)
+    # create (sub)directories
+    os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
+    # save it
+    shuffled_aoav_srm.save(out_fpath)
+    print('SRM (AO & AV shuffled) saved to', out_fpath)

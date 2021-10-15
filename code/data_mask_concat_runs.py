@@ -129,8 +129,9 @@ def process_infiles(in_fpathes):
         # reshape to voxel x TRs
         masked_new_data = np.transpose(masked_new_data)
 
+        # slice the last part of the 8th AO run such that
+        # all subjects have 263 TRs (like sub-04 in which 75 TRs are missing)
         if 'aomovie_run-8_bold_filtered' in in_fpath and 'sub-04' not in in_fpath:
-            print('slicing run-8')
             masked_new_data = masked_new_data[:, :263]
 
         # concatenate current time-series to previous time-series

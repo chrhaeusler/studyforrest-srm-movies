@@ -26,7 +26,8 @@ from scipy.stats import gaussian_kde
 
 
 # constants
-MASK_PTTRN = 'sub-??/masks/in_bold3Tp2/grp_PPA_bin.nii.gz'
+GRP_PPA_PTTRN = 'sub-??/masks/in_bold3Tp2/grp_PPA_bin.nii.gz'
+AO_FOV_MASK = 'sub-??/masks/in_bold3Tp2/audio_fov.nii.gz'
 GM_MASK = 'sub-??/masks/in_bold3Tp2/gm_bin_dil_fov.nii.gz'
 
 # binary mask(s) of individual visual localizer (in subject space)
@@ -35,17 +36,25 @@ PPA_MASK_PATTERN = 'inputs/studyforrest-data-visualrois/'\
 
 # individual 2nd level results (primary cope in subject space)
 PREDICTED_PREFIX = 'predicted-VIS-PPA_from_'
-
 PREDICTIONS = [
     'anatomy.nii.gz',
-    'srm-ao-av_feat10_0-451.nii.gz',
-    'srm-ao-av_feat10_0-3599.nii.gz',
-    'srm-ao-av_feat10_3599-4050.nii.gz',
-    'srm-ao-av_feat10_3599-7123.nii.gz',
     'srm-ao-av-vis_feat10_0-451.nii.gz',
-    'srm-ao-av-vis_feat10_0-3599.nii.gz',
-    'srm-ao-av-vis_feat10_3599-4050.nii.gz',
-    'srm-ao-av-vis_feat10_3599-7123.nii.gz'
+    'srm-ao-av-vis_feat10_0-892.nii.gz',
+    'srm-ao-av-vis_feat10_0-1330.nii.gz',
+    'srm-ao-av-vis_feat10_0-1818.nii.gz',
+    'srm-ao-av-vis_feat10_0-2280.nii.gz',
+    'srm-ao-av-vis_feat10_0-2719.nii.gz',
+    'srm-ao-av-vis_feat10_0-3261.nii.gz',
+    'srm-ao-av-vis_feat10_0-3524.nii.gz',
+    'srm-ao-av-vis_feat10_3524-3975.nii.gz',
+    'srm-ao-av-vis_feat10_3524-4416.nii.gz',
+    'srm-ao-av-vis_feat10_3524-4854.nii.gz',
+    'srm-ao-av-vis_feat10_3524-5342.nii.gz',
+    'srm-ao-av-vis_feat10_3524-5804.nii.gz',
+    'srm-ao-av-vis_feat10_3524-6243.nii.gz',
+    'srm-ao-av-vis_feat10_3524-6785.nii.gz',
+    'srm-ao-av-vis_feat10_3524-7123.nii.gz',
+    'srm-ao-av-vis_feat10_0-7123.nii.gz'
 ]
 
 
@@ -356,6 +365,35 @@ def create_mosaic(in_pattern, dims, out_fpath, dpi):
          out_fpath])
 
 
+def load_mask(subj):
+    '''
+    '''
+    # open the mask of cortices (at the moment it justs the union of
+    # individual PPAs)
+    grp_ppa_fpath = GRP_PPA_PTTRN.replace('sub-??', subj)
+#    print('PPA GRP mask:\t', grp_ppa_fpath)
+
+    # subject-specific field of view in audio-description
+    ao_fov_mask = AO_FOV_MASK.replace('sub-??', subj)
+#    print('ind. FoV mask:\t', ao_fov_mask)
+
+    # load the masks
+    grp_ppa_img = nib.load(grp_ppa_fpath)
+    ao_fov_img = nib.load(ao_fov_mask)
+
+    # (dilated) gray matter mask; see constat at script's top
+    #gm_fpath = GM_MASK.replace('sub-??', subj)
+    #gm_img = nib.load(gm_fpath)
+    #final_mask_data = grp_ppa_img.get_fdata() * gm_img.get_fdata()
+
+    final_mask_data = grp_ppa_img.get_fdata() * ao_fov_img.get_fdata()
+    final_mask_img = nib.Nifti1Image(final_mask_data,
+                                     grp_ppa_img.affine,
+                                     header=grp_ppa_img.header)
+
+    return final_mask_img
+
+
 if __name__ == "__main__":
     # get command line argument
     inDir, outDir = parse_arguments()
@@ -368,7 +406,7 @@ if __name__ == "__main__":
     subjs = [re.search(r'sub-..', string).group() for string in subjs_pathes]
     subjs = sorted(list(set(subjs)))
 
-    for prediction in PREDICTIONS:
+    for prediction in PREDICTIONS[:]:
         # loop over subjects
         for subj in subjs:
             print('\nProcessing', subj)
@@ -392,21 +430,23 @@ if __name__ == "__main__":
             # put the array into the dataframe
             zmaps_df['vis'] = np.ndarray.flatten(vis_data)
 
-            # create the mask by combining PPA group overlap (in bold3TP)
-            # and the subject-specific gray matter mask
-            grp_ppa_fpath = MASK_PTTRN.replace('sub-??', subj)
-            grp_ppa_img = nib.load(grp_ppa_fpath)
-            gm_mask = GM_MASK.replace('sub-??', subj)
-            gm_img = nib.load(gm_mask)
-            # combine the mask
-            final_mask_data = grp_ppa_img.get_fdata() * gm_img.get_fdata()
+            # load the GRP PPA mask (in subject space)
+            # (GRP PPA will be masked with individual FoV)
+            final_mask_img = load_mask(subj)
+            final_mask_data = final_mask_img.get_fdata()
             # put the array into the dataframe
             zmaps_df['ppa_grp'] = np.ndarray.flatten(final_mask_data)
 
             # load the subject-specific PPA mask (Sengupta et al., 2016)
             ppa_fpathes = find_files(PPA_MASK_PATTERN.replace('sub-*', subj))
             ppaIndData = fmri_dataset(ppa_fpathes).samples.sum(axis=0)
-            zmaps_df['ppa_ind'] = np.ndarray.flatten(ppaIndData)
+            # masked it with individual FoV (just to be sure)
+            ao_fov_fpath = find_files(AO_FOV_MASK.replace('sub-??', subj))
+            ao_fov_data = fmri_dataset(ao_fov_fpath).samples
+
+            ppaIndMasked = ppaIndData * ao_fov_data
+
+            zmaps_df['ppa_ind'] = np.ndarray.flatten(ppaIndMasked)
 
             # let the function do the calculation and the plotting
             process_df(subj, zmaps_df, outDir, prediction)
