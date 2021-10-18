@@ -489,6 +489,7 @@ def run_the_predictions(zmap_fpathes, subjs):
 
         # the list for the dataframe that will build from the list
         for_dataframe = []
+        for_dataframe_func_vs_anat = []
 
         # compute the anatomical prediction for every subject first
         empirical_arrays = []
@@ -550,6 +551,7 @@ def run_the_predictions(zmap_fpathes, subjs):
                                           func_pred_arrays[idx]) for idx
                                           in range(len(empirical_arrays))]
 
+
             # print the result of the currently used runs / stimulus
             print('subject\temp. vs. anat\temp. vs. cms')
 
@@ -563,9 +565,23 @@ def run_the_predictions(zmap_fpathes, subjs):
             elif stim == 'AV':
                 predictor = 'movie'
 
-            func_lines = [[subj, predictor, runs, corr[0]] for subj, corr in zip(subjs, emp_vs_func)]
+            func_lines = [[subj, predictor, runs, corr[0]]
+                          for subj, corr in zip(subjs, emp_vs_func)]
             # list of line for the dataframe
             for_dataframe.extend(func_lines)
+
+            # compute the correlations of prediction from anatomy vs.
+            # prediction from functional alignment (with currently used
+            # no. of runs
+            func_vs_anat = [stats.pearsonr(func_pred_arrays[idx],
+                                           anat_pred_arrays[idx]) for idx
+                                           in range(len(func_pred_arrays))]
+
+            func_vs_anat_lines = [[subj,  f'{stim}-vs-anat', runs, corr[0]]
+                                  for subj, corr in zip(subjs, func_vs_anat)]
+
+            for_dataframe_func_vs_anat.extend(func_vs_anat_lines)
+
 
         # add the correlations of prediction from anatomy vs. empirical data
         anat_lines = [[subj, 'anatomy', 0, corr[0]]
@@ -573,6 +589,7 @@ def run_the_predictions(zmap_fpathes, subjs):
 
         # put the correlations per subject into the dataframe
         for_dataframe.extend(anat_lines)
+        for_dataframe.extend(for_dataframe_func_vs_anat)
 
         # prepare the dataframe for the current model
         df = pd.DataFrame(for_dataframe, columns = ['sub',
@@ -615,7 +632,7 @@ if __name__ == "__main__":
         for x in VIS_VPN_COPES.items()]
 
     print('\nTransforming VIS z-maps into MNI and into other subjects\' space')
-    transform_ind_ppas(zmap_fpathes, subjs)
+###    transform_ind_ppas(zmap_fpathes, subjs)
 
     run_the_predictions(zmap_fpathes, subjs)
 
@@ -625,6 +642,6 @@ if __name__ == "__main__":
         for x in VIS_VPN_COPES.items()]
 
     print('\nTransforming AO z-maps into MNI and into other subjects\' space')
-    transform_ind_ppas(zmap_fpathes, subjs)
+###    transform_ind_ppas(zmap_fpathes, subjs)
 
     run_the_predictions(zmap_fpathes, subjs)
