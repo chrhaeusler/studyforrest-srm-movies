@@ -203,11 +203,11 @@ if __name__ == "__main__":
                       for run in aofPathes], ignore_index=True)
 
     # AT THE MOMENT ONLY USE REGRESSORS FROM THE AUDIO-DESCRIPTION
-#     avDf = pd.concat([pd.read_csv(run,
-#                                   usecols=av_columns,
-#                                   names=av_reg_names,
-#                                   skiprows=5, sep='\t')
-#                       for run in avfPathes], ignore_index=True)
+    avDf = pd.concat([pd.read_csv(run,
+                                  usecols=av_columns,
+                                  names=av_reg_names,
+                                  skiprows=5, sep='\t')
+                      for run in avfPathes], ignore_index=True)
 
     # concatenate data of AO & AV
 #    all_df = pd.concat([aoDf, avDf], axis=1)
@@ -221,7 +221,7 @@ if __name__ == "__main__":
     # LOAD THE SRM MODEL
     subj, in_dir, n_feat, n_iter = 'sub-02', inDir, 10, 30
     in_fpath = os.path.join(
-        in_dir, subj, f'srm-ao-av_feat{n_feat}-iter{n_iter}.npz'
+        in_dir, subj, f'srm-ao-av-vis_feat{n_feat}-iter{n_iter}.npz'
     )
 
     # load the SRM from file
@@ -236,7 +236,7 @@ if __name__ == "__main__":
 
     # a) plot correlation of time-series of features (AO & AV)
     # create name of path and file (must not include file extension)
-    out_fpath = os.path.join(outDir, 'corr_ao-regressors-vs-shared-resp')
+    out_fpath = os.path.join(outDir, 'corr_shared-responses')
     # create the correlation matrix for all columns
     regCorrMat = srm_df.corr()
     # plot it
@@ -244,10 +244,21 @@ if __name__ == "__main__":
 
     # b) plot the correlation of AO regressors and features (only AO TRs)
     # concat dataframes containing the regressors and the features
-    all_df = pd.concat([aoDf, srm_df[:3599]], axis=1)
+    all_df = pd.concat([aoDf, srm_df[:3524]], axis=1)
     # create the correlation matrix for all columns
     regCorrMat = all_df.corr()
     # create name of path and file (must not include ".{extension}"
     out_fpath = os.path.join(outDir, 'corr_ao-regressors-vs-shared-resp (only AO TRs)')
+    # plot it
+    plot_heatmap(regCorrMat, out_fpath)
+
+
+    # c) plot the correlation of AV regressors and features (only AV TRs)
+    # concat dataframes containing the regressors and the features
+    all_df = pd.concat([avDf, srm_df[3524:]], axis=1)
+    # create the correlation matrix for all columns
+    regCorrMat = all_df.corr()
+    # create name of path and file (must not include ".{extension}"
+    out_fpath = os.path.join(outDir, 'corr_av-regressors-vs-shared-resp (only AV TRs)')
     # plot it
     plot_heatmap(regCorrMat, out_fpath)

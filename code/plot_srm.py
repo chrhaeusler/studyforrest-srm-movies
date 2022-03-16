@@ -45,7 +45,7 @@ def parse_arguments():
 
     parser.add_argument('-niter',
                         required=False,
-                        default='20',
+                        default='30',
                         help='number of iterations')
 
     args = parser.parse_args()
@@ -158,7 +158,7 @@ if __name__ == "__main__":
     subj, in_dir, n_feat, n_iter = parse_arguments()
     # save model as (zipped) pickle variable
     in_fpath = os.path.join(
-        in_dir, f'{subj}_srm_feat{n_feat}-iter{n_iter}.npz'
+        in_dir, subj, f'srm-ao-av-vis_feat{n_feat}-iter{n_iter}.npz'
     )
 
     # load the srm from file

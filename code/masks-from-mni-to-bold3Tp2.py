@@ -280,4 +280,3 @@ if __name__ == "__main__":
                                       roi_img.header)
                 # save
                 nib.save(img, out_fpath)
-

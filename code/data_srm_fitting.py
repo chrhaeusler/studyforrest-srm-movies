@@ -147,7 +147,7 @@ def shuffle_all_arrays(all_arrays):
     '''
     '''
     timings = [0, 451, 441, 438, 488, 462, 439, 542, 338-75]
-    timings = timings + timings[1:-1] + [338]  # add AO to AO
+    timings = timings + timings[1:-1] + [338]  # add AV to AO
     starts = [sum(timings[0:idx+1]) for idx, value in enumerate(timings)]
     starts_ends = [[x, y] for x, y in zip(starts[:-1], starts[1:])]
     # substitute the last index for '-1'
@@ -159,7 +159,7 @@ def shuffle_all_arrays(all_arrays):
 
         shuffled_blocks_arrays = []
         for start, end in starts_ends:
-            # print(start, end)
+            print(start, end)
             # append the current block
             if end:
                 shuffled_blocks_arrays.append(array[:, start:end])
@@ -282,3 +282,23 @@ if __name__ == "__main__":
     # save it
     shuffled_aoav_srm.save(out_fpath)
     print('SRM (AO & AV shuffled) saved to', out_fpath)
+
+    # d) SRM with shuffled AO, AV, VIS data (negative control):
+    model = 'srm-ao-av-vis-shuffled'
+    print('\nProcessing data for model', model)
+    # shuffle the arrays before fitting the model
+    # always take the same seed for every subject
+    # by deriving it from the subject's number
+    random.seed(int(subj[-2:]))
+    shuffled_aoavvis_arrays = shuffle_all_arrays(aoavvis_arrays)
+    # fit the SRM model
+    shuffled_aoavvis_srm = fit_srm(shuffled_aoavvis_arrays, out_dir)
+
+    # prepare saving results as pickle
+    out_file = f'{model}_feat{n_feat}-iter{n_iter}.npz'
+    out_fpath = os.path.join(out_dir, subj, out_file)
+    # create (sub)directories
+    os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
+    # save it
+    shuffled_aoavvis_srm.save(out_fpath)
+    print('SRM (AO, AV, VIS shuffled) saved to', out_fpath)
