@@ -143,11 +143,10 @@ def fit_srm(list_of_arrays, out_dir):
     return srm
 
 
-def shuffle_all_arrays(all_arrays):
+def shuffle_all_arrays(all_arrays, timings):
     '''
     '''
-    timings = [0, 451, 441, 438, 488, 462, 439, 542, 338-75]
-    timings = timings + timings[1:-1] + [338]  # add AV to AO
+
     starts = [sum(timings[0:idx+1]) for idx, value in enumerate(timings)]
     starts_ends = [[x, y] for x, y in zip(starts[:-1], starts[1:])]
     # substitute the last index for '-1'
@@ -181,6 +180,7 @@ if __name__ == "__main__":
     # a) SRM with data from AO & AV
     model = 'srm-ao-av'
     print('\nProcessing data for model', model)
+
     # find all input files
     aoav_fpathes = find_files(AOAV_TRAIN_PATTERN)
     # filter for non-current subject
@@ -218,6 +218,7 @@ if __name__ == "__main__":
     # b) SRM with data from AO, AV, VIS
     model = 'srm-ao-av-vis'
     print('\nProcessing data for model', model)
+
     # find all input files
     vis_fpathes = find_files(VIS_TRAIN_PATTERN)
     # filter for non-current subject
@@ -266,11 +267,17 @@ if __name__ == "__main__":
     # c) SRM with shuffled AO & AV data (negative control):
     model = 'srm-ao-av-shuffled'
     print('\nProcessing data for model', model)
+
     # shuffle the arrays before fitting the model
     # always take the same seed for every subject
     # by deriving it from the subject's number
     random.seed(int(subj[-2:]))
-    shuffled_aoav_arrays = shuffle_all_arrays(aoav_arrays)
+
+    aoTimings = [0, 451, 441, 438, 488, 462, 439, 542, 338-75]
+    aoAvTimings = aoTimings + aoTimings[1:-1] + [338]  # add AV to AO
+
+    shuffled_aoav_arrays = shuffle_all_arrays(aoav_arrays, aoAvTimings)
+
     # fit the SRM model
     shuffled_aoav_srm = fit_srm(shuffled_aoav_arrays, out_dir)
 
@@ -290,7 +297,13 @@ if __name__ == "__main__":
     # always take the same seed for every subject
     # by deriving it from the subject's number
     random.seed(int(subj[-2:]))
-    shuffled_aoavvis_arrays = shuffle_all_arrays(aoavvis_arrays)
+
+    aoTimings = [0, 451, 441, 438, 488, 462, 439, 542, 338-75]
+    aoAvTimings = aoTimings + aoTimings[1:-1] + [338]  # add AV to AO
+    aoAvVisTimings = aoAvTimings + 4 * [156]
+
+    shuffled_aoavvis_arrays = shuffle_all_arrays(aoavvis_arrays, aoAvVisTimings)
+
     # fit the SRM model
     shuffled_aoavvis_srm = fit_srm(shuffled_aoavvis_arrays, out_dir)
 

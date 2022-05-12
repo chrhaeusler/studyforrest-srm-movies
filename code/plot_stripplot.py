@@ -84,10 +84,10 @@ if __name__ == "__main__":
     else:
         print('unkown predicted PPA (must be VIS or AO)')
 
-    plt.savefig(f'{outDir}/correlations-{which_PPA}-stripplot.svg',
+    plt.savefig(f'{outDir}/stripplot-{which_PPA}.svg',
                 bbox_inches='tight')
 
-    plt.savefig(f'{outDir}/correlations-{which_PPA}-stripplot.png',
+    plt.savefig(f'{outDir}/stripplot-{which_PPA}.png',
                 bbox_inches='tight')
 
     plt.show()
