@@ -18,8 +18,33 @@ import re
 
 
 # constants
-IN_PATTERN = 'sub-??/sub-??_task_aomovie-avmovie_run-1-8_bold-filtered.npy'
+IN_PATTERN_NAT = 'sub-??/sub-??_task_aomovie-avmovie_run-1-8_bold-filtered.npy'
+IN_PATTERN_VIS = 'sub-??/sub-??_task_visloc_run-1-4_bold-filtered.npy'
 
+# and vary the amount of TRs used for alignment
+STARTS_ENDS = [
+    (0, 451),      # AO, 1 run
+    (0, 892),      # AO, 2 runs
+    (0, 1330),     # AO, 3 runs
+    (0, 1818),     # AO, 4 runs
+    (0, 2280),     # AO, 5 runs
+    (0, 2719),     # AO, 6 runs
+    (0, 3261),     # AO, 7 runs
+    (0, 3524),     # AO, 8 runs
+    (3524, 3975),  # AV, 1 run
+    (3524, 4416),  # AV, 2 runs
+    (3524, 4854),  # AV, 3 runs
+    (3524, 5342),  # AV, 4 runs
+    (3524, 5804),  # AV, 5 runs
+    (3524, 6243),  # AV, 6 runs
+    (3524, 6785),  # AV, 7 runs
+    (3524, 7123),  # AV, 8 runs
+    (0, 7123),      # AO & AV
+    (7123, 7123 + 1 * 156),  # VIS, 1 run
+    (7123, 7123 + 2 * 156),  # VIS, 2 run
+    (7123, 7123 + 3 * 156),  # VIS, 3 run
+    (7123, 7123 + 4 * 156)  # VIS, 4 run
+]
 
 def parse_arguments():
     '''
@@ -107,34 +132,21 @@ if __name__ == "__main__":
         'srm-ao-av',
         'srm-ao-av-vis'
     ]
-    # and vary the amount of TRs used for alignment
-    starts_ends = [
-        (0, 451),      # AO, 1 run
-        (0, 892),      # AO, 2 runs
-        (0, 1330),     # AO, 3 runs
-        (0, 1818),     # AO, 4 runs
-        (0, 2280),     # AO, 5 runs
-        (0, 2719),     # AO, 6 runs
-        (0, 3261),     # AO, 7 runs
-        (0, 3524),     # AO, 8 runs
-        (3524, 3975),  # AV, 1 run
-        (3524, 4416),  # AV, 2 runs
-        (3524, 4854),  # AV, 3 runs
-        (3524, 5342),  # AV, 4 runs
-        (3524, 5804),  # AV, 5 runs
-        (3524, 6243),  # AV, 6 runs
-        (3524, 6785),  # AV, 7 runs
-        (3524, 7123),  # AV, 8 runs
-        (0, 7123),      # AO & AV
-        (7123, 7123 + 1 * 156),  # VIS, 1 run
-        (7123, 7123 + 2 * 156),  # VIS, 2 run
-        (7123, 7123 + 3 * 156),  # VIS, 3 run
-        (7123, 7123 + 4 * 156)  # VIS, 4 run
-    ]
 
     for model in models:
-        for start, end in starts_ends:
+        if model == 'srm-ao-av':
+            # only consider indices from AO & AV
+            corrected_starts_ends = STARTS_ENDS[:-4]
+        else:
+            # consider all incides
+            corrected_starts_ends = STARTS_ENDS
+
+        for start, end in corrected_starts_ends:
             print(f'\nUsing {model}, {start}-{end}')
+
+            out_file = f'wmatrix_{model}_feat{n_feat}_{start}-{end}.npy'
+            print('Output file:', out_file)
+
             for subj in subjs:
                 print('Processing', subj)
                 in_fpath = os.path.join(
@@ -149,14 +161,24 @@ if __name__ == "__main__":
                 srm_sliced = copy.copy(srm)
                 srm_sliced.s_ = srm_sliced.s_[:, start:end]
 
-                in_fpath = IN_PATTERN.replace('sub-??', subj)
+                # correct the input file (and start & end indices)
+                # in case you use TRs from localizer within the shared space
+                # time series of the localizer
+                if start < 7123:
+                    in_fpath = IN_PATTERN_NAT.replace('sub-??', subj)
+                elif start == 7123:
+                    in_fpath = IN_PATTERN_VIS.replace('sub-??', subj)
+                    start, end = start - 7123, end - 7123
+
                 print('Loading data:', in_fpath)
+                # print(start, end)
+
                 array = np.load(in_fpath)
-                array = array[:, start:end]
-                w_matrix = srm_sliced.transform_subject(array)
+                array_sliced = array[:, start:end]
+                # print(array_sliced.shape)
+                w_matrix = srm_sliced.transform_subject(array_sliced)
 
                 # save the matrix
-                out_file = f'wmatrix_{model}_feat{n_feat}_{start}-{end}.npy'
                 out_fpath = os.path.join(in_dir, subj, out_file)
                 # create (sub)directories
                 os.makedirs(os.path.dirname(out_fpath), exist_ok=True)

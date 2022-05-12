@@ -88,7 +88,11 @@ starts_ends = [
     (3524, 5804, 'AV', 5),  # AV, 5 runs
     (3524, 6243, 'AV', 6),  # AV, 6 runs
     (3524, 6785, 'AV', 7),  # AV, 7 runs
-    (3524, 7123, 'AV', 8)  # AV, 8 runs
+    (3524, 7123, 'AV', 8),  # AV, 8 runs
+    (7123, 7123 + 1 * 156, 'VIS', 1),  # VIS, 1 run
+    (7123, 7123 + 2 * 156, 'VIS', 2),  # VIS, 2 run
+    (7123, 7123 + 3 * 156, 'VIS', 3),  # VIS, 3 run
+    (7123, 7123 + 4 * 156, 'VIS', 4)   # VIS, 4 run
 ]
 
 
@@ -606,6 +610,10 @@ def run_the_predictions(zmap_fpathes, subjs, model):
             predictor = 'audio-description'
         elif stim == 'AV':
             predictor = 'movie'
+        elif stim == 'VIS':
+            predictor = 'localizer'
+        else:
+            print('unknown stimulation used for alignment')
 
         func_lines = [[subj, predictor, runs, corr[0]]
                       for subj, corr in zip(subjs, emp_vs_func)]
