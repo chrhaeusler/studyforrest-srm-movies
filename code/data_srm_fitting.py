@@ -2,6 +2,9 @@
 '''
 created on Mon March 29th 2021
 author: Christian Olaf Haeusler
+
+todo:
+    needs factorization obviously
 '''
 
 from glob import glob
@@ -149,11 +152,13 @@ def shuffle_all_arrays(all_arrays, timings):
 
     starts = [sum(timings[0:idx+1]) for idx, value in enumerate(timings)]
     starts_ends = [[x, y] for x, y in zip(starts[:-1], starts[1:])]
+
     # substitute the last index for '-1'
     starts_ends[-1][1] = ''
 
     shuffled_subjs = []
     for subject, array in enumerate(all_arrays):
+        print(f'\nSubject {subject}:')
         random.shuffle(starts_ends)
 
         shuffled_blocks_arrays = []
@@ -170,6 +175,7 @@ def shuffle_all_arrays(all_arrays, timings):
         # concatenate the blocks
         shuffled_subjs.append(shuffled_blocks)
 
+    import ipdb; ipdb.set_trace() #  BREAKPOINT
     return shuffled_subjs
 
 
@@ -177,14 +183,19 @@ if __name__ == "__main__":
     # read command line arguments
     subj, out_dir, n_feat, n_iter = parse_arguments()
 
-    # a) SRM with data from AO & AV
-    model = 'srm-ao-av'
-    print('\nProcessing data for model', model)
-
     # find all input files
     aoav_fpathes = find_files(AOAV_TRAIN_PATTERN)
     # filter for non-current subject
     aoav_fpathes = [fpath for fpath in aoav_fpathes if subj not in fpath]
+
+    # find all input files
+    vis_fpathes = find_files(VIS_TRAIN_PATTERN)
+    # filter for non-current subject
+    vis_fpathes = [fpath for fpath in vis_fpathes if subj not in fpath]
+
+    # a) SRM with data from AO & AV
+    model = 'srm-ao-av'
+    print('\nProcessing data for model', model)
 
     aoav_arrays = []
     # loops through subjects (one concatenated / masked time-series per sub)
@@ -218,12 +229,6 @@ if __name__ == "__main__":
     # b) SRM with data from AO, AV, VIS
     model = 'srm-ao-av-vis'
     print('\nProcessing data for model', model)
-
-    # find all input files
-    vis_fpathes = find_files(VIS_TRAIN_PATTERN)
-    # filter for non-current subject
-    vis_fpathes = [fpath for fpath in vis_fpathes if subj not in fpath]
-
     # extend the data of AO & AV with the VIS data
     aoavvis_arrays = []
     # loops through subjects (one concatenated / masked time-series per sub)
@@ -302,11 +307,11 @@ if __name__ == "__main__":
     aoAvTimings = aoTimings + aoTimings[1:-1] + [338]  # add AV to AO
     aoAvVisTimings = aoAvTimings + 4 * [156]
 
-    shuffled_aoavvis_arrays = shuffle_all_arrays(aoavvis_arrays, aoAvVisTimings)
+    shuffled_aoavvis_arrays = shuffle_all_arrays(aoavvis_arrays,
+                                                 aoAvVisTimings)
 
     # fit the SRM model
     shuffled_aoavvis_srm = fit_srm(shuffled_aoavvis_arrays, out_dir)
-
     # prepare saving results as pickle
     out_file = f'{model}_feat{n_feat}-iter{n_iter}.npz'
     out_fpath = os.path.join(out_dir, subj, out_file)
