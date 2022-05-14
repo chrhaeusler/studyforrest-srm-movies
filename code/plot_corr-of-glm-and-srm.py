@@ -151,7 +151,7 @@ def load_srm(in_fpath):
     return srm
 
 
-def plot_heatmap(title, matrix, outFpath):
+def plot_heatmap(title, matrix, outFpath, usedRegressors=[]):
     '''
     '''
     # generate a mask for the upper triangle
@@ -181,9 +181,33 @@ def plot_heatmap(title, matrix, outFpath):
     plt.title(title)
 
     # coloring of ticklabels
-#     for x in range(0, len(AO_USED)):
-#         plt.gca().get_xticklabels()[x].set_color('blue')  # black = default
-#
+    # x-axis
+    if usedRegressors == AO_USED:
+        for x in range(len(srm.s_), len(srm.s_) + len(AO_USED)):
+            plt.gca().get_xticklabels()[x].set_color('blue')  # black = default
+        # handle the sum of regressors
+        for x in range(len(srm.s_) + len(AO_USED), len(srm.s_) + len(AO_USED) + 2):
+            plt.gca().get_xticklabels()[x].set_color('cornflowerblue')  # black = default
+    elif usedRegressors == AV_USED:
+        for x in range(len(srm.s_), len(srm.s_) + len(AV_USED)):
+            plt.gca().get_xticklabels()[x].set_color('red')  # black = default
+    elif usedRegressors == VIS_USED:
+        for x in range(len(srm.s_), len(srm.s_) + len(VIS_USED)):
+            plt.gca().get_xticklabels()[x].set_color('green')  # black = default
+
+    # y-axis
+    if usedRegressors == AO_USED:
+        for y in range(len(srm.s_), len(srm.s_) + len(AO_USED)):
+            plt.gca().get_yticklabels()[y].set_color('blue')  # black = default
+        for y in range(len(srm.s_) + len(AO_USED), len(srm.s_) + len(AO_USED) + 2):
+            plt.gca().get_yticklabels()[y].set_color('cornflowerblue')  # black = default
+    elif usedRegressors == AV_USED:
+        for y in range(len(srm.s_), len(srm.s_) + len(AV_USED)):
+            plt.gca().get_yticklabels()[y].set_color('red')  # black = default
+    elif usedRegressors == VIS_USED:
+        for y in range(len(srm.s_), len(srm.s_) + len(VIS_USED)):
+            plt.gca().get_yticklabels()[y].set_color('green')  # black = default
+
 #     for x in range(len(AO_USED), len(AO_USED) + len(AV_USED)):
 #         plt.gca().get_xticklabels()[x].set_color('red')
 #
@@ -197,9 +221,9 @@ def plot_heatmap(title, matrix, outFpath):
     os.makedirs(os.path.dirname(outFpath), exist_ok=True)
 
     # save the plot
-    f.savefig(out_fpath + '.png', bbox_inches='tight', transparent=True)
-#    f.savefig(out_fpath + '.svg', bbox_inches='tight', transparent=True)
-#    f.savefig(out_fpath + '.pdf', bbox_inches='tight', transparent=True)
+    f.savefig(out_fpath + '.png', bbox_inches='tight')  # transparent=True
+#    f.savefig(out_fpath + '.svg', bbox_inches='tight')  # transparent=True
+#    f.savefig(out_fpath + '.pdf', bbox_inches='tight')  # transparent=True
     plt.close()
 
 
@@ -255,8 +279,6 @@ if __name__ == "__main__":
 #    all_df = pd.concat([aoDf, avDf], axis=1)
     aoDf['geo&groom'] = aoDf['geo'] + aoDf['groom']
     aoDf['geo&groom&furn'] = aoDf['geo'] + aoDf['groom'] + aoDf['furn']
-#    all_df['geo&furn'] = all_df['geo'] + all_df['furn']
-#    all_df['groom&furn'] = all_df['groom'] + all_df['furn']
 
     #############
     # LOAD THE SRM MODEL
@@ -270,7 +292,7 @@ if __name__ == "__main__":
     srm_array = srm.s_.T
 
     # create pandas dataframe from array and name the columns
-    columns = [f'sh. res. {x}' for x in range(srm_array.shape[1])]
+    columns = ['sh. res. %s' % str(int(x)+1) for x in range(srm_array.shape[1])]
 
     srm_df = pd.DataFrame(data=srm_array,
                           columns=columns)
@@ -304,7 +326,7 @@ if __name__ == "__main__":
 
     title = f'{sub}: AO Regressors vs. Shared Responses ({model}; TRs {start}-{end})'
     # plot it
-    plot_heatmap(title, regCorrMat, out_fpath)
+    plot_heatmap(title, regCorrMat, out_fpath, AO_USED)
 
 
     # c) plot the correlation of AV regressors and features (only AV TRs)
@@ -322,7 +344,7 @@ if __name__ == "__main__":
                              f'corr_av-regressors-vs-cfs_{sub}_{model}_{start}-{end}')
     # plot it
     title = f'{sub}: AV Regressors vs. Shared Responses ({model}; TRs {start}-{end})'
-    plot_heatmap(title, regCorrMat, out_fpath)
+    plot_heatmap(title, regCorrMat, out_fpath, AV_USED)
 
 
     # d) plot the correlation of VIS regressors and features (only VIS TRs)
@@ -340,4 +362,4 @@ if __name__ == "__main__":
                              f'corr_vis-regressors-vs-cfs_{sub}_{model}_{start}-{end}')
     # plot it
     title = f'{sub}: VIS Regressors vs. Shared Responses ({model}; TRs {start}-{end})'
-    plot_heatmap(title, regCorrMat, out_fpath)
+    plot_heatmap(title, regCorrMat, out_fpath, VIS_USED)
