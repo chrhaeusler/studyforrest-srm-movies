@@ -19,10 +19,16 @@ def parse_arguments():
     parser = argparse.ArgumentParser(
         description='loads a csv file to plot data as stripplot')
 
-    parser.add_argument('-infile',
+    parser.add_argument('-invis',
                         required=False,
-                        default='test/corr-empVIS-vs-func.csv',
+                        default='test/srm-ao-av-vis_feat10_corr_VIS-PPA-vs-CFS-PPA.csv',
                         help='the data as csv')
+
+    parser.add_argument('-inao',
+                        required=False,
+                        default='test/srm-ao-av-vis_feat10_corr_AO-PPA-vs-CFS-PPA.csv',
+                        help='the data as csv')
+
 
     parser.add_argument('-outdir',
                         required=False,
@@ -31,10 +37,11 @@ def parse_arguments():
 
     args = parser.parse_args()
 
-    infile = args.infile
+    inVisResults = args.invis
+    inAoResults = args.inao
     outdir = args.outdir
 
-    return infile, outdir
+    return inVisResults, inAoResults, outdir
 
 
 def find_files(pattern):
@@ -55,39 +62,85 @@ def find_files(pattern):
     return found_files
 
 
-if __name__ == "__main__":
-    # read command line arguments
-    inFile, outDir = parse_arguments()
+def plot_subplot(axNr, title, df, legend=True):
+    '''
+    '''
+    axes[axNr].set_title(title)
 
-
-
-    # close figure
-    plt.close()
-
-    df = pd.read_csv(inFile)
-
-    sns.set_theme(style='whitegrid')
-
-    ax = sns.stripplot(x='runs',
+    ax = sns.stripplot(ax=axes[axNr],
+                       x='number of runs',
                        y="Pearson's r",
-                       hue='prediction from',
+                       hue='prediction via',
+                       hue_order=['anatomical alignment',
+                                  'visual localizer',
+                                  'movie',
+                                  'audio-description'
+                                  ],
+                       palette = {'anatomical alignment' : 'grey',
+                                  'visual localizer' : 'limegreen',
+                                  'movie' : 'red',
+                                  'audio-description' : 'blue'
+                                  },
                        jitter=0.2,
                        linewidth=1,
                        dodge=True,
                        data=df)
 
-    # prepare name of output file
-    if 'VIS' in inFile:
-        which_PPA = 'VIS'
-    elif 'AO' in inFile:
-        which_PPA = 'AO'
-    else:
-        print('unkown predicted PPA (must be VIS or AO)')
+    if not legend:
+        ax.legend().remove()
 
-    plt.savefig(f'{outDir}/stripplot-{which_PPA}.svg',
+    return ax
+
+
+if __name__ == "__main__":
+    # read command line arguments
+    visResults, aoResults, outDir = parse_arguments()
+
+    # close figure
+    plt.close()
+
+
+    sns.set_theme(style='whitegrid')
+
+    # create figure
+    fig, axes = plt.subplots(2, 1, figsize=(12,8), sharex=False)
+
+    # figure title
+    fig.suptitle('Correlations between empirical and predicted Z-maps')
+
+    # plot upper subplot
+    # read the data first
+    visDf = pd.read_csv(visResults)
+    axNr = 0
+    axes[0] = plot_subplot(axNr,
+                           'PPA localized via visual localizer (Sengupta et al., 2016)',
+                           visDf,
+                           legend=True
+                           )
+
+    # plot lower subplot
+    aoDf = pd.read_csv(aoResults)
+    axNr = 1
+    axes[1] = plot_subplot(axNr,
+                           'PPA localized via audio-description (Häusler et al., 2022)',
+                           aoDf,
+                           legend=False
+                           )
+
+    plt.subplots_adjust(hspace=0.35,
+                        wspace=None,
+                        top=None,
+                        bottom=None,
+                        left=None,
+                        right=None
+                        )
+
+    plt.savefig(f'{outDir}/stripplot.pdf',
                 bbox_inches='tight')
 
-    plt.savefig(f'{outDir}/stripplot-{which_PPA}.png',
+    plt.savefig(f'{outDir}/stripplot.png',
                 bbox_inches='tight')
 
     plt.show()
+
+    plt.close()

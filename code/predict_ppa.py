@@ -530,7 +530,7 @@ def run_the_predictions(zmap_fpathes, subjs, model):
     for_dataframe = []
 
     # compute the PREDICTION FROM ANATOMY for every subject
-    print('Running prediction from anatomy')
+    print('Running prediction via anatomical alignment')
     # initialize lists that will, for every subject, contain
     # the array empirical z-map values
     empirical_arrays = []
@@ -571,7 +571,7 @@ def run_the_predictions(zmap_fpathes, subjs, model):
 
     # compute the PREDICTION FROM CMS for every subject
     # but also increase the number of fMRI runs used for functional alignment
-    print('Running prediction from CMS')
+    print('Running prediction via functional alignment')
     for start, end, stim, runs in starts_ends[:]:  # cf. constants at the top
         print(f'\nTRs:\t{start}-{end}')
 
@@ -611,7 +611,7 @@ def run_the_predictions(zmap_fpathes, subjs, model):
         elif stim == 'AV':
             predictor = 'movie'
         elif stim == 'VIS':
-            predictor = 'localizer'
+            predictor = 'visual localizer'
         else:
             print('unknown stimulation used for alignment')
 
@@ -622,7 +622,7 @@ def run_the_predictions(zmap_fpathes, subjs, model):
         for_dataframe.extend(func_lines)
 
     # add the correlations of prediction from anatomy vs. empirical data
-    anat_lines = [[subj, 'anatomy', 0, corr[0]]
+    anat_lines = [[subj, 'anatomical alignment', 0, corr[0]]
                   for subj, corr in zip(subjs, emp_vs_anat)]
 
     # put the correlations per subject into the dataframe
@@ -630,8 +630,8 @@ def run_the_predictions(zmap_fpathes, subjs, model):
 
     # prepare the dataframe for the current model
     df = pd.DataFrame(for_dataframe, columns=['sub',
-                                              'prediction from',
-                                              'runs',
+                                              'prediction via',
+                                              'number of runs',
                                               'Pearson\'s r'])
 
     # adjust the name of the output file according to the input:
@@ -642,7 +642,7 @@ def run_the_predictions(zmap_fpathes, subjs, model):
         which_PPA = 'AO'
 
     # save the dataframe for the currently used CMS
-    df.to_csv(f'{in_dir}/{model}_corr_{which_PPA}-PPA-vs-CMS-PPA.csv', index=False)
+    df.to_csv(f'{in_dir}/{model}_feat{n_feat}_corr_{which_PPA}-PPA-vs-CFS-PPA.csv', index=False)
 
     return None
 
