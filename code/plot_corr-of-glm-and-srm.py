@@ -222,10 +222,10 @@ def plot_heatmap(title, matrix, outFpath, usedRegressors=[]):
 
     # save the plot
     f.savefig(out_fpath + '.png', bbox_inches='tight')  # transparent=True
-#    f.savefig(out_fpath + '.svg', bbox_inches='tight')  # transparent=True
-#    f.savefig(out_fpath + '.pdf', bbox_inches='tight')  # transparent=True
-    plt.close()
+    f.savefig(out_fpath + '.pdf', bbox_inches='tight')  # transparent=True
+    f.savefig(out_fpath + '.svg', bbox_inches='tight')  # transparent=True
 
+    plt.close()
 
 
 if __name__ == "__main__":
