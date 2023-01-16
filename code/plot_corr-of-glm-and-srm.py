@@ -155,7 +155,7 @@ def plot_heatmap(title, matrix, outFpath, usedRegressors=[]):
     '''
     '''
     # generate a mask for the upper triangle
-    mask = np.zeros_like(matrix, dtype=np.bool)
+    mask = np.zeros_like(matrix, dtype=bool)
     mask[np.triu_indices_from(mask)] = True
 
     # set up the matplotlib figure
@@ -170,7 +170,7 @@ def plot_heatmap(title, matrix, outFpath, usedRegressors=[]):
                            square=True,
                            center=0,
                            vmin=-1.0, vmax=1,
-                           annot=True, annot_kws={"size": 8}, fmt='.1f',
+                           annot=True, annot_kws={"size": 8, "color": "k"}, fmt='.1f',
                            # linewidths=.5,
                            cbar_kws={"shrink": .6}
                            )
@@ -183,47 +183,44 @@ def plot_heatmap(title, matrix, outFpath, usedRegressors=[]):
     # coloring of ticklabels
     # x-axis
     if usedRegressors == AO_USED:
-        for x in range(len(srm.s_), len(srm.s_) + len(AO_USED)):
+#        for x in range(len(srm.s_), len(srm.s_) + len(AO_USED)):
+        for x in range(len(AO_USED)):
             plt.gca().get_xticklabels()[x].set_color('blue')  # black = default
         # handle the sum of regressors
-        for x in range(len(srm.s_) + len(AO_USED), len(srm.s_) + len(AO_USED) + 2):
+        for x in range(len(AO_USED), len(AO_USED) + 1):
             plt.gca().get_xticklabels()[x].set_color('cornflowerblue')  # black = default
+
     elif usedRegressors == AV_USED:
-        for x in range(len(srm.s_), len(srm.s_) + len(AV_USED)):
+        for x in range(len(AV_USED)):
             plt.gca().get_xticklabels()[x].set_color('red')  # black = default
+
     elif usedRegressors == VIS_USED:
-        for x in range(len(srm.s_), len(srm.s_) + len(VIS_USED)):
+        for x in range(len(VIS_USED)):
             plt.gca().get_xticklabels()[x].set_color('green')  # black = default
 
     # y-axis
     if usedRegressors == AO_USED:
-        for y in range(len(srm.s_), len(srm.s_) + len(AO_USED)):
+        for y in range(len(AO_USED)):
             plt.gca().get_yticklabels()[y].set_color('blue')  # black = default
-        for y in range(len(srm.s_) + len(AO_USED), len(srm.s_) + len(AO_USED) + 2):
+        for y in range(len(AO_USED), len(AO_USED) + 1):
             plt.gca().get_yticklabels()[y].set_color('cornflowerblue')  # black = default
+
     elif usedRegressors == AV_USED:
-        for y in range(len(srm.s_), len(srm.s_) + len(AV_USED)):
+        for y in range(len(AV_USED)):
             plt.gca().get_yticklabels()[y].set_color('red')  # black = default
+
     elif usedRegressors == VIS_USED:
-        for y in range(len(srm.s_), len(srm.s_) + len(VIS_USED)):
+        for y in range(len(VIS_USED)):
             plt.gca().get_yticklabels()[y].set_color('green')  # black = default
 
-#     for x in range(len(AO_USED), len(AO_USED) + len(AV_USED)):
-#         plt.gca().get_xticklabels()[x].set_color('red')
-#
-#     for y in range(len(AO_USED), len(AO_USED) + len(AV_USED)):
-#         plt.gca().get_yticklabels()[y].set_color('red')
-#
-#     for y in range(0, len(AO_USED)):
-#         plt.gca().get_yticklabels()[y].set_color('blue')
 
     # create the output path
     os.makedirs(os.path.dirname(outFpath), exist_ok=True)
 
     # save the plot
     f.savefig(out_fpath + '.png', bbox_inches='tight')  # transparent=True
-    f.savefig(out_fpath + '.pdf', bbox_inches='tight')  # transparent=True
-    f.savefig(out_fpath + '.svg', bbox_inches='tight')  # transparent=True
+#    f.savefig(out_fpath + '.pdf', bbox_inches='tight')  # transparent=True
+#    f.savefig(out_fpath + '.svg', bbox_inches='tight')  # transparent=True
 
     plt.close()
 
@@ -251,34 +248,31 @@ if __name__ == "__main__":
     vis_columns = [(x-1) * 2 for x in VIS_USED]
     vis_reg_names = [VIS_NAMES[x] for x in VIS_USED]
 
-    # Audio-description: read the all 8 design files and concatenate
+    # audio-description: read the 8 design files and concatenate
     aoDf = pd.concat([pd.read_csv(run,
                                   usecols=ao_columns,
                                   names=ao_reg_names,
                                   skiprows=5, sep='\t')
                       for run in aofPathes], ignore_index=True)
 
-    # slice the design file 'cause we won't use the last 75 TRs
-    aoDf = aoDf.iloc[0:7123, :]
+    # add a combination of regressors
+    aoDf['geo&groom'] = aoDf['geo'] + aoDf['groom']
+    # aoDf['geo&groom&furn'] = aoDf['geo'] + aoDf['groom'] + aoDf['furn']
 
-    # movie: read the all 8 design files and concatenate
+    # movie: read the 8 design files and concatenate
     avDf = pd.concat([pd.read_csv(run,
                                   usecols=av_columns,
                                   names=av_reg_names,
                                   skiprows=5, sep='\t')
                       for run in avfPathes], ignore_index=True)
 
-    # movie: read the all 8 design files and concatenate
+    # localizer: read the 4 design files and concatenate
     visDf = pd.concat([pd.read_csv(run,
                                    usecols=vis_columns,
                                   names=vis_reg_names,
                                   skiprows=5, sep='\t')
                       for run in visfPathes], ignore_index=True)
 
-    # concatenate data of AO & AV
-#    all_df = pd.concat([aoDf, avDf], axis=1)
-    aoDf['geo&groom'] = aoDf['geo'] + aoDf['groom']
-    aoDf['geo&groom&furn'] = aoDf['geo'] + aoDf['groom'] + aoDf['furn']
 
     #############
     # LOAD THE SRM MODEL
@@ -297,12 +291,11 @@ if __name__ == "__main__":
     srm_df = pd.DataFrame(data=srm_array,
                           columns=columns)
 
-    # a) plot correlation of time-series of features (AO & AV)
-    # create name of path and file (must not include file extension)
-
+    # a) plot correlation of shared features within in shared feature space
     # create the correlation matrix for all columns
     regCorrMat = srm_df.corr()
 
+    # create name of path and file (must not include file extension)
     out_fpath = os.path.join(outDir,
                              f'corr_shared-responses_{sub}_{model}')
 
@@ -317,7 +310,7 @@ if __name__ == "__main__":
     end = 3524
     # concat regressors and shared responses
     # slice the dataframe cause the last 75 TRs are not in the model space
-    aoModelDf = pd.concat([srm_df[start:end], aoDf[start:end]], axis=1)
+    aoModelDf = pd.concat([aoDf[start:end], srm_df[start:end]], axis=1)
     # create the correlation matrix for all columns
     regCorrMat = aoModelDf.corr()
     # create name of path and file (must not include ".{extension}"
@@ -336,10 +329,10 @@ if __name__ == "__main__":
     srm_av_TRs = srm_df[start:end]
     srm_av_TRs.reset_index(inplace = True, drop = True)
 
-    avModelDf = pd.concat([srm_av_TRs, avDf], axis=1)
+    avModelDf = pd.concat([avDf, srm_av_TRs], axis=1)
     # create the correlation matrix for all columns
     regCorrMat = avModelDf.corr()
-    # create name of path and file (must not include ".{extension}"
+    # create name of path and file (must not include file extension)"
     out_fpath = os.path.join(outDir,
                              f'corr_av-regressors-vs-cfs_{sub}_{model}_{start}-{end}')
     # plot it
@@ -354,10 +347,10 @@ if __name__ == "__main__":
     srm_vis_TRs = srm_df[start:end]
     srm_vis_TRs.reset_index(inplace = True, drop = True)
 
-    visModelDf = pd.concat([srm_vis_TRs, visDf], axis=1)
+    visModelDf = pd.concat([visDf, srm_vis_TRs], axis=1)
     # create the correlation matrix for all columns
     regCorrMat = visModelDf.corr()
-    # create name of path and file (must not include ".{extension}"
+    # create name of path and file (must not include file extension)
     out_fpath = os.path.join(outDir,
                              f'corr_vis-regressors-vs-cfs_{sub}_{model}_{start}-{end}')
     # plot it

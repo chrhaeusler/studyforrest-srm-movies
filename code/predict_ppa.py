@@ -48,6 +48,9 @@ GM_MASK = 'sub-??/masks/in_bold3Tp2/gm_bin_dil_fov.nii.gz'
 AO_ZMAP_PATTERN = 'inputs/studyforrest-ppa-analysis/'\
     'sub-*/2nd-lvl_audio-ppa-ind.gfeat/cope1.feat/stats/zstat1.nii.gz'
 
+AV_ZMAP_PATTERN = 'inputs/studyforrest-ppa-analysis/'\
+    'sub-*/2nd-lvl_movie-ppa-ind.gfeat/cope1.feat/stats/zstat1.nii.gz'
+
 VIS_ZMAP_PATTERN = 'inputs/studyforrest-data-visualrois/'\
     'sub-*/2ndlvl.gfeat/cope*.feat/stats/zstat1.nii.gz'
 
@@ -163,11 +166,14 @@ def transform_ind_ppas(zmap_fpathes, subjs):
         if 'studyforrest-data-visualrois' in zmap_fpath:
             out_file = f'{source_subj}_VIS-PPA.nii.gz'
             out_fpath = os.path.join(out_path, out_file)
+        elif '2nd-lvl_movie-ppa-ind' in zmap_fpath:
+            out_file = f'{source_subj}_AV-PPA.nii.gz'
+            out_fpath = os.path.join(out_path, out_file)
         elif '2nd-lvl_audio-ppa-ind' in zmap_fpath:
             out_file = f'{source_subj}_AO-PPA.nii.gz'
             out_fpath = os.path.join(out_path, out_file)
         else:
-            print('unkown source for PPA (must be from VIS or AO)')
+            print('unkown source for PPA (must be from VIS, AV or AO)')
             continue
 
         # create the output path
@@ -446,6 +452,13 @@ def predict_from_cms(left_out_subj, subjs, zmap_fpathes, start, end):
         out_fpath = os.path.join(
             in_dir, left_out_subj,
             f'predicted-AO-PPA_from_{model}_feat{n_feat}_{start}-{end}.nii.gz')
+    elif '2nd-lvl_movie-ppa-ind' in zmap_fpathes[0]:
+        out_fpath = os.path.join(
+            in_dir, left_out_subj,
+            f'predicted-AV-PPA_from_{model}_feat{n_feat}_{start}-{end}.nii.gz')
+    else:
+        print('unkown source for PPA (must be from VIS, AV or AO)')
+
 
     # save it
     nib.save(predicted_img, out_fpath)
@@ -465,10 +478,12 @@ def predict_from_ana(left_out_subj, nifti_masker, subjs, zmap_fpathes):
         # subject-specific space of the current subject
         if 'studyforrest-data-visualrois' in zmap_fpathes[0]:
             which_PPA = 'VIS'
+        elif '2nd-lvl_movie-ppa-ind' in zmap_fpathes[0]:
+            which_PPA = 'AV'
         elif '2nd-lvl_audio-ppa-ind' in zmap_fpathes[0]:
             which_PPA = 'AO'
         else:
-            print('unkown source for PPA (must be from VIS or AO)')
+            print('unkown source for PPA (must be from VIS, AV or AO)')
             break
 
         ppa_img_fpath = os.path.join(
@@ -637,7 +652,8 @@ def run_the_predictions(zmap_fpathes, subjs, model):
     # adjust the name of the output file according to the input:
     if 'studyforrest-data-visualrois' in zmap_fpathes[0]:
         which_PPA = 'VIS'
-
+    elif '2nd-lvl_movie-ppa-ind' in zmap_fpathes[0]:
+        which_PPA = 'AV'
     elif '2nd-lvl_audio-ppa-ind' in zmap_fpathes[0]:
         which_PPA = 'AO'
 
@@ -713,7 +729,7 @@ if __name__ == "__main__":
     # subject-specific z-maps from the localizer into MNI space
     # (and later transform then into the subject-space of the left-out subject
 
-    # VIS LOCALIZER PPA
+    # VIS PPA
     # create the list of all subjects' VIS zmaps by substituting the
     # subject's string and the correct cope that was used in Sengupta et al.
     zmap_fpathes = [
@@ -722,15 +738,22 @@ if __name__ == "__main__":
 
     print('\nTransforming VIS z-maps into MNI and into other subjects\' space')
     transform_ind_ppas(zmap_fpathes, subjs)
-
     run_the_predictions(zmap_fpathes, subjs, model)
 
-    # AO STIMULUS PPA
+    # AO PPA
     zmap_fpathes = [
         (AO_ZMAP_PATTERN.replace('sub-*', x[0]))
         for x in VIS_VPN_COPES.items()]
 
     print('\nTransforming AO z-maps into MNI and into other subjects\' space')
     transform_ind_ppas(zmap_fpathes, subjs)
+    run_the_predictions(zmap_fpathes, subjs, model)
 
+    # AV PPA
+    zmap_fpathes = [
+        (AV_ZMAP_PATTERN.replace('sub-*', x[0]))
+        for x in VIS_VPN_COPES.items()]
+
+    print('\nTransforming AV z-maps into MNI and into other subjects\' space')
+    transform_ind_ppas(zmap_fpathes, subjs)
     run_the_predictions(zmap_fpathes, subjs, model)

@@ -14,7 +14,7 @@ executable = /bin/bash
 transfer_executable = False
 should_transfer_files = NO
 
-arguments = python3 ./code/predict_ppa.py -model 'srm-ao-av-vis' -indir 'test' -nfeat '10' -niter '30'
+arguments = ./code/predict_ppa.py -model 'srm-ao-av-vis' -indir 'test' -nfeat '10' -niter '30'
 queue
-arguments = python3 ./code/predict_ppa.py -model 'srm-ao-av' -indir 'test' -nfeat '10' -niter '30'
+arguments = ./code/predict_ppa.py -model 'srm-ao-av' -indir 'test' -nfeat '10' -niter '30'
 queue

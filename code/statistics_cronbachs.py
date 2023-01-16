@@ -15,12 +15,6 @@ import numpy as np
 import re
 
 # constants
-VIS_FRST_LVL_PTTRN = 'inputs/studyforrest-data-visualrois/' \
-    'sub-*/run-*.feat/stats/zstat?.nii.gz'
-
-GRP_PPA_PTTRN = 'sub-??/masks/in_bold3Tp2/grp_PPA_bin.nii.gz'
-AO_FOV_MASK = 'sub-??/masks/in_bold3Tp2/audio_fov.nii.gz'
-
 # contrast used by Sengupta et al. (2016) to create the PPA mask
 VIS_VPN_COPES = OrderedDict({  # dicts are ordered from Python 3.7
     'sub-01': 'cope8',
@@ -38,6 +32,23 @@ VIS_VPN_COPES = OrderedDict({  # dicts are ordered from Python 3.7
     'sub-19': 'cope3',
     'sub-20': 'cope3'
 })
+
+# pattern for the localizer contrast
+VIS_FRST_LVL_PTTRN = 'inputs/studyforrest-data-visualrois/' \
+    'sub-*/run-*.feat/stats/zstat?.nii.gz'
+
+# pattern for the PPA localized via movie (primary contrast)
+AV_FRST_LVL_PTTRN = 'inputs/studyforrest-ppa-analysis/' \
+    'sub-*/run-*_movie-ppa-ind.feat/stats/zstat1.nii.gz'
+
+# pattern for the PPA localized via audio-description (primary contrast)
+AO_FRST_LVL_PTTRN = 'inputs/studyforrest-ppa-analysis/' \
+    'sub-*/run-*_audio-ppa-ind.feat/stats/zstat1.nii.gz'
+
+# pattern for the mask in subject space
+GRP_PPA_PTTRN = 'sub-??/masks/in_bold3Tp2/grp_PPA_bin.nii.gz'
+AO_FOV_MASK = 'sub-??/masks/in_bold3Tp2/audio_fov.nii.gz'
+
 
 
 def parse_arguments():
@@ -71,11 +82,11 @@ def parse_arguments():
     args = parser.parse_args()
 
     outDir = args.outDir
-    visPattern = args.vis
+    # visPattern = args.vis
     groupPPAmask = args.grpPPAmask
     aoFOVmask = args.aoFOVmask
 
-    return outDir, visPattern, groupPPAmask, aoFOVmask
+    return outDir, groupPPAmask, aoFOVmask
 
 
 def find_files(pattern):
@@ -157,7 +168,7 @@ def cronbach_alpha_alt(matrix):
 
 if __name__ == "__main__":
     # read command line arguments
-    outDir, visPattern, groupPPApattern, aoFOVpattern = parse_arguments()
+    outDir, groupPPApattern, aoFOVpattern = parse_arguments()
 
     # get the subjects for which data are available
     subjsPathPattern = 'sub-??'
@@ -165,51 +176,67 @@ if __name__ == "__main__":
     subjs = [re.search(r'sub-..', string).group() for string in subjsPathes]
     subjs = sorted(list(set(subjs)))
 
-    # for later prediction from anatomy, we need to transform the
-    # subject-specific z-maps from the localizer into MNI space
-    # (and later transform then into the subject-space of the left-out subject
+    criterions = ['visual localizer',
+                  'movie',
+                  'audio-description']
 
-    ### VIS LOCALIZER PPA
-    # create the list of all subjects' VIS zmaps by substituting the
-    # subject's string and the correct cope that was used in Sengupta et al.
-    frstLvlPttrn = [
-        (visPattern.replace('sub-*', x[0]).replace('?', x[1][-1]))
-        for x in VIS_VPN_COPES.items()]
+    toWrite = [["sub", 'stimulus', "Cronbach's a", 'number of voxels']]
 
-    toWrite = [["sub", "Cronbach's a", 'number of voxels']]
-    for subj in subjs[:]:
-        # filtere input patterns of first run for current subj
-        zmapPattern = [x for x in frstLvlPttrn if subj in x][0]
-        zmapFpathes = find_files(zmapPattern)
+    # loop over PPAs localized via VIS, AV, and AO
+    for criterion in criterions:
+        print(criterion)
 
-        # load the mask (combines PPA + gray matter)
-        mask_img = load_mask(subj, groupPPApattern, aoFOVpattern)
-        # create instance of NiftiMasker used to mask the 4D time-series
-        nifti_masker = NiftiMasker(mask_img=mask_img)
+        # create the list of all subjects' z-maps
+        if criterion == 'visual localizer':
+            # use the correct cope that was used in Sengupta et al.
+            frstLvlPttrn = [
+                (VIS_FRST_LVL_PTTRN.replace('sub-*', x[0]).replace('?', x[1][-1]))
+                for x in VIS_VPN_COPES.items()]
+        elif criterion == 'movie':
+            frstLvlPttrn = [AV_FRST_LVL_PTTRN.replace('sub-*', x) for x in subjs]
+        elif criterion == 'audio-description':
+            frstLvlPttrn = [AO_FRST_LVL_PTTRN.replace('sub-*', x) for x in subjs]
 
-        # loops through the runs
-        fourRunsList = []
-        for zmapFpath in zmapFpathes:
-            # load the current's run image
-            zmap_img = nib.load(zmapFpath)
+        # loop over the subjects
+        resultsForCriterion = []
+        for subj in subjs[:]:
+            # filter input patterns of first run for current subj
+            zmapPattern = [x for x in frstLvlPttrn if subj in x][0]
+            zmapFpathes = find_files(zmapPattern)
 
-            # mask the VIS z-map
-            nifti_masker.fit(zmap_img)
-            masked_data = nifti_masker.transform(zmap_img)
-            fourRunsList.append(masked_data)
+            # load the mask (combines PPA + gray matter)
+            mask_img = load_mask(subj, groupPPApattern, aoFOVpattern)
+            # create instance of NiftiMasker used to mask the 4D time-series
+            nifti_masker = NiftiMasker(mask_img=mask_img)
 
-        fourRuns = np.concatenate(fourRunsList, axis=0)
-        cronbach = cronbach_alpha(fourRuns)
-        print(f'{subj}, {masked_data.shape[1]} voxel, a={round(cronbach, 2)}')
-        toWrite.append([subj, cronbach, masked_data.shape[1]])
+            # loops through the runs
+            fourRunsList = []
+            for zmapFpath in zmapFpathes:
+                print(zmapFpath)
+                # load the current's run image
+                zmap_img = nib.load(zmapFpath)
+
+                # mask the VIS z-map
+                nifti_masker.fit(zmap_img)
+                masked_data = nifti_masker.transform(zmap_img)
+                fourRunsList.append(masked_data)
+
+            fourRuns = np.concatenate(fourRunsList, axis=0)
+            cronbach = cronbach_alpha(fourRuns)
+            print(f'{subj}, {masked_data.shape[1]} voxel, a={round(cronbach, 2)}')
+            resultsForCriterion.append([subj, criterion, cronbach, masked_data.shape[1]])
+
+        # print results to screen
+        alphasForPrint = [str(round(x[2], 2)) for x in resultsForCriterion[1:]]
+        print(', '.join(alphasForPrint))
+
+        toWrite.extend(resultsForCriterion)
 
     with open(opj(outDir, 'statistics_cronbachs.csv'), 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(toWrite)
 
     # print results
-    alphasForPrint = [str(round(x[1], 2)) for x in toWrite[1:]]
-    print(', '.join(alphasForPrint))
 
 
 

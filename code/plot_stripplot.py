@@ -8,6 +8,7 @@ from glob import glob
 import argparse
 import ipdb
 import matplotlib.pyplot as plt
+import numpy as np
 import os
 import pandas as pd
 import seaborn as sns
@@ -24,6 +25,11 @@ def parse_arguments():
                         default='test/srm-ao-av-vis_feat10_corr_VIS-PPA-vs-CFS-PPA.csv',
                         help='the data as csv')
 
+    parser.add_argument('-inav',
+                        required=False,
+                        default='test/srm-ao-av-vis_feat10_corr_AV-PPA-vs-CFS-PPA.csv',
+                        help='the data as csv')
+
     parser.add_argument('-inao',
                         required=False,
                         default='test/srm-ao-av-vis_feat10_corr_AO-PPA-vs-CFS-PPA.csv',
@@ -38,10 +44,11 @@ def parse_arguments():
     args = parser.parse_args()
 
     inVisResults = args.invis
+    inAvResults = args.inav
     inAoResults = args.inao
     outdir = args.outdir
 
-    return inVisResults, inAoResults, outdir
+    return inVisResults, inAvResults, inAoResults, outdir
 
 
 def find_files(pattern):
@@ -94,16 +101,18 @@ def plot_subplot(axNr, title, df, legend=True):
 
 if __name__ == "__main__":
     # read command line arguments
-    visResults, aoResults, outDir = parse_arguments()
+    visResults, avResults, aoResults, outDir = parse_arguments()
 
+    # some preparations for plotting
     # close figure
     plt.close()
-
-
+    # set style for seaborn
     sns.set_theme(style='whitegrid')
+    # set seed to always have the same jitter
+    np.random.seed(seed=1984)
 
     # create figure
-    fig, axes = plt.subplots(2, 1, figsize=(12,8), sharex=False)
+    fig, axes = plt.subplots(3, 1, figsize=(16,10), sharex=False)
 
     # figure title
     fig.suptitle('Correlations between empirical and predicted Z-maps')
@@ -119,9 +128,19 @@ if __name__ == "__main__":
                            )
 
     # plot lower subplot
-    aoDf = pd.read_csv(aoResults)
+    avDf = pd.read_csv(avResults)
     axNr = 1
     axes[1] = plot_subplot(axNr,
+                           'PPA localized via movie (Häusler et al., 2022)',
+                           avDf,
+                           legend=False
+                           )
+
+
+    # plot lower subplot
+    aoDf = pd.read_csv(aoResults)
+    axNr = 2
+    axes[2] = plot_subplot(axNr,
                            'PPA localized via audio-description (Häusler et al., 2022)',
                            aoDf,
                            legend=False
