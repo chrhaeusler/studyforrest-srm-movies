@@ -658,7 +658,7 @@ def run_the_predictions(zmap_fpathes, subjs, model):
         which_PPA = 'AO'
 
     # save the dataframe for the currently used CMS
-    df.to_csv(f'{in_dir}/{model}_feat{n_feat}_corr_{which_PPA}-PPA-vs-CFS-PPA.csv', index=False)
+    df.to_csv(f'{in_dir}/corr_{which_PPA.lower()}-ppa-vs-estimation_{model}_feat{n_feat}.csv', index=False)
 
     return None
 

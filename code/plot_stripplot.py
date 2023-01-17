@@ -18,23 +18,22 @@ def parse_arguments():
     '''
     '''
     parser = argparse.ArgumentParser(
-        description='loads a csv file to plot data as stripplot')
+        description='loads csv files to plot data as stripplot')
 
     parser.add_argument('-invis',
                         required=False,
-                        default='test/srm-ao-av-vis_feat10_corr_VIS-PPA-vs-CFS-PPA.csv',
+                        default='test/corr_vis-ppa-vs-estimation_srm-ao-av-vis_feat10.csv',
                         help='the data as csv')
 
     parser.add_argument('-inav',
                         required=False,
-                        default='test/srm-ao-av-vis_feat10_corr_AV-PPA-vs-CFS-PPA.csv',
+                        default='test/corr_av-ppa-vs-estimation_srm-ao-av-vis_feat10.csv',
                         help='the data as csv')
 
     parser.add_argument('-inao',
                         required=False,
-                        default='test/srm-ao-av-vis_feat10_corr_AO-PPA-vs-CFS-PPA.csv',
+                        default='test/corr_ao-ppa-vs-estimation_srm-ao-av-vis_feat10.csv',
                         help='the data as csv')
-
 
     parser.add_argument('-outdir',
                         required=False,
@@ -112,41 +111,40 @@ if __name__ == "__main__":
     np.random.seed(seed=1984)
 
     # create figure
-    fig, axes = plt.subplots(3, 1, figsize=(16,10), sharex=False)
+    fig, axes = plt.subplots(3, 1, figsize=(16, 10), sharex=False)
 
     # figure title
     fig.suptitle('Correlations between empirical and predicted Z-maps')
 
-    # plot upper subplot
+    # upper subplot: visual localizer
     # read the data first
     visDf = pd.read_csv(visResults)
     axNr = 0
-    axes[0] = plot_subplot(axNr,
-                           'PPA localized via visual localizer (Sengupta et al., 2016)',
-                           visDf,
-                           legend=True
-                           )
+    axes[axNr] = plot_subplot(axNr,
+                              'PPA localized via visual localizer (Sengupta et al., 2016)',
+                              visDf,
+                              legend=True
+                              )
 
-    # plot lower subplot
+    # plot middle subplot
     avDf = pd.read_csv(avResults)
     axNr = 1
-    axes[1] = plot_subplot(axNr,
-                           'PPA localized via movie (Häusler et al., 2022)',
-                           avDf,
-                           legend=False
-                           )
-
+    axes[axNr] = plot_subplot(axNr,
+                              'PPA localized via movie (Häusler et al., 2022)',
+                              avDf,
+                              legend=False
+                              )
 
     # plot lower subplot
     aoDf = pd.read_csv(aoResults)
     axNr = 2
-    axes[2] = plot_subplot(axNr,
-                           'PPA localized via audio-description (Häusler et al., 2022)',
-                           aoDf,
-                           legend=False
-                           )
+    axes[axNr] = plot_subplot(axNr,
+                              'PPA localized via audio-description (Häusler et al., 2022)',
+                              aoDf,
+                              legend=False
+                              )
 
-    plt.subplots_adjust(hspace=0.35,
+    plt.subplots_adjust(hspace=0.4,
                         wspace=None,
                         top=None,
                         bottom=None,
@@ -154,10 +152,13 @@ if __name__ == "__main__":
                         right=None
                         )
 
-    plt.savefig(f'{outDir}/stripplot.pdf',
+    plt.savefig(f'{outDir}/plot_corr-emp-vs-estimation.pdf',
                 bbox_inches='tight')
 
-    plt.savefig(f'{outDir}/stripplot.png',
+    plt.savefig(f'{outDir}/plot_corr-emp-vs-estimation.png',
+                bbox_inches='tight')
+
+    plt.savefig(f'{outDir}/plot_corr-emp-vs-estimation.svg',
                 bbox_inches='tight')
 
     plt.show()
