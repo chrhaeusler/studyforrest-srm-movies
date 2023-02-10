@@ -13,7 +13,7 @@ import pandas as pd
 import seaborn as sns
 
 STIMULICOLORS = {'anatomical alignment': 'grey',
-                 'visual localizer': 'limegreen',
+                 'visual localizer': 'y',
                  'movie': 'red',
                  'audio-description': 'blue'
                  }
@@ -67,29 +67,47 @@ def plot_boxplot(axis, df):
     axis = sns.boxplot(
         data=df,
         ax=axis,
-        zorder=2,  # boxplots are supposed to be behind the stripplot
+        zorder=1,  # boxplots are supposed to be behind the stripplot
         x='number of runs',
         y="Pearson's r",
         hue='prediction via',
         hue_order=STIMULICOLORS.keys(),
         palette=STIMULICOLORS,
+        # width=0.1,
         # median
-        medianprops={'visible': True, 'color': 'k'},
+        medianprops={'visible': True,
+                     'color': 'dimgrey',
+                     'ls': '-',
+                     'lw': 1,
+                     # 'alpha': 0.3
+                     },
         # mean
         showmeans=True,
         meanline=True,
-        meanprops={'color': 'k', 'ls': '--', 'lw': 1, 'alpha': 0.3},
+        meanprops={'color': 'dimgrey',
+                   'ls': (0, (1, 1)),
+                   'lw': 1,
+                   # 'alpha': 0.3
+                   },
         # outliers
-        showfliers=True,
-        flierprops={'marker': 'x', 'markersize': 8},
+        showfliers=False,
+        # flierprops={'marker': 'x', 'markersize': 8},
         # box
         showbox=True,
-        boxprops={'alpha': 0.3},
+        boxprops={# 'color': STIMULICOLORS.items(),
+                  'lw': 1,
+                  'alpha': 0.3
+                  },
         # whiskers
-        whiskerprops={'visible': True, 'alpha': 0.3},
+        whiskerprops={'color': 'dimgrey',
+                      'lw': 1,
+                      'alpha': 0.3
+                      },
         # caps (horizontal lines at the ends of whiskers)
         showcaps=True,
-        capprops={'alpha': 0.3},
+        capprops={'color': 'dimgrey',
+                  'alpha': 0.3
+                  },
     )
 
     # remove the handles and labels from the legend
@@ -99,7 +117,7 @@ def plot_boxplot(axis, df):
     return axis
 
 
-def plot_subplot(axis, title, df, boxplot=False, legend=True):
+def plot_subplot(axis, title, df, boxplot=False, legend=True, xlabel=True, ylabel=True):
     '''
     '''
     axis.set_title(title)
@@ -120,6 +138,19 @@ def plot_subplot(axis, title, df, boxplot=False, legend=True):
         dodge=True
     )
 
+    # set a custom label for the x axis
+    if xlabel == True:
+        axis.set_xlabel('number of runs / segments')
+    else:
+        x_axis = axis.axes.get_xaxis()
+        x_label = x_axis.get_label()
+        x_label.set_visible(False)
+
+    if ylabel == False:
+        y_axis = axis.axes.get_yaxis()
+        y_label = y_axis.get_label()
+        y_label.set_visible(False)
+
     # set the same limits for the y axis
     # to make subplots comparable
     axis.set_ylim([-0.3, 1])
@@ -127,6 +158,7 @@ def plot_subplot(axis, title, df, boxplot=False, legend=True):
 
     # one legend in the figure is sufficient
     # remove it from (some) subplots
+
     if legend:
         handles, labels = axis.get_legend_handles_labels()
         axis.legend(handles[-4:], labels[-4:], loc='lower right')
@@ -152,10 +184,10 @@ if __name__ == "__main__":
     fig, axes = plt.subplots(3, 1, figsize=(16, 10), sharex=False)
 
     # figure title
-    fig.suptitle('Correlations between empirical and predicted Z-maps')
+    # fig.suptitle('Correlations between empirical and predicted Z-maps')
 
     # adjust some spacings
-    plt.subplots_adjust(hspace=0.4,
+    plt.subplots_adjust(hspace=0.35,
                         wspace=None,
                         top=None,
                         bottom=None,
@@ -163,50 +195,12 @@ if __name__ == "__main__":
                         right=None
                         )
 
-    # upper subplot: visual localizer
-    # read the first
-    visDf = pd.read_csv(visResults)
-    axNr = 0
-    # call the plotting function
-    axes[axNr] = plot_subplot(
-        axes[axNr],
-        'PPA localized via visual localizer (Sengupta et al., 2016)',
-        visDf,
-        boxplot=True,
-        legend=True
-    )
-
-    # plot middle subplot
-    avDf = pd.read_csv(avResults)
-    axNr = 1
-    # call the plotting function
-    axes[axNr] = plot_subplot(
-        axes[axNr],
-        'PPA localized via movie (Häusler et al., 2022)',
-        avDf,
-        boxplot=True,
-        legend=False
-    )
-
-    # plot lower subplot
-    aoDf = pd.read_csv(aoResults)
-    axNr = 2
-    # call the plotting function
-    axes[axNr] = plot_subplot(
-        axes[axNr],
-        'PPA localized via audio-description (Häusler et al., 2022)',
-        aoDf,
-        boxplot=True,
-        legend=False
-    )
-
     # add the Cronbach's a to the subplot
-    # which measure across subjects to calculate?
-    centrTendFunc = np.median  # vs. np.mean
     # read the results of Cronbachs per stimulus per subject
     df = pd.read_csv(cronbachs)
     # pivot the table
-    centrTends = pd.pivot_table(df, index='stimulus', aggfunc=centrTendFunc)
+    medians = pd.pivot_table(df, index='stimulus', aggfunc=np.median)
+    means = pd.pivot_table(df, index='stimulus', aggfunc=np.mean)
 
     # loop over the subplots
     # and add measure of central tendency for predicted PPA
@@ -215,11 +209,62 @@ if __name__ == "__main__":
         color = stimCol[1]
 
         # get the value of central tendency of the current loops stimulus
-        centrTend = centrTends.loc[stimulus]["Cronbach's a"]
-        axes[axNr].axhline(y=centrTend,
+        median = medians.loc[stimulus]["Cronbach's a"]
+        axes[axNr].axhline(y=median,
+                           zorder=0,
                            color=color,
-                           linestyle='--',
-                           alpha=0.6)
+                           linestyle='-',
+                           alpha=0.4
+                           )
+
+        mean = means.loc[stimulus]["Cronbach's a"]
+        axes[axNr].axhline(y=mean,
+                           zorder=0,
+                           color=color,
+                           linestyle=(0, (1, 1)),
+                           alpha=0.4
+                           )
+
+    # upper subplot: visual localizer
+    # read the first
+    visDf = pd.read_csv(visResults)
+    axNr = 0
+    # call the plotting function
+    axes[axNr] = plot_subplot(
+        axes[axNr],
+        'Estimation of the visual localizer\'s empirical $\it{Z}$-maps (cf. Sengupta et al., 2016)',
+        visDf,
+        boxplot=True,
+        legend=True,
+        ylabel=False,
+        xlabel=False
+    )
+
+    # plot middle subplot
+    avDf = pd.read_csv(avResults)
+    axNr = 1
+    # call the plotting function
+    axes[axNr] = plot_subplot(
+        axes[axNr],
+        'Estimation of the movie\'s empirical $\it{Z}$-maps (cf. Häusler et al., 2022)',
+        avDf,
+        boxplot=True,
+        legend=False,
+        xlabel=False
+    )
+
+    # plot lower subplot
+    aoDf = pd.read_csv(aoResults)
+    axNr = 2
+    # call the plotting function
+    axes[axNr] = plot_subplot(
+        axes[axNr],
+        'Estimation of the audio-description\'s empirical $\it{Z}$-maps (cf. Häusler et al., 2022)',
+        aoDf,
+        boxplot=True,
+        legend=False,
+        ylabel=False
+    )
 
     # save the figure
     os.makedirs(outDir, exist_ok=True)

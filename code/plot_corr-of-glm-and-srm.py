@@ -178,7 +178,7 @@ def plot_heatmap(title, matrix, outFpath, usedRegressors=[]):
     plt.xticks(rotation=90, fontsize=12)
     plt.yticks(rotation=0, fontsize=12)
 
-    plt.title(title)
+    # plt.title(title)
 
     # coloring of ticklabels
     # x-axis
@@ -196,7 +196,7 @@ def plot_heatmap(title, matrix, outFpath, usedRegressors=[]):
 
     elif usedRegressors == VIS_USED:
         for x in range(len(VIS_USED)):
-            plt.gca().get_xticklabels()[x].set_color('green')  # black = default
+            plt.gca().get_xticklabels()[x].set_color('y')  # black = default
 
     # y-axis
     if usedRegressors == AO_USED:
@@ -211,17 +211,16 @@ def plot_heatmap(title, matrix, outFpath, usedRegressors=[]):
 
     elif usedRegressors == VIS_USED:
         for y in range(len(VIS_USED)):
-            plt.gca().get_yticklabels()[y].set_color('green')  # black = default
+            plt.gca().get_yticklabels()[y].set_color('y')  # black = default
 
 
     # create the output path
     os.makedirs(os.path.dirname(outFpath), exist_ok=True)
 
-    # save the plot
-    f.savefig(out_fpath + '.png', bbox_inches='tight')  # transparent=True
-#    f.savefig(out_fpath + '.pdf', bbox_inches='tight')  # transparent=True
-#    f.savefig(out_fpath + '.svg', bbox_inches='tight')  # transparent=True
-
+    extensions = ['pdf', 'png', 'svg']
+    for extension in extensions:
+        fpath = os.path.join(f'{out_fpath}.{extension}')
+        plt.savefig(fpath, bbox_inches='tight')
     plt.close()
 
 
@@ -286,7 +285,7 @@ if __name__ == "__main__":
     srm_array = srm.s_.T
 
     # create pandas dataframe from array and name the columns
-    columns = ['sh. res. %s' % str(int(x)+1) for x in range(srm_array.shape[1])]
+    columns = ['shared feature %s' % str(int(x)+1) for x in range(srm_array.shape[1])]
 
     srm_df = pd.DataFrame(data=srm_array,
                           columns=columns)
@@ -317,7 +316,7 @@ if __name__ == "__main__":
     out_fpath = os.path.join(outDir,
                              f'corr_ao-regressors-vs-cfs_{sub}_{model}_{start}-{end}')
 
-    title = f'{sub}: AO Regressors vs. Shared Responses ({model}; TRs {start}-{end})'
+    title = f'{sub}: AO Regressors vs. Shared Features ({model}; TRs {start}-{end})'
     # plot it
     plot_heatmap(title, regCorrMat, out_fpath, AO_USED)
 
