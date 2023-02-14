@@ -2,32 +2,57 @@
 '''
 created on Mon March 29th 2021
 author: Christian Olaf Haeusler
+
+To do:
+    - add header to csv
+    - add stat and p-value for tests of normality
+    - use floats, not scientific annotation when writing to file
+    - test vs. Cronbach's?
 '''
 
-from collections import OrderedDict
-from glob import glob
-from nilearn.input_data import NiftiMasker, MultiNiftiMasker
-from scipy import stats
 
 import argparse
-import copy
-import ipdb
-import matplotlib.pyplot as plt
-import nibabel as nib
+import csv
 import numpy as np
 import os
 import pandas as pd
-import re
-import subprocess
-import sys
-sys.path.append('code')
-import corrstats
+
+from glob import glob
+from statsmodels.stats.diagnostic import lilliefors
+from scipy import stats
+
+
+# beautifully hardcoded
+todoDict = {
+    'corr_vis-ppa-vs-estimation_srm-ao-av-vis_feat10.csv':
+    [
+        ('movie', 1, 'anatomical alignment', 0),
+        ('movie', 1, 'visual localizer', 4),
+        ('movie', 1, 'movie', 2),
+        ('movie', 2, 'movie', 3),
+        ('audio-description', 1, 'visual localizer', 4)
+    ],
+    'corr_av-ppa-vs-estimation_srm-ao-av-vis_feat10.csv':
+    [
+        ('movie', 1, 'anatomical alignment', 0),
+        ('movie', 1, 'visual localizer', 4),
+        ('movie', 1, 'movie', 2),
+        ('movie', 2, 'movie', 3),
+        ('audio-description', 1, 'visual localizer', 4)
+    ],
+    'corr_ao-ppa-vs-estimation_srm-ao-av-vis_feat10.csv':
+    [
+        ('movie', 1, 'anatomical alignment', 0)
+    ]
+}
+
 
 def parse_arguments():
     '''
     '''
     parser = argparse.ArgumentParser(
-        description='loads data from VIS runs and denoises them'
+        description='reads cvs\'s comprising the correlations between' \
+        'empirical and estimated Z-maps'
     )
 
     parser.add_argument('-indir',
@@ -35,101 +60,146 @@ def parse_arguments():
                         default='test',
                         help='input directory')
 
-    parser.add_argument('-run',
+    parser.add_argument('-outdir',
                         required=False,
-                        default='1',
-                        help='run to be tested')
+                        default='test',
+                        help='ouput directory')
 
     args = parser.parse_args()
 
     indir = args.indir
-    run = args.run
+    outdir = args.outdir
 
-    return indir, run
+    return indir, outdir
 
 
-def find_files(pattern):
+def test_shapiro(values):
     '''
     '''
-    def sort_nicely(l):
-        '''Sorts a given list in the way that humans expect
-        '''
-        convert = lambda text: int(text) if text.isdigit() else text
-        alphanum_key = lambda key: [convert(c) for c in re.split("([0-9]+)", key)]
-        l.sort(key=alphanum_key)
+    alpha = 0.05
 
-        return l
+    print('Shapiro-Wilk-Test:')
+    stat, p = stats.shapiro(values)
+    print('Statistics=%.3f, p=%.3f' % (stat, p))
 
-    found_files = glob(pattern)
-    found_files = sort_nicely(found_files)
+    if p > alpha:
+        print('Sample looks Gaussian (fail to reject H0)')
+    else:
+        print('Sample does NOT look Gaussian (reject H0) <-----------')
 
-    return found_files
+    return stat, p
+
+
+def test_lilliefors(values):
+    '''
+    '''
+    alpha = 0.05
+
+    print('Lilliefors:')
+    stat, p = lilliefors(values, dist='norm', pvalmethod='table')
+    print('Statistics=%.3f, p=%.3f' % (stat, p))
+
+    if p > alpha:
+        print('Sample looks Gaussian (fail to reject H0)')
+    else:
+        print('Sample does NOT look Gaussian (reject H0) <-----------')
+
+    return stat, p
 
 
 if __name__ == "__main__":
     # read command line arguments
-    in_dir, run = parse_arguments()
+    inDir, outDir = parse_arguments()
 
-    stimulus, stim = 'movie', 'AV'  # vs. 'audio-description', 'AO'
-    runA = 7
-    runB = 8
+    #
+    allToWrite = []
 
-    df = pd.read_csv('test/corr-empVIS-vs-func.csv')
+    # loop over the input files (one for each paradigm to be estimated)
+    for criterion in list(todoDict.items()):
+        inFile = criterion[0]
+        toDos = criterion[1]
 
-    corrsAna = df.loc[df['prediction from'] == 'anatomy', 'Pearson\'s r']
-    corrsAna = corrsAna.values
-    # perform Fisher's z-transformation
-    corrsAnaZ = np.arctanh(corrsAna)
+        if 'corr_vis-ppa' in inFile:
+            crit = 'vis'
+        elif 'corr_av-ppa' in inFile:
+            crit = 'av'
+        elif 'corr_ao-ppa' in inFile:
+            crit = 'ao'
+        # change to raising an exception
+        else:
+            print('unknown criterium')
+            break
 
-    # get corrleation between empirical and prediction from CMS
-    allRuns = df.loc[df['prediction from'] == stimulus, ['runs', 'Pearson\'s r']]
+        inFpath = os.path.join(inDir, inFile)
+        print(f'\nreading {inFpath}')
+        df = pd.read_csv(inFpath)
 
-    for runA in list(range(1, 8)):
-        runB = runA + 1
+        # loop over the pairs to test
+        for toDo in toDos:
+            currentTestToWrite = []
+            # unpack values (explicitly) from dict
+            firstPred, firstQuant, secondPred, secondQuant = toDo
+            print(f'\nTesting {firstPred} ({firstQuant} runs) vs. '
+                  f'{secondPred} ({secondQuant} runs)')
 
-        # get correlations functional vs. empirical for run A
-        corrsRunA = allRuns.loc[allRuns['runs'] == runA, 'Pearson\'s r']
-        corrsRunA = corrsRunA.values
-        # perform Fisher's z-transformation
-        corrsRunAZ = np.arctanh(corrsRunA)
+            # filter for first predictor
+            firstDf = df.loc[df['prediction via'] == firstPred,
+                            ['number of runs', 'Pearson\'s r']]
+            # filter for first predictor's number of runs / segments
+            firstVals = firstDf.loc[firstDf['number of runs'] == firstQuant,
+                                    'Pearson\'s r'].values
 
-        # compare run 1 (and just run 1) to correlation anatomy vs. empirical
-        if runA == 1:
-            print(f'Run {runA} vs Anatomy:')
+            # filter for second predictor
+            secondDf = df.loc[df['prediction via'] == secondPred,
+                            ['number of runs', 'Pearson\'s r']]
+            # filter for second predictor's number of runs / segments
+            secondVals = secondDf.loc[secondDf['number of runs'] == secondQuant,
+                                    'Pearson\'s r'].values
+
+            # Do Fisher's z-transformation
+            firstValsZ = np.arctanh(firstVals)
+            secondValsZ = np.arctanh(secondVals)
+
+            print('\nTests for normality:')
+
+
+            print(f'{firstPred} ({firstQuant} runs), Fisher\'s transformed')
+            test_shapiro(firstValsZ)
+            test_lilliefors(firstValsZ)
+
+            print(f'{secondPred} ({secondQuant} runs), Fisher\'s transformed')
+            test_shapiro(secondValsZ)
+            test_lilliefors(secondValsZ)
+
+            # perform the t-tests
+            ttalpha = 0.05
+            print(f'\nt-test {firstPred} ({firstQuant} runs) vs. {secondPred} ({secondQuant})')
+
             # independent t-test
-            tValue, pValue = stats.ttest_ind(corrsRunAZ, corrsAnaZ)
-            tValue = round(tValue, 2)
-            pValue = round(pValue, 4)
-            print(f'independent:\tt={tValue}, p={pValue}')
+            indtValue, indpValue = stats.ttest_ind(firstValsZ, secondValsZ)
+            if indpValue <= ttalpha:
+                print(f'independent:\tt={indtValue:.4f}, p={indpValue:.4f}\tsignficiant')
+            else:
+                print(f'independent:\tt={indtValue:.4f}, p={indpValue:.4f}\tNOT signficiant')
+
             # dependent t-test
-            tValue, pValue = stats.ttest_rel(corrsRunAZ, corrsAnaZ)
-            tValue = round(tValue, 2)
-            pValue = round(pValue, 4)
-            print(f'dependent:\tt={tValue}, p={pValue}\n')
+            deptValue, deppValue = stats.ttest_rel(firstValsZ, secondValsZ)
+            if deppValue <= ttalpha:
+                print(f'dependent:\tt={deptValue:.4f}, p={deppValue:.4f}\tsignficiant')
+            else:
+                print(f'dependent:\tt={deptValue:.4f}, p={deppValue:.4f}\tNOT signficiant')
 
-        # get correlations functional vs. empirical for run B
-        corrsRunB = allRuns.loc[allRuns['runs'] == runB, 'Pearson\'s r']
-        corrsRunB = corrsRunB.values
-        # perform Fisher's z-transformation
-        corrsRunBZ = np.arctanh(corrsRunB)
+            currentTestToWrite = [crit,
+                                  firstPred, firstQuant,
+                                  secondPred, secondQuant,
+                                  indtValue, indpValue,
+                                  deptValue, deppValue
+                                  ]
 
-        print(f'Run {runA} vs {runB}:')
-        # independent t-test
-        tValue, pValue = stats.ttest_ind(corrsRunAZ, corrsRunBZ)
-        tValue = round(tValue, 2)
-        pValue = round(pValue, 5)
-        print(f'independent:\tt={tValue}, p={pValue}')
-        # dependent t-test
-        tValue, pValue = stats.ttest_rel(corrsRunAZ, corrsRunBZ)
-        tValue = round(tValue, 2)
-        pValue = round(pValue, 5)
-        print(f'dependent:\tt={tValue}, p={pValue}\n')
+            allToWrite.append(currentTestToWrite)
 
-        # get correlations between predictions from CMS and anatomy
-#         allRuns = df.loc[df['prediction from'] == f'{stim}-vs-anat', ['runs', 'Pearson\'s r']]
-#         corrsFunAnaRunA = allRuns.loc[allRuns['runs'] == runA, 'Pearson\'s r']
-#         corrsFunAnaRunA = corrsFunAnaRunA.values
-#
-#         allRuns = df.loc[df['prediction from'] == f'{stim}-vs-anat', ['runs', 'Pearson\'s r']]
-#         corrsFunAnaRunB = allRuns.loc[allRuns['runs'] == runB, 'Pearson\'s r']
-#         corrsFunAnaRunB = corrsFunAnaRunB.values
+    # write results to file
+    outFpath = os.path.join(outDir, 'statistics_t-tests.csv')
+    with open(outFpath, 'w') as f:
+        writer = csv.writer(f)
+        writer.writerows(allToWrite)
