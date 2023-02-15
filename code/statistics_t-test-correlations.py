@@ -4,9 +4,6 @@ created on Mon March 29th 2021
 author: Christian Olaf Haeusler
 
 To do:
-    - add header to csv
-    - add stat and p-value for tests of normality
-    - use floats, not scientific annotation when writing to file
     - test vs. Cronbach's?
 '''
 
@@ -16,8 +13,6 @@ import csv
 import numpy as np
 import os
 import pandas as pd
-
-from glob import glob
 from statsmodels.stats.diagnostic import lilliefors
 from scipy import stats
 
@@ -73,13 +68,16 @@ def parse_arguments():
     return indir, outdir
 
 
-def test_shapiro(values):
+def test_normality(values, test='shapiro', alpha=0.05):
     '''
     '''
-    alpha = 0.05
+    if test == 'shapiro':
+        print('Shapiro-Wilk-Test:')
+        stat, p = stats.shapiro(values)
+    elif test == 'lilliefors':
+        print('Lilliefors:')
+        stat, p = lilliefors(values, dist='norm', pvalmethod='table')
 
-    print('Shapiro-Wilk-Test:')
-    stat, p = stats.shapiro(values)
     print('Statistics=%.3f, p=%.3f' % (stat, p))
 
     if p > alpha:
@@ -87,24 +85,24 @@ def test_shapiro(values):
     else:
         print('Sample does NOT look Gaussian (reject H0) <-----------')
 
-    return stat, p
+    return '{:.7f}'.format(stat), '{:.7f}'.format(p)
 
 
-def test_lilliefors(values):
+def test_ttest(sampleOne, sampleTwo, alpha=0.05, test='dependent'):
     '''
     '''
-    alpha = 0.05
+    if test == 'dependent':
+        # dependent t-test
+        t, p = stats.ttest_rel(sampleOne, sampleTwo)
+    elif test == 'independent':
+        t, p = stats.ttest_ind(sampleOne, sampleTwo)
 
-    print('Lilliefors:')
-    stat, p = lilliefors(values, dist='norm', pvalmethod='table')
-    print('Statistics=%.3f, p=%.3f' % (stat, p))
-
-    if p > alpha:
-        print('Sample looks Gaussian (fail to reject H0)')
+    if p <= alpha:
+        print(f'{test} t-test:\tt={t:.4f}, p={p:.4f}\tsignficiant')
     else:
-        print('Sample does NOT look Gaussian (reject H0) <-----------')
+        print(f'{test} t-test:\tt={t:.4f}, p={p:.4f}\tNOT signficiant')
 
-    return stat, p
+    return '{:.7f}'.format(t), '{:.7f}'.format(p)
 
 
 if __name__ == "__main__":
@@ -119,6 +117,7 @@ if __name__ == "__main__":
         inFile = criterion[0]
         toDos = criterion[1]
 
+        # change to regular expression
         if 'corr_vis-ppa' in inFile:
             crit = 'vis'
         elif 'corr_av-ppa' in inFile:
@@ -144,62 +143,75 @@ if __name__ == "__main__":
 
             # filter for first predictor
             firstDf = df.loc[df['prediction via'] == firstPred,
-                            ['number of runs', 'Pearson\'s r']]
+                             ['number of runs', 'Pearson\'s r']]
             # filter for first predictor's number of runs / segments
             firstVals = firstDf.loc[firstDf['number of runs'] == firstQuant,
                                     'Pearson\'s r'].values
 
             # filter for second predictor
             secondDf = df.loc[df['prediction via'] == secondPred,
-                            ['number of runs', 'Pearson\'s r']]
+                              ['number of runs', 'Pearson\'s r']]
             # filter for second predictor's number of runs / segments
             secondVals = secondDf.loc[secondDf['number of runs'] == secondQuant,
-                                    'Pearson\'s r'].values
+                                      'Pearson\'s r'].values
 
             # Do Fisher's z-transformation
             firstValsZ = np.arctanh(firstVals)
             secondValsZ = np.arctanh(secondVals)
 
-            print('\nTests for normality:')
-
-
+            print('Tests for normality:')
             print(f'{firstPred} ({firstQuant} runs), Fisher\'s transformed')
-            test_shapiro(firstValsZ)
-            test_lilliefors(firstValsZ)
+            statFirstShap, pFirstShap = test_normality(firstValsZ,
+                                                       test='shapiro')
+            statFirstLill, pFirstLill = test_normality(firstValsZ,
+                                                       test='lilliefors')
 
             print(f'{secondPred} ({secondQuant} runs), Fisher\'s transformed')
-            test_shapiro(secondValsZ)
-            test_lilliefors(secondValsZ)
+            statSeconShap, pSeconShap = test_normality(secondValsZ,
+                                                       test='shapiro')
+            statSeconLill, pSeconLill = test_normality(secondValsZ,
+                                                       test='lilliefors')
 
             # perform the t-tests
-            ttalpha = 0.05
-            print(f'\nt-test {firstPred} ({firstQuant} runs) vs. {secondPred} ({secondQuant})')
-
+            print(f't-test {firstPred} ({firstQuant} runs)' \
+                  f'vs. {secondPred} ({secondQuant})')
             # independent t-test
-            indtValue, indpValue = stats.ttest_ind(firstValsZ, secondValsZ)
-            if indpValue <= ttalpha:
-                print(f'independent:\tt={indtValue:.4f}, p={indpValue:.4f}\tsignficiant')
-            else:
-                print(f'independent:\tt={indtValue:.4f}, p={indpValue:.4f}\tNOT signficiant')
-
+            indtValue, indpValue = test_ttest(firstValsZ, secondValsZ,
+                                              test='independent')
             # dependent t-test
-            deptValue, deppValue = stats.ttest_rel(firstValsZ, secondValsZ)
-            if deppValue <= ttalpha:
-                print(f'dependent:\tt={deptValue:.4f}, p={deppValue:.4f}\tsignficiant')
-            else:
-                print(f'dependent:\tt={deptValue:.4f}, p={deppValue:.4f}\tNOT signficiant')
+            deptValue, deppValue = test_ttest(firstValsZ, secondValsZ,
+                                              test='dependent')
 
+            # chain the variables to be written to file later
             currentTestToWrite = [crit,
                                   firstPred, firstQuant,
                                   secondPred, secondQuant,
                                   indtValue, indpValue,
-                                  deptValue, deppValue
+                                  deptValue, deppValue,
+                                  statFirstShap, pFirstShap,
+                                  statFirstLill, pFirstLill,
+                                  statSeconShap, pSeconShap,
+                                  statSeconLill, pSeconLill
                                   ]
 
+            # extend current loops to previous loop
             allToWrite.append(currentTestToWrite)
 
     # write results to file
     outFpath = os.path.join(outDir, 'statistics_t-tests.csv')
+    header = [
+        'citerion',
+        'pred1', 'quant1',
+        'pred2', 'quant2',
+        'ind t-test t', 'ind t-test p',
+        'dep t-test t', 'dep t-test p',
+        'pred1ShapW', 'pred1ShapP',
+        'pred1LillD', 'pred1LillP',
+        'pred2ShapW', 'pred2ShapP',
+        'pred2LillD', 'pred2LillP',
+    ]
+
     with open(outFpath, 'w') as f:
         writer = csv.writer(f)
+        writer.writerow(header)
         writer.writerows(allToWrite)
