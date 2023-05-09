@@ -21,6 +21,9 @@ import re
 AOAV_TRAIN_PATTERN = 'sub-??/sub-??_ao-av-vis_concatenated_zscored.npy'
 VIS_TRAIN_PATTERN = 'sub-??/sub-??_task_visloc_run-1-4_bold-filtered.npy'
 
+TIMINGS = [451, 441, 438, 488, 462, 439, 542, 338-75]
+
+
 
 def parse_arguments():
     '''
@@ -49,14 +52,20 @@ def parse_arguments():
                         default='20',
                         help='number of iterations')
 
+    parser.add_argument('-rseed',
+                        required=False,
+                        default='0',
+                        help='seed for the shuffling of runs')
+
     args = parser.parse_args()
 
     sub = args.sub
     outdir = args.outdir
     n_feat = int(args.nfeat)
     n_iter = int(args.niter)
+    rseed = int(args.rseed)
 
-    return sub, outdir, n_feat, n_iter
+    return sub, outdir, n_feat, n_iter, rseed
 
 
 def find_files(pattern):
@@ -98,6 +107,48 @@ def load_and_zscore(aoav_fpath, vis_fpath):
     return zscored_aoavvis_array
 
 
+def shuffle_all_arrays(all_arrays, timings):
+    '''
+    '''
+    aoTimings = [0] + TIMINGS
+    aoavTimings = aoTimings + aoTimings[1:-1] + [338]  # add AV to AO
+    aoavvisTimings = aoavTimings + 4 * [156]
+
+    # make a list of lists with start-end indices per segment
+    starts = [sum(aoavvisTimings[0:idx+1]) for idx, value
+              in enumerate(aoavvisTimings)]
+    starts_ends = [[x, y] for x, y in zip(starts[:-1], starts[1:])]
+    # substitute the last index for '-1'
+    starts_ends[-1][1] = ''
+
+    shuffled_subjs = []
+    for subject, array in enumerate(all_arrays):
+        print(f'\nSubject {subject}:')
+
+        # shuffle each paradigm separately
+        shuffledAO = random.sample(starts_ends[0:8], 8)
+        shuffledAV = random.sample(starts_ends[8:16], 8)
+        shuffledVIS = random.sample(starts_ends[16:], 4)
+        shuffled_starts_ends = shuffledAO + shuffledAV + shuffledVIS
+
+        shuffled_blocks_arrays = []
+        for start, end in shuffled_starts_ends:
+            print(start, end)
+            # append the current block
+            if end:
+                shuffled_blocks_arrays.append(array[:, start:end])
+            else:
+                shuffled_blocks_arrays.append(array[:, start:])
+
+            # manipulate the array
+            shuffled_blocks = np.concatenate(shuffled_blocks_arrays, axis=1)
+
+        # concatenate the blocks
+        shuffled_subjs.append(shuffled_blocks)
+
+    return shuffled_subjs
+
+
 def fit_srm(list_of_arrays, out_dir):
     '''Fits the SRM and saves it to files
     '''
@@ -112,7 +163,10 @@ def fit_srm(list_of_arrays, out_dir):
 
 if __name__ == "__main__":
     # read command line arguments
-    subj, out_dir, n_feat, n_iter = parse_arguments()
+    subj, out_dir, n_feat, n_iter, rseed = parse_arguments()
+
+    print(f'Processing {subj} to fit SRM model ' \
+          f'of {n_feat} features (iterations={n_iter}, rs={rseed}).')
 
     # find all input files
     aoavvis_fpathes = find_files(AOAV_TRAIN_PATTERN)
@@ -128,14 +182,30 @@ if __name__ == "__main__":
         # append to the list of arrays (containing all subjects' arrays)
         aoavvis_arrays.append(aoavvis_array)
 
-    # fit the SRM model
-    srm_aoavvis = fit_srm(aoavvis_arrays, out_dir)
+    print(f'fitting model for {subj}')
 
-    # prepare saving results as pickle
-    out_file = f'srm-ao-av-vis_feat{n_feat}-iter{n_iter}.npz'
+    if rseed == 0:
+        # use always the same seed drawn from subject number
+        random.seed(int(subj[-2:]))
+        # fit the SRM
+        srm = fit_srm(aoavvis_arrays, out_dir)
+        # prepared name of output file
+        out_file = f'srm-ao-av-vis_feat{n_feat}-iter{n_iter}.npz'
+    else:
+        # set the seed
+        random.seed(rseed)
+        # shuffle the runs for each paradigm and subject separately
+        shuffled_aoavvis_arrays = shuffle_all_arrays(aoavvis_arrays,
+                                                     TIMINGS)
+        # fit the SRM to shuffled runs
+        srm_aoavvis = fit_srm(shuffled_aoavvis_arrays, out_dir)
+        # prepared name of output file
+        out_file = f'srm-ao-av-vis_shuffled_feat{n_feat}-iter{n_iter}-{rseed:04d}.npz'
+
+    # create name of output path
     out_fpath = os.path.join(out_dir, subj, 'models', out_file)
     # create (sub)directories
     os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
     # save it
-    srm_aoavvis.save(out_fpath)
+    srm.save(out_fpath)
     print('SRM saved to', out_fpath)

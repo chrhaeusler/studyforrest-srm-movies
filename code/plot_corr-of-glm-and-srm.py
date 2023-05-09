@@ -276,7 +276,7 @@ if __name__ == "__main__":
     #############
     # LOAD THE SRM MODEL
     in_fpath = os.path.join(inDir, sub, modelFile)
-    model = modelFile.split('.npz')[0]
+    model = os.path.basename(modelFile).split('.npz')[0]
 
     # load the SRM from file
     print('reading model:', in_fpath)
