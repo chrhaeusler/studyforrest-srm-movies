@@ -112,7 +112,7 @@ git checkout -b "job-$JOBID"
 
 # run the job
 datalad run \
--m "Computing data of subject ${indir}" \
+-m "Concatenating and z-scoring runs of ${indir}" \
 --explicit \
 --input $indir \
 --output $indir \
