@@ -235,9 +235,9 @@ if __name__ == "__main__":
         'Estimation of the visual localizer\'s empirical $\it{Z}$-maps (cf. Sengupta et al., 2016)',
         visDf,
         boxplot=True,
-        legend=True,
-        ylabel=False,
-        xlabel=False
+        legend=True
+        # ylabel=False,
+        # xlabel=False
     )
 
     # plot middle subplot
@@ -249,8 +249,8 @@ if __name__ == "__main__":
         'Estimation of the movie\'s empirical $\it{Z}$-maps (cf. Häusler et al., 2022)',
         avDf,
         boxplot=True,
-        legend=False,
-        xlabel=False
+        legend=False
+        # xlabel=False
     )
 
     # plot lower subplot
@@ -262,8 +262,8 @@ if __name__ == "__main__":
         'Estimation of the audio-description\'s empirical $\it{Z}$-maps (cf. Häusler et al., 2022)',
         aoDf,
         boxplot=True,
-        legend=False,
-        ylabel=False
+        legend=False
+        # ylabel=False
     )
 
     # save the figure

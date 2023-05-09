@@ -12,6 +12,7 @@ import argparse
 import csv
 import nibabel as nib
 import numpy as np
+import pandas as pd
 import re
 
 # constants
@@ -184,7 +185,7 @@ if __name__ == "__main__":
 
     # loop over PPAs localized via VIS, AV, and AO
     for criterion in criterions:
-        print(criterion)
+        print(f'\n{criterion}')
 
         # create the list of all subjects' z-maps
         if criterion == 'visual localizer':
@@ -212,7 +213,7 @@ if __name__ == "__main__":
             # loops through the runs
             fourRunsList = []
             for zmapFpath in zmapFpathes:
-                print(zmapFpath)
+                # print(zmapFpath)
                 # load the current's run image
                 zmap_img = nib.load(zmapFpath)
 
@@ -229,17 +230,13 @@ if __name__ == "__main__":
         # print results to screen
         alphasForPrint = [str(round(x[2], 2)) for x in resultsForCriterion[1:]]
         print(', '.join(alphasForPrint))
+        # print descriptive statistics, too
+        toSummarize = pd.DataFrame(resultsForCriterion)
+        print(toSummarize[2].describe())
 
+        # add current paradigm's results
         toWrite.extend(resultsForCriterion)
 
     with open(opj(outDir, 'statistics_cronbachs.csv'), 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(toWrite)
-
-    # print results
-
-
-
-
-# Cronbach's alpha if whole volume was used
-# 0.44, 0.73, 0.64, 0.59, 0.53, 0.74, 0.77, 0.66, 0.6, 0.66, 0.68, 0.09, 0.78, -0.29

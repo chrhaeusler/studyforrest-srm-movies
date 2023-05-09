@@ -124,22 +124,30 @@ def plot_top_repsonses(srm, start, end):
     '''
     plt.figure(figsize=(15, 4))
 
-    # some labels
-    plt.title('SRM: top 3 feature in audio-description')
-    plt.xlabel('TR')
-
-
+    # title
+    # plt.title('Time series of shared features')
     # do some slicing, so the plot does not get too crowded
     plt.plot(srm.s_[0, start:end], linewidth=0.5)
     plt.plot(srm.s_[1, start:end], linewidth=0.5)
     plt.plot(srm.s_[2, start:end], linewidth=0.5)
+#     plt.plot(srm.s_[3, start:end], linewidth=0.5)
+#     plt.plot(srm.s_[4, start:end], linewidth=0.5)
+#     plt.plot(srm.s_[5, start:end], linewidth=0.5)
+#     plt.plot(srm.s_[6, start:end], linewidth=0.5)
+#     plt.plot(srm.s_[7, start:end], linewidth=0.5)
+#     plt.plot(srm.s_[8, start:end], linewidth=0.5)
+#     plt.plot(srm.s_[9, start:end], linewidth=0.5)
 
     # some "making it neat"
     plt.xlim(start, end)
 
-    #
-    plt.savefig(f'test/top3features.svg', bbox_inches='tight')
-    plt.close()
+    # label x axis
+    plt.xlabel('TR')
+
+    extensions = ['pdf', 'png', 'svg']
+    for extension in extensions:
+        fpath = os.path.join(outDir, f'srm-time-series.{extension}')
+        plt.savefig(fpath, bbox_inches='tight')
 
     return None
 
@@ -164,8 +172,6 @@ def plot_distance_mtrx(srm, start, end):
     plt.imshow(dist_mat, cmap='viridis')
     plt.colorbar()
 
-    os.makedirs(outDir, exist_ok=True)
-
     extensions = ['pdf', 'png', 'svg']
     for extension in extensions:
         fpath = os.path.join(outDir, f'distance-matrix.{extension}')
@@ -177,6 +183,10 @@ def plot_distance_mtrx(srm, start, end):
 if __name__ == "__main__":
     # read command line arguments
     subj, in_dir, n_feat, n_iter, outDir = parse_arguments()
+
+    # create output directory
+    os.makedirs(outDir, exist_ok=True)
+
     # save model as (zipped) pickle variable
     in_fpath = os.path.join(
         in_dir, subj, f'srm-ao-av-vis_feat{n_feat}-iter{n_iter}.npz'
@@ -186,10 +196,10 @@ if __name__ == "__main__":
     srm = load_srm(in_fpath)
 
     # plot depicting features x timepoints
-    # plot_feat_x_timepoints(srm)
+    plot_feat_x_timepoints(srm)
 
     # plot depicting time-series of x top shared responses
-    # plot_top_repsonses(srm, start, end)
+    plot_top_repsonses(srm, start, end)
 
     # plot distance matrix
     dist_mat = plot_distance_mtrx(srm, start, end)

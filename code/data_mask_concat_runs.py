@@ -6,13 +6,13 @@ author: Christian Olaf Haeusler
 
 from glob import glob
 from nilearn.input_data import NiftiMasker
+from scipy import stats
 from sklearn import preprocessing
 import argparse
 import nibabel as nib
 import numpy as np
 import os
 import re
-
 
 # constants
 GRP_PPA_PTTRN = 'sub-??/masks/in_bold3Tp2/grp_PPA_bin.nii.gz'
@@ -160,7 +160,7 @@ if __name__ == "__main__":
     # which will be loaded next
     nifti_masker = NiftiMasker(mask_img=mask_img)
 
-    # AUDIO-DESCRIPTIO & MOVIE
+    # Audio-description & Movie
     print('\nProcessing data of audio-description & movie')
 
     # get the files for current subject
@@ -168,17 +168,17 @@ if __name__ == "__main__":
     aoav_fpathes = find_files(aoav_pattern)
 
     # process the files
-    masked_data = process_infiles(aoav_fpathes)
+    masked_aoav_data = process_infiles(aoav_fpathes)
 
     # prepare to save
     out_file = f'{subj}_task_aomovie-avmovie_run-1-8_bold-filtered.npy'
     out_fpath = os.path.join(out_dir, out_file)
-    # only needed is path "test" is used
+    # only needed if path "test" is used
     os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
     # save it
-    np.save(out_fpath, masked_data)
+    np.save(out_fpath, masked_aoav_data)
 
-    # VISUAL LOCALIZER
+    # Visual Localizer
     print('\nProcessing data of visual localizer')
 
     # get the files for current subject
@@ -186,12 +186,26 @@ if __name__ == "__main__":
     vis_fpathes = find_files(vis_pattern)
 
     # process the files
-    masked_data = process_infiles(vis_fpathes)
+    masked_vis_data = process_infiles(vis_fpathes)
 
     # prepare to save
     out_file = f'{subj}_task_visloc_run-1-4_bold-filtered.npy'
     out_fpath = os.path.join(out_dir, out_file)
-    # only needed if path "test" is used
-    os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
     # save it
-    np.save(out_fpath, masked_data)
+    np.save(out_fpath, masked_vis_data)
+
+    # Prepare input for the SRM modeling script
+    # concat AOAV data and VIS data
+    aoavvis_array = np.concatenate([masked_aoav_data, masked_vis_data],
+                                   axis=1)
+
+    # perform zscoring across concatenated paradigms
+    aoavvis_zscored = stats.zscore(aoavvis_array,
+                                   axis=1,
+                                   ddof=1)
+
+    # prepare to save
+    out_file = f'{subj}_ao-av-vis_concatenated_zscored.npy'
+    out_fpath = os.path.join(out_dir, out_file)
+
+    np.save(out_fpath, aoavvis_zscored)
