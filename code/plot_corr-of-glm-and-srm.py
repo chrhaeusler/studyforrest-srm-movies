@@ -87,19 +87,9 @@ def parse_arguments():
                         'sub-01/run-1_movie-ppa-grp.feat/design.mat',
                         help='pattern of path/file for 1st lvl (AV) design files')
 
-
-    parser.add_argument('-sub',
-                        default='sub-01',
-                        help='model of which test subject?')
-
-    parser.add_argument('-model',
-                        default='srm-ao-av-vis_feat10-iter30.npz',
+    parser.add_argument('-modelFile',
+                        default='sub-01/srm-ao-av-vis_feat10-iter30.npz',
                         help='the model file')
-
-    parser.add_argument('-i',
-                        default='test',
-                        help='the output directory for the PDF and SVG file')
-
 
     parser.add_argument('-o',
                         default='test',
@@ -110,12 +100,28 @@ def parse_arguments():
     aoExample = args.ao
     avExample = args.av
     visExample = args.vis
-    sub = args.sub
-    model = args.model
-    inDir = args.i
+    modelFile = args.modelFile
     outDir = args.o
 
-    return aoExample, avExample, visExample, sub, model, inDir, outDir
+    return aoExample, avExample, visExample, modelFile, outDir
+
+
+def find_files(pattern):
+    '''
+    '''
+    def sort_nicely(l):
+        '''Sorts a given list in the way that humans expect
+        '''
+        convert = lambda text: int(text) if text.isdigit() else text
+        alphanum_key = lambda key: [convert(c) for c in re.split("([0-9]+)", key)]
+        l.sort(key=alphanum_key)
+
+        return l
+
+    found_files = glob(pattern)
+    found_files = sort_nicely(found_files)
+
+    return found_files
 
 
 def find_design_files(example):
@@ -224,14 +230,10 @@ def plot_heatmap(title, matrix, outFpath, usedRegressors=[]):
     plt.close()
 
 
-if __name__ == "__main__":
-    # get the command line inputs
-    aoExample, avExample, visExample, sub, modelFile, inDir, outDir = parse_arguments()
-
-    # get design.mat files for the 8 runs of the AO & AV stimulus
-    aofPathes = find_design_files(aoExample)
-    avfPathes = find_design_files(avExample)
-    visfPathes = find_design_files(visExample)
+def create_aoDf(aofPathes):
+    '''
+    factorize / merge this function and the two functions below into one
+    '''
     # specify which columns of the design file to use
     # correct for python index starting at 0
     # use every 2nd column because odd numbered columns
@@ -239,15 +241,7 @@ if __name__ == "__main__":
     ao_columns = [(x-1) * 2 for x in AO_USED]
     ao_reg_names = [AO_NAMES[x] for x in AO_USED]
 
-    # do the same for the movie data
-    av_columns = [(x-1) * 2 for x in AV_USED]
-    av_reg_names = [AV_NAMES[x] for x in AV_USED]
-
-    # do the same for the visual localizer movie data
-    vis_columns = [(x-1) * 2 for x in VIS_USED]
-    vis_reg_names = [VIS_NAMES[x] for x in VIS_USED]
-
-    # audio-description: read the 8 design files and concatenate
+    # read the 8 design files and concatenate
     aoDf = pd.concat([pd.read_csv(run,
                                   usecols=ao_columns,
                                   names=ao_reg_names,
@@ -258,100 +252,210 @@ if __name__ == "__main__":
     aoDf['geo&groom'] = aoDf['geo'] + aoDf['groom']
     # aoDf['geo&groom&furn'] = aoDf['geo'] + aoDf['groom'] + aoDf['furn']
 
-    # movie: read the 8 design files and concatenate
+    return aoDf
+
+
+def create_avDf(avfPathes):
+    '''
+    '''
+    # specify which columns of the design file to use
+    # correct for python index starting at 0
+    # use every 2nd column because odd numbered columns
+    # in the design file are temporal derivatives
+    av_columns = [(x-1) * 2 for x in AV_USED]
+    av_reg_names = [AV_NAMES[x] for x in AV_USED]
+
+    # read the 8 design files and concatenate
     avDf = pd.concat([pd.read_csv(run,
                                   usecols=av_columns,
                                   names=av_reg_names,
                                   skiprows=5, sep='\t')
                       for run in avfPathes], ignore_index=True)
 
-    # localizer: read the 4 design files and concatenate
+    return avDf
+
+
+def create_visDf(visfPathes):
+    '''
+    '''
+    # specify which columns of the design file to use
+    # correct for python index starting at 0
+    # use every 2nd column because odd numbered columns
+    # in the design file are temporal derivatives
+    vis_columns = [(x-1) * 2 for x in VIS_USED]
+    vis_reg_names = [VIS_NAMES[x] for x in VIS_USED]
+
+    # read the 4 design files and concatenate
     visDf = pd.concat([pd.read_csv(run,
                                    usecols=vis_columns,
-                                  names=vis_reg_names,
-                                  skiprows=5, sep='\t')
-                      for run in visfPathes], ignore_index=True)
+                                   names=vis_reg_names,
+                                   skiprows=5, sep='\t')
+                       for run in visfPathes], ignore_index=True)
+
+    return visDf
 
 
-    #############
-    # LOAD THE SRM MODEL
-    in_fpath = os.path.join(inDir, sub, modelFile)
-    model = os.path.basename(modelFile).split('.npz')[0]
-
+def create_srmDf(modelFile):
+    '''
+    '''
     # load the SRM from file
-    print('reading model:', in_fpath)
-    srm = load_srm(in_fpath)
+    srm = load_srm(modelFile)
     # slice SRM model for the TRs of the audio-description
     srm_array = srm.s_.T
 
     # create pandas dataframe from array and name the columns
     columns = ['shared feature %s' % str(int(x)+1) for x in range(srm_array.shape[1])]
 
-    srm_df = pd.DataFrame(data=srm_array,
-                          columns=columns)
+    srmDf = pd.DataFrame(data=srm_array,
+                         columns=columns)
 
-    # a) plot correlation of shared features within in shared feature space
-    # create the correlation matrix for all columns
-    regCorrMat = srm_df.corr()
+    return srmDf
 
-    # create name of path and file (must not include file extension)
-    out_fpath = os.path.join(outDir,
-                             f'corr_shared-responses_{sub}_{model}')
 
-    title = f'{sub}: Correlations within CFS (model: {model})'
-
-    # plot it
-    plot_heatmap(title, regCorrMat, out_fpath)
-
-    # b) plot the correlation of AO regressors and features (only AO TRs)
-    # concat dataframes containing the regressors and the features
-    start = 0
-    end = 3524
+def create_corr_matrix(df1, df2, arctanh=False):
+    '''
+    '''
     # concat regressors and shared responses
     # slice the dataframe cause the last 75 TRs are not in the model space
-    aoModelDf = pd.concat([aoDf[start:end], srm_df[start:end]], axis=1)
+    regressorsAndModelDf = pd.concat([df1, df2], axis=1)
     # create the correlation matrix for all columns
-    regCorrMat = aoModelDf.corr()
-    # create name of path and file (must not include ".{extension}"
-    out_fpath = os.path.join(outDir,
-                             f'corr_ao-regressors-vs-cfs_{sub}_{model}_{start}-{end}')
 
-    title = f'{sub}: AO Regressors vs. Shared Features ({model}; TRs {start}-{end})'
+    if arctanh is True:
+        regCorrMat = regressorsAndModelDf.corr()
+        regCorrMat = np.arctanh(regCorrMat)
+    else:
+        regCorrMat = regressorsAndModelDf.corr()
+
+    return regCorrMat
+
+
+def handle_one_or_list_of_models(regressorsDf, modelFile, start, end):
+    '''it's the thought that counts (and that the function does what it does)
+    '''
+    if 'shuffled' not in modelFile:
+        # read the model file
+        srmDf = create_srmDf(modelFile)
+        # reset index of SRM's df
+        srm_ao_TRs = srmDf[start:end]
+        srm_ao_TRs.reset_index(inplace=True, drop=True)
+
+        # concat regressors and shared responses
+        # slice the dataframe cause the last 75 TRs are not in the model space
+        regCorrMat = create_corr_matrix(regressorsDf, srm_ao_TRs,
+                                        arctanh=False)
+
+    else:
+        # find all files according to pattern
+        directory = os.path.dirname(modelFile)
+        modelPattern = model[:-4] + '*.npz'
+        modelPattern = os.path.join(directory, modelPattern)
+        shuffledModelFpathes = find_files(modelPattern)
+
+        # read in the files and sum up all cells
+        for idx, shuffledModelFile in enumerate(shuffledModelFpathes, 1):
+
+            if idx == 1:
+                print(f'reading model no. {idx}:', shuffledModelFile)
+                # read the model file
+                srmDf = create_srmDf(shuffledModelFile)
+                # reset index of SRM's df
+                srm_ao_TRs = srmDf[start:end]
+                srm_ao_TRs.reset_index(inplace=True, drop=True)
+
+                # concat regressors and shared responses
+                regCorrMat = create_corr_matrix(regressorsDf, srm_ao_TRs,
+                                                arctanh=True)
+
+            else:
+                # read the model file
+                print(f'reading model no. {idx}:', shuffledModelFile)
+                # reset index of SRM's df
+                srm_ao_TRs = srmDf[start:end]
+                srm_ao_TRs.reset_index(inplace=True, drop=True)
+
+                # concat regressors and shared responses
+                regCorrMat += create_corr_matrix(regressorsDf, srm_ao_TRs,
+                                                 arctanh=True)
+
+        # take the mean
+        regCorrMat = regCorrMat / idx
+        regCorrMat = np.tanh(regCorrMat)
+
+    return regCorrMat
+
+
+if __name__ == "__main__":
+    # get the command line inputs
+    aoExample, avExample, visExample, modelFile, outDir = parse_arguments()
+
+    # infere subject number form file name
+    sub = re.search('sub-\d{2}', modelFile)
+    sub = sub.group()
+
+    model = os.path.basename(modelFile).split('.npz')[0]
+
+    # a) plot the correlation of AO regressors and features (only AO TRs)
+    # get design.mat files for the 8 runs
+    aofPathes = find_design_files(aoExample)
+    # create the dataframe
+    aoDf = create_aoDf(aofPathes)
+    # indices of audio-decription TRs within the model
+    start = 0
+    end = 3524
+
+    # get the correlation matrix
+    regCorrMat = handle_one_or_list_of_models(aoDf, modelFile, start, end)
+
     # plot it
+    title = f'{sub}: AO Regressors vs. Shared Features'\
+        ' ({model}; TRs {start}-{end})'
+    # create name of path and file (must not include ".{extension}"
+    out_fpath = os.path.join(
+        outDir, f'corr_ao-regressors-vs-cfs_{sub}_{model}_{start}-{end}')
+
     plot_heatmap(title, regCorrMat, out_fpath, AO_USED)
 
-
-    # c) plot the correlation of AV regressors and features (only AV TRs)
-    # concat dataframes containing the regressors and the features
+    # b) plot the correlation of AV regressors and features (only AV TRs)
+    # get design.mat files for the 8 runs
+    avfPathes = find_design_files(avExample)
+    # create the dataframe
+    avDf = create_avDf(avfPathes)
+    # indices of movie TRs within the model
     start = 3524
     end = 7123
-    srm_av_TRs = srm_df[start:end]
-    srm_av_TRs.reset_index(inplace = True, drop = True)
 
-    avModelDf = pd.concat([avDf, srm_av_TRs], axis=1)
-    # create the correlation matrix for all columns
-    regCorrMat = avModelDf.corr()
-    # create name of path and file (must not include file extension)"
-    out_fpath = os.path.join(outDir,
-                             f'corr_av-regressors-vs-cfs_{sub}_{model}_{start}-{end}')
+    # get the correlation matrix
+    regCorrMat = handle_one_or_list_of_models(avDf, modelFile, start, end)
+
     # plot it
-    title = f'{sub}: AV Regressors vs. Shared Responses ({model}; TRs {start}-{end})'
+    title = f'{sub}: AV Regressors vs. Shared Responses' \
+        ' ({model}; TRs {start}-{end})'
+    # create name of path and file (must not include file extension)"
+    out_fpath = os.path.join(
+        outDir, f'corr_av-regressors-vs-cfs_{sub}_{model}_{start}-{end}'
+    )
+
     plot_heatmap(title, regCorrMat, out_fpath, AV_USED)
 
+    # c) plot the correlation of VIS regressors and features (only VIS TRs)
+    # get design.mat files for the 4 runs
+    visfPathes = find_design_files(visExample)
+    # create the dataframe
+    visDf = create_visDf(visfPathes)
 
-    # d) plot the correlation of VIS regressors and features (only VIS TRs)
-    # concat dataframes containing the regressors and the features
+    # indices of localizer TRs within the model
     start = 7123
     end = 7747
-    srm_vis_TRs = srm_df[start:end]
-    srm_vis_TRs.reset_index(inplace = True, drop = True)
 
-    visModelDf = pd.concat([visDf, srm_vis_TRs], axis=1)
-    # create the correlation matrix for all columns
-    regCorrMat = visModelDf.corr()
-    # create name of path and file (must not include file extension)
-    out_fpath = os.path.join(outDir,
-                             f'corr_vis-regressors-vs-cfs_{sub}_{model}_{start}-{end}')
+    # get the correlation matrix
+    regCorrMat = handle_one_or_list_of_models(visDf, modelFile, start, end)
+
     # plot it
-    title = f'{sub}: VIS Regressors vs. Shared Responses ({model}; TRs {start}-{end})'
+    title = f'{sub}: VIS Regressors vs. Shared Responses' \
+        ' ({model}; TRs {start}-{end})'
+    # create name of path and file (must not include file extension)
+    out_fpath = os.path.join(
+        outDir, f'corr_vis-regressors-vs-cfs_{sub}_{model}_{start}-{end}'
+    )
+
     plot_heatmap(title, regCorrMat, out_fpath, VIS_USED)
