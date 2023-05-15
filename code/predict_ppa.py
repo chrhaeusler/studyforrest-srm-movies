@@ -394,13 +394,16 @@ def predict_from_cms(left_out_subj, subjs, zmap_fpathes, start, end):
 
     # load the left-out subject's transformation matrix
     # that will be used to tranform the data from CMS into brain volume
-    in_fpath = os.path.join(in_dir, left_out_subj,
+    in_fpath = os.path.join(in_dir,
+                            left_out_subj,
+                            'matrices',
                             f'wmatrix_{model}_feat{n_feat}_{start}-{end}.npy')
     wmatrix = np.load(in_fpath)
 
     # load the SRM (based on non-left-out subjects' data)
     srm_fpath = os.path.join(in_dir,
                              left_out_subj,
+                             'models',
                              f'{model}_feat{n_feat}-iter{n_iter}.npz')
     # load it
     srm = load_srm(srm_fpath)
@@ -446,15 +449,21 @@ def predict_from_cms(left_out_subj, subjs, zmap_fpathes, start, end):
     # adjust the name of the output file according to the input:
     if 'studyforrest-data-visualrois' in zmap_fpathes[0]:
         out_fpath = os.path.join(
-            in_dir, left_out_subj,
+            in_dir,
+            left_out_subj,
+            'predictions',
             f'predicted-VIS-PPA_from_{model}_feat{n_feat}_{start}-{end}.nii.gz')
     elif '2nd-lvl_audio-ppa-ind' in zmap_fpathes[0]:
         out_fpath = os.path.join(
-            in_dir, left_out_subj,
+            in_dir,
+            left_out_subj,
+            'predictions',
             f'predicted-AO-PPA_from_{model}_feat{n_feat}_{start}-{end}.nii.gz')
     elif '2nd-lvl_movie-ppa-ind' in zmap_fpathes[0]:
         out_fpath = os.path.join(
-            in_dir, left_out_subj,
+            in_dir,
+            left_out_subj,
+            'predictions',
             f'predicted-AV-PPA_from_{model}_feat{n_feat}_{start}-{end}.nii.gz')
     else:
         print('unkown source for PPA (must be from VIS, AV or AO)')
@@ -507,7 +516,11 @@ def predict_from_ana(left_out_subj, nifti_masker, subjs, zmap_fpathes):
 
     out_fpath = os.path.join(in_dir,
                              left_out_subj,
+                             'predictions',
                              f'predicted-{which_PPA}-PPA_from_anatomy.nii.gz')
+
+    # create (sub)directories
+    os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
 
     nib.save(mean_anat_img, out_fpath)
 
@@ -515,7 +528,7 @@ def predict_from_ana(left_out_subj, nifti_masker, subjs, zmap_fpathes):
 
 
 def get_array_from_fsl_results(left_out_subj, zmap_fpath):
-    '''loads a zmap (FSL outpunt)
+    '''loads Z-map (FSL output)
     '''
     # load the subject's zmap of the PPA contrast
     zmap_img = nib.load(zmap_fpath)
@@ -588,7 +601,7 @@ def run_the_predictions(zmap_fpathes, subjs, model):
     # but also increase the number of fMRI runs used for functional alignment
     print('Running prediction via functional alignment')
     for start, end, stim, runs in starts_ends[:]:  # cf. constants at the top
-        print(f'\nTRs:\t{start}-{end}')
+        print(f'TRs:\t{start}-{end}')
 
         # initialize a list that will, for every subject, contain
         # the array of predicted z-value
@@ -658,61 +671,15 @@ def run_the_predictions(zmap_fpathes, subjs, model):
         which_PPA = 'AO'
 
     # save the dataframe for the currently used CMS
-    df.to_csv(f'{in_dir}/corr_{which_PPA.lower()}-ppa-vs-estimation_{model}_feat{n_feat}.csv', index=False)
+    outFpath = os.path.join(in_dir,
+                            'results',
+                            f'corr_{which_PPA.lower()}-ppa-vs-estimation_{model}_feat{n_feat}.csv')
+
+    os.makedirs(os.path.dirname(outFpath), exist_ok=True)
+
+    df.to_csv(outFpath, index=False)
 
     return None
-
-
-def run_predictions_for_denoised(zmap_fpathes, subjs, model):
-    '''Following is a mess and more a scaffold
-    '''
-#     ### DENOISED TIME-SERIES
-#     # using the contrast calculated from denoised time-series
-#     denoised_contr_arrays = []
-#
-#     for left_out_subj in subjs[:]:
-#         zmap_fpath = [x for x in zmap_fpathes if left_out_subj in x][0]
-#         # following is super hard-coded
-#         new_contrast = zmap_fpath.replace(
-#             'inputs/studyforrest-data-visualrois',
-#             'test')
-#
-#         nifti_masker, func_contrast_array = get_array_from_fsl_results(
-#             left_out_subj,
-#             new_contrast)
-#
-#         denoised_contr_arrays.append(func_contrast_array)
-#
-#     # compute the correlations of empirical vs. contrast from denoised TRs
-#     emp_vs_func_contr = [stats.pearsonr(empirical_arrays[idx],
-#                                         denoised_contr_arrays[idx]) for idx
-#                                         in range(len(empirical_arrays))]
-#
-#     # print the result of the currently used runs / stimulus
-#     print('subject\temp. vs. anat\temp. vs. from cleand TRs')
-#
-#     for idx, subj in enumerate(subjs):
-#         print(f'{subj}\t{round(emp_vs_anat[idx][0], 2)}\t'
-#         f'{round(emp_vs_func_contr[idx][0], 2)}')
-#
-#
-#     funcVsFuncLines = [[subj, predictor+'(contr)', runs, corr[0]]
-#                        for subj, corr in zip(subjs, func_vs_func_contr)]
-#
-#     for_dataframe.extend(funcVsFuncLines)
-#
-#     # compute the correlations of empirical vs. prediction from
-#     # functional alignment (with currently used no. of runs)
-#     func_vs_func_contr = [stats.pearsonr(
-#         denoised_contr_arrays[idx],
-#         func_pred_arrays[idx]) for idx
-#         in range(len(denoised_contr_arrays))]
-#
-#     # print the result of the currently used runs / stimulus
-#     print('subject\temp. vs. cms\tfunc.contr. vs. cms')
-#
-#     for idx, subj in enumerate(subjs):
-#         print(f'{subj}\t{round(emp_vs_func[idx][0], 2)}\t{round(func_vs_func_contr[idx][0], 2)}')
 
 
 if __name__ == "__main__":
@@ -725,35 +692,35 @@ if __name__ == "__main__":
     subjs = [re.search(r'sub-..', string).group() for string in subjs_pathes]
     subjs = sorted(list(set(subjs)))
 
-    # for later prediction from anatomy, we need to transform the
-    # subject-specific z-maps from the localizer into MNI space
-    # (and later transform then into the subject-space of the left-out subject
-
     # VIS PPA
     # create the list of all subjects' VIS zmaps by substituting the
     # subject's string and the correct cope that was used in Sengupta et al.
+    print('Estimating Z-maps of visual localizer')
     zmap_fpathes = [
         (VIS_ZMAP_PATTERN.replace('sub-*', x[0]).replace('cope*', x[1]))
         for x in VIS_VPN_COPES.items()]
 
-    print('\nTransforming VIS z-maps into MNI and into other subjects\' space')
-    transform_ind_ppas(zmap_fpathes, subjs)
-    run_the_predictions(zmap_fpathes, subjs, model)
-
-    # AO PPA
-    zmap_fpathes = [
-        (AO_ZMAP_PATTERN.replace('sub-*', x[0]))
-        for x in VIS_VPN_COPES.items()]
-
-    print('\nTransforming AO z-maps into MNI and into other subjects\' space')
+    print('Transforming VIS z-maps into MNI and into other subjects\' space')
     transform_ind_ppas(zmap_fpathes, subjs)
     run_the_predictions(zmap_fpathes, subjs, model)
 
     # AV PPA
+    print('\tEstimating Z-maps of movie')
     zmap_fpathes = [
         (AV_ZMAP_PATTERN.replace('sub-*', x[0]))
         for x in VIS_VPN_COPES.items()]
 
-    print('\nTransforming AV z-maps into MNI and into other subjects\' space')
+    print('Transforming AV z-maps into MNI and into other subjects\' space')
+    transform_ind_ppas(zmap_fpathes, subjs)
+    run_the_predictions(zmap_fpathes, subjs, model)
+
+    # AO PPA
+    print('\tEstimating Z-maps of audio-description')
+
+    zmap_fpathes = [
+        (AO_ZMAP_PATTERN.replace('sub-*', x[0]))
+        for x in VIS_VPN_COPES.items()]
+
+    print('Transforming AO z-maps into MNI and into other subjects\' space')
     transform_ind_ppas(zmap_fpathes, subjs)
     run_the_predictions(zmap_fpathes, subjs, model)

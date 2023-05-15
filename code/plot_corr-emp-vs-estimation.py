@@ -27,28 +27,35 @@ def parse_arguments():
 
     parser.add_argument('-invis',
                         required=False,
-                        default='test/corr_vis-ppa-vs-estimation_srm-ao-av-vis_feat10.csv',
+                        default='test/results/corr_vis-ppa-vs-estimation_srm-ao-av-vis_feat10.csv',
                         help='csv file with correlations VIS vs. estimation')
 
     parser.add_argument('-inav',
                         required=False,
-                        default='test/corr_av-ppa-vs-estimation_srm-ao-av-vis_feat10.csv',
+                        default='test/results/corr_av-ppa-vs-estimation_srm-ao-av-vis_feat10.csv',
                         help='csv file with correlations AV vs. estimation')
 
     parser.add_argument('-inao',
                         required=False,
-                        default='test/corr_ao-ppa-vs-estimation_srm-ao-av-vis_feat10.csv',
+                        default='test/results/corr_ao-ppa-vs-estimation_srm-ao-av-vis_feat10.csv',
                         help='csv file with correlations AO vs. estimation')
 
     parser.add_argument('-incronb',
                         required=False,
-                        default='test/statistics_cronbachs.csv',
+                        default='test/results/statistics_cronbachs.csv',
                         help='csv file with Cronbachs Alpha of PPA from VIS, AV & AO')
+
+    parser.add_argument('-useMin',
+                        required=False,
+                        default='False',
+                        help='plot minutes instead of TRs?')
 
     parser.add_argument('-outdir',
                         required=False,
-                        default='test',
+                        default='test/results',
                         help='output directory')
+
+
 
     args = parser.parse_args()
 
@@ -56,9 +63,48 @@ def parse_arguments():
     inAvResults = args.inav
     inAoResults = args.inao
     inCronbachs = args.incronb
+    useMin = args.useMin
     outdir = args.outdir
 
-    return inVisResults, inAvResults, inAoResults, inCronbachs, outdir
+    if useMin == 'False':
+        useMin = False
+    elif useMin == 'True':
+        useMin = True
+    else:
+        raise TypeError("useMin must be Boolean (e.g. 'True' or 'False')")
+
+    return inVisResults, inAvResults, inAoResults, inCronbachs, useMin, outdir
+
+
+def convert_trs_to_min(df):
+    '''just a quick and dirty solution
+    '''
+    #df['number of runs'] = np.where((df['prediction via'] == 'anatomical alignment') & (df['number of runs'] == 0), 0, df['number of runs'])
+
+    df['number of runs'] = np.where((df['prediction via'] == 'visual localizer') & (df['number of runs'] == 1), 5, df['number of runs'])
+    df['number of runs'] = np.where((df['prediction via'] == 'visual localizer') & (df['number of runs'] == 2), 10, df['number of runs'])
+    df['number of runs'] = np.where((df['prediction via'] == 'visual localizer') & (df['number of runs'] == 3), 15, df['number of runs'])
+    df['number of runs'] = np.where((df['prediction via'] == 'visual localizer') & (df['number of runs'] == 4), 20, df['number of runs'])
+
+    df['number of runs'] = np.where((df['prediction via'] == 'movie') & (df['number of runs'] == 1), 15, df['number of runs'])
+    df['number of runs'] = np.where((df['prediction via'] == 'movie') & (df['number of runs'] == 2), 30, df['number of runs'])
+    df['number of runs'] = np.where((df['prediction via'] == 'movie') & (df['number of runs'] == 3), 45, df['number of runs'])
+    df['number of runs'] = np.where((df['prediction via'] == 'movie') & (df['number of runs'] == 4), 60, df['number of runs'])
+    df['number of runs'] = np.where((df['prediction via'] == 'movie') & (df['number of runs'] == 5), 75, df['number of runs'])
+    df['number of runs'] = np.where((df['prediction via'] == 'movie') & (df['number of runs'] == 6), 90, df['number of runs'])
+    df['number of runs'] = np.where((df['prediction via'] == 'movie') & (df['number of runs'] == 7), 105, df['number of runs'])
+    df['number of runs'] = np.where((df['prediction via'] == 'movie') & (df['number of runs'] == 8), 120, df['number of runs'])
+
+    df['number of runs'] = np.where((df['prediction via'] == 'audio-description') & (df['number of runs'] == 1), 15, df['number of runs'])
+    df['number of runs'] = np.where((df['prediction via'] == 'audio-description') & (df['number of runs'] == 2), 30, df['number of runs'])
+    df['number of runs'] = np.where((df['prediction via'] == 'audio-description') & (df['number of runs'] == 3), 45, df['number of runs'])
+    df['number of runs'] = np.where((df['prediction via'] == 'audio-description') & (df['number of runs'] == 4), 60, df['number of runs'])
+    df['number of runs'] = np.where((df['prediction via'] == 'audio-description') & (df['number of runs'] == 5), 75, df['number of runs'])
+    df['number of runs'] = np.where((df['prediction via'] == 'audio-description') & (df['number of runs'] == 6), 90, df['number of runs'])
+    df['number of runs'] = np.where((df['prediction via'] == 'audio-description') & (df['number of runs'] == 7), 105, df['number of runs'])
+    df['number of runs'] = np.where((df['prediction via'] == 'audio-description') & (df['number of runs'] == 8), 120, df['number of runs'])
+
+    return df
 
 
 def plot_boxplot(axis, df):
@@ -140,7 +186,10 @@ def plot_subplot(axis, title, df, boxplot=False, legend=True, xlabel=True, ylabe
 
     # set a custom label for the x axis
     if xlabel == True:
-        axis.set_xlabel('number of runs / segments')
+        if useMin == True:
+            axis.set_xlabel('minutes of functional scanning')
+        else:
+            axis.set_xlabel('number of runs / segments')
     else:
         x_axis = axis.axes.get_xaxis()
         x_label = x_axis.get_label()
@@ -170,7 +219,7 @@ def plot_subplot(axis, title, df, boxplot=False, legend=True, xlabel=True, ylabe
 
 if __name__ == "__main__":
     # read command line arguments
-    visResults, avResults, aoResults, cronbachs, outDir = parse_arguments()
+    visResults, avResults, aoResults, cronbachs, useMin, outDir = parse_arguments()
 
     # some preparations for plotting
     # close figure
@@ -187,7 +236,7 @@ if __name__ == "__main__":
     # fig.suptitle('Correlations between empirical and predicted Z-maps')
 
     # adjust some spacings
-    plt.subplots_adjust(hspace=0.35,
+    plt.subplots_adjust(hspace=0.55,
                         wspace=None,
                         top=None,
                         bottom=None,
@@ -229,6 +278,11 @@ if __name__ == "__main__":
     # read the first
     visDf = pd.read_csv(visResults)
     axNr = 0
+
+    # convert TRs to Minutes
+    if useMin is True:
+        visDf = convert_trs_to_min(visDf)
+
     # call the plotting function
     axes[axNr] = plot_subplot(
         axes[axNr],
@@ -243,6 +297,11 @@ if __name__ == "__main__":
     # plot middle subplot
     avDf = pd.read_csv(avResults)
     axNr = 1
+
+    # convert TRs to Minutes
+    if useMin is True:
+        avDf = convert_trs_to_min(avDf)
+
     # call the plotting function
     axes[axNr] = plot_subplot(
         axes[axNr],
@@ -256,6 +315,11 @@ if __name__ == "__main__":
     # plot lower subplot
     aoDf = pd.read_csv(aoResults)
     axNr = 2
+
+    # convert TRs to Minutes
+    if useMin is True:
+        aoDf = convert_trs_to_min(aoDf)
+
     # call the plotting function
     axes[axNr] = plot_subplot(
         axes[axNr],

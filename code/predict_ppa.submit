@@ -16,5 +16,3 @@ should_transfer_files = NO
 
 arguments = ./code/predict_ppa.py -model 'srm-ao-av-vis' -indir 'test' -nfeat '10' -niter '30'
 queue
-arguments = ./code/predict_ppa.py -model 'srm-ao-av' -indir 'test' -nfeat '10' -niter '30'
-queue
