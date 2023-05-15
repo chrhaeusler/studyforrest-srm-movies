@@ -1,7 +1,7 @@
 universe = vanilla
 getenv   = True
 request_cpus = 1
-request_memory = 4G
+request_memory = 8G
 
 # Outputs
 output = condor_logs/$(CLUSTER).$(PROCESS).out

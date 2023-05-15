@@ -39,7 +39,7 @@ STARTS_ENDS = [
     (3524, 6243),  # AV, 6 runs
     (3524, 6785),  # AV, 7 runs
     (3524, 7123),  # AV, 8 runs
-    (0, 7123),      # AO & AV
+    # (0, 7123),      # AO & AV
     (7123, 7123 + 1 * 156),  # VIS, 1 run
     (7123, 7123 + 2 * 156),  # VIS, 2 run
     (7123, 7123 + 3 * 156),  # VIS, 3 run
@@ -57,16 +57,21 @@ def parse_arguments():
     parser.add_argument('-indir',
                         required=False,
                         default='test',
-                        help='output directory (e.g. "sub-01")')
+                        help='input directory')
+
+    parser.add_argument('-sub',
+                        required=False,
+                        default='sub-01',
+                        help='subject to leave out (e.g. "subj-01")')
 
     parser.add_argument('-model',
                         required=False,
                         default='srm-ao-av-vis',
-                        help='the model (e.g. "srm")')
+                        help='the model file\'s base name')
 
     parser.add_argument('-nfeat',
                         required=False,
-                        default='30',
+                        default='10',
                         help='number of features (shared responses)')
 
     parser.add_argument('-niter',
@@ -77,11 +82,12 @@ def parse_arguments():
     args = parser.parse_args()
 
     indir = args.indir
+    sub = args.sub
     model = args.model
     n_feat = int(args.nfeat)
     n_iter = int(args.niter)
 
-    return indir, model, n_feat, n_iter
+    return indir, sub, model, n_feat, n_iter
 
 
 def find_files(pattern):
@@ -119,69 +125,58 @@ def load_srm(in_fpath):
 
 if __name__ == "__main__":
     # read command line arguments
-    in_dir, model, n_feat, n_iter = parse_arguments()
+    in_dir, sub, model, n_feat, n_iter = parse_arguments()
 
-    SUBJS_PATH_PATTERN = 'sub-??'
-    subjs_pathes = find_files(SUBJS_PATH_PATTERN)
-    subjs = [re.search(r'sub-..', string).group() for string in subjs_pathes]
-    # some filtering
-    subjs = sorted(list(set(subjs)))
+    for modelStart, modelEnd in STARTS_ENDS:
+        print(f'\nUsing {model}, {modelStart}-{modelEnd}')
 
-    # loob through the models
-    models = [
-        'srm-ao-av',
-        'srm-ao-av-vis'
-    ]
+        in_fpath = os.path.join(
+            in_dir,
+            sub,
+            'models',  # hard coded FTW
+            f'{model}_feat{n_feat}-iter{n_iter}.npz'
+        )
 
-    for model in models:
-        if model == 'srm-ao-av':
-            # only consider indices from AO & AV
-            corrected_starts_ends = STARTS_ENDS[:-4]
-        else:
-            # consider all incides
-            corrected_starts_ends = STARTS_ENDS
+        # load the srm from file
+        print('Loading SRM:', in_fpath)
+        srm = load_srm(in_fpath)
 
-        for start, end in corrected_starts_ends:
-            print(f'\nUsing {model}, {start}-{end}')
+        # leave the original srm untouched but copy it
+        srm_sliced = copy.copy(srm)
+        srm_sliced.s_ = srm_sliced.s_[:, modelStart:modelEnd]
 
-            out_file = f'wmatrix_{model}_feat{n_feat}_{start}-{end}.npy'
-            print('Output file:', out_file)
+        # load the time series of the paradigms
+        # AO and AV are concatenated
+        # VIS is separate file
+        # adjust the indices accordingly
+        if modelStart < 7123:
+            in_fpath = IN_PATTERN_NAT.replace('sub-??', sub)
+            paradigmStart, paradigmEnd = modelStart, modelEnd
+        elif modelStart == 7123:
+            in_fpath = IN_PATTERN_VIS.replace('sub-??', sub)
+            paradigmStart, paradigmEnd = modelStart - 7123, modelEnd - 7123
 
-            for subj in subjs:
-                print('Processing', subj)
-                in_fpath = os.path.join(
-                    in_dir, subj, f'{model}_feat{n_feat}-iter{n_iter}.npz'
-                )
+        print('Loading data:', in_fpath)
 
-                # load the srm from file
-                print('Loading SRM:', in_fpath)
-                srm = load_srm(in_fpath)
+        array = np.load(in_fpath)
+        array_sliced = array[:, paradigmStart:paradigmEnd]
+        # print(array_sliced.shape)
+        w_matrix = srm_sliced.transform_subject(array_sliced)
 
-                # leave the original srm untouched but copy it
-                srm_sliced = copy.copy(srm)
-                srm_sliced.s_ = srm_sliced.s_[:, start:end]
+        # save the matrix
+        # create name of output file
+        out_file = f'wmatrix_{model}_feat{n_feat}_{modelStart}-{modelEnd}.npy'
 
-                # correct the input file (and start & end indices)
-                # in case you use TRs from localizer within the shared space
-                # time series of the localizer
-                if start < 7123:
-                    in_fpath = IN_PATTERN_NAT.replace('sub-??', subj)
-                elif start == 7123:
-                    in_fpath = IN_PATTERN_VIS.replace('sub-??', subj)
-                    start, end = start - 7123, end - 7123
+        # just take the input math as the output path
+        out_fpath = os.path.join(
+            in_dir,
+            sub,
+            'matrices',  # hard coded FTW
+            out_file
+        )
 
-                print('Loading data:', in_fpath)
-                # print(start, end)
-
-                array = np.load(in_fpath)
-                array_sliced = array[:, start:end]
-                # print(array_sliced.shape)
-                w_matrix = srm_sliced.transform_subject(array_sliced)
-
-                # save the matrix
-                out_fpath = os.path.join(in_dir, subj, out_file)
-                # create (sub)directories
-                os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
-                # save it
-                np.save(out_fpath, w_matrix)
-                print(f'weight matrix for {subj} saved to', out_fpath)
+        # create (sub)directories
+        os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
+        # save it
+        np.save(out_fpath, w_matrix)
+        print(f'weight matrix for {sub} saved to', out_fpath)

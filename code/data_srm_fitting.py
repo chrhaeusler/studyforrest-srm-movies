@@ -44,12 +44,12 @@ def parse_arguments():
 
     parser.add_argument('-nfeat',
                         required=False,
-                        default='50',
+                        default='10',
                         help='number of features (shared responses)')
 
     parser.add_argument('-niter',
                         required=False,
-                        default='20',
+                        default='30',
                         help='number of iterations')
 
     parser.add_argument('-rseed',
