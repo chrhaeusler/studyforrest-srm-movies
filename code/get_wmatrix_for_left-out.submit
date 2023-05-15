@@ -1,0 +1,184 @@
+universe = vanilla
+getenv   = True
+request_cpus = 1
+request_memory = 4G
+
+# Outputs
+output = condor_logs/$(CLUSTER).$(PROCESS).out
+error = condor_logs/$(CLUSTER).$(PROCESS).err
+log = condor_logs/$(CLUSTER).$(PROCESS).log
+
+# Execution
+initialdir = /data/group/psyinf/studyforrest-srm-movies
+executable = /bin/bash
+transfer_executable = False
+should_transfer_files = NO
+
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-01 srm-ao-av-vis 5 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-02 srm-ao-av-vis 5 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-03 srm-ao-av-vis 5 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-04 srm-ao-av-vis 5 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-05 srm-ao-av-vis 5 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-06 srm-ao-av-vis 5 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-09 srm-ao-av-vis 5 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-14 srm-ao-av-vis 5 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-15 srm-ao-av-vis 5 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-16 srm-ao-av-vis 5 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-17 srm-ao-av-vis 5 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-18 srm-ao-av-vis 5 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-19 srm-ao-av-vis 5 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-20 srm-ao-av-vis 5 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-01 srm-ao-av-vis 10 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-02 srm-ao-av-vis 10 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-03 srm-ao-av-vis 10 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-04 srm-ao-av-vis 10 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-05 srm-ao-av-vis 10 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-06 srm-ao-av-vis 10 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-09 srm-ao-av-vis 10 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-14 srm-ao-av-vis 10 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-15 srm-ao-av-vis 10 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-16 srm-ao-av-vis 10 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-17 srm-ao-av-vis 10 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-18 srm-ao-av-vis 10 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-19 srm-ao-av-vis 10 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-20 srm-ao-av-vis 10 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-01 srm-ao-av-vis 20 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-02 srm-ao-av-vis 20 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-03 srm-ao-av-vis 20 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-04 srm-ao-av-vis 20 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-05 srm-ao-av-vis 20 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-06 srm-ao-av-vis 20 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-09 srm-ao-av-vis 20 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-14 srm-ao-av-vis 20 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-15 srm-ao-av-vis 20 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-16 srm-ao-av-vis 20 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-17 srm-ao-av-vis 20 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-18 srm-ao-av-vis 20 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-19 srm-ao-av-vis 20 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-20 srm-ao-av-vis 20 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-01 srm-ao-av-vis 30 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-02 srm-ao-av-vis 30 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-03 srm-ao-av-vis 30 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-04 srm-ao-av-vis 30 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-05 srm-ao-av-vis 30 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-06 srm-ao-av-vis 30 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-09 srm-ao-av-vis 30 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-14 srm-ao-av-vis 30 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-15 srm-ao-av-vis 30 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-16 srm-ao-av-vis 30 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-17 srm-ao-av-vis 30 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-18 srm-ao-av-vis 30 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-19 srm-ao-av-vis 30 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-20 srm-ao-av-vis 30 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-01 srm-ao-av-vis 40 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-02 srm-ao-av-vis 40 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-03 srm-ao-av-vis 40 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-04 srm-ao-av-vis 40 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-05 srm-ao-av-vis 40 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-06 srm-ao-av-vis 40 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-09 srm-ao-av-vis 40 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-14 srm-ao-av-vis 40 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-15 srm-ao-av-vis 40 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-16 srm-ao-av-vis 40 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-17 srm-ao-av-vis 40 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-18 srm-ao-av-vis 40 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-19 srm-ao-av-vis 40 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-20 srm-ao-av-vis 40 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-01 srm-ao-av-vis 50 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-02 srm-ao-av-vis 50 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-03 srm-ao-av-vis 50 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-04 srm-ao-av-vis 50 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-05 srm-ao-av-vis 50 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-06 srm-ao-av-vis 50 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-09 srm-ao-av-vis 50 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-14 srm-ao-av-vis 50 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-15 srm-ao-av-vis 50 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-16 srm-ao-av-vis 50 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-17 srm-ao-av-vis 50 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-18 srm-ao-av-vis 50 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-19 srm-ao-av-vis 50 30
+queue
+arguments = ./code/get_wmatrix_for_left-out_venv.sh test sub-20 srm-ao-av-vis 50 30
+queue
