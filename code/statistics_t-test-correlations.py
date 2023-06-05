@@ -21,23 +21,28 @@ from scipy import stats
 todoDict = {
     'corr_vis-ppa-vs-estimation_srm-ao-av-vis_feat10.csv':
     [
+        ('visual localizer', 3, 'anatomical alignment', 0),
         ('movie', 1, 'anatomical alignment', 0),
-        ('movie', 1, 'visual localizer', 4),
-        ('movie', 1, 'movie', 2),
-        ('movie', 2, 'movie', 3),
-        ('audio-description', 1, 'visual localizer', 4)
+        ('movie', 1, 'visual localizer', 3),
+        ('movie', 2, 'movie', 1),
+        ('movie', 3, 'movie', 2),
+        ('audio-description', 8, 'anatomical alignment', 0)
     ],
     'corr_av-ppa-vs-estimation_srm-ao-av-vis_feat10.csv':
     [
         ('movie', 1, 'anatomical alignment', 0),
-        ('movie', 1, 'visual localizer', 4),
-        ('movie', 1, 'movie', 2),
-        ('movie', 2, 'movie', 3),
-        ('audio-description', 1, 'visual localizer', 4)
+        ('visual localizer', 3, 'anatomical alignment', 0),
+        ('movie', 1, 'visual localizer', 3),
+        ('movie', 2, 'movie', 1),
+        ('movie', 3, 'movie', 2),
+        ('audio-description', 8, 'anatomical alignment', 0)
+
     ],
     'corr_ao-ppa-vs-estimation_srm-ao-av-vis_feat10.csv':
     [
-        ('movie', 1, 'anatomical alignment', 0)
+        ('audio-description', 1, 'anatomical alignment', 0),
+        ('audio-description', 8, 'anatomical alignment', 0),
+        ('movie', 8, 'anatomical alignment', 0)
     ]
 }
 
@@ -68,7 +73,7 @@ def parse_arguments():
     return indir, outdir
 
 
-def test_normality(values, test='shapiro', alpha=0.05):
+def test_normality(values, test='shapiro', alphalvl=0.05):
     '''
     '''
     if test == 'shapiro':
@@ -80,7 +85,7 @@ def test_normality(values, test='shapiro', alpha=0.05):
 
     print('Statistics=%.3f, p=%.3f' % (stat, p))
 
-    if p > alpha:
+    if p > alphalvl:
         print('Sample looks Gaussian (fail to reject H0)')
     else:
         print('Sample does NOT look Gaussian (reject H0) <-----------')
@@ -88,7 +93,7 @@ def test_normality(values, test='shapiro', alpha=0.05):
     return '{:.7f}'.format(stat), '{:.7f}'.format(p)
 
 
-def test_ttest(sampleOne, sampleTwo, alpha=0.05, test='dependent'):
+def test_ttest(sampleOne, sampleTwo, alphalvl=0.05, test='dependent'):
     '''
     '''
     if test == 'dependent':
@@ -97,10 +102,10 @@ def test_ttest(sampleOne, sampleTwo, alpha=0.05, test='dependent'):
     elif test == 'independent':
         t, p = stats.ttest_ind(sampleOne, sampleTwo)
 
-    if p <= alpha:
-        print(f'{test} t-test:\tt={t:.4f}, p={p:.4f}\tsignficiant')
+    if p <= alphalvl:
+        print(f'{test} t-test:\tt={t:.7f}, p={p:.7f}\tsignificant')
     else:
-        print(f'{test} t-test:\tt={t:.4f}, p={p:.4f}\tNOT signficiant')
+        print(f'{test} t-test:\tt={t:.7f}, p={p:.7f}\tNOT significant')
 
     return '{:.7f}'.format(t), '{:.7f}'.format(p)
 
@@ -109,9 +114,12 @@ if __name__ == "__main__":
     # read command line arguments
     inDir, outDir = parse_arguments()
 
-    #
-    allToWrite = []
+    noOfTests = sum(([len(tests) for tests in todoDict.values()]))
+    alpha = 0.05 / noOfTests
 
+    print(f'Number of tests: {noOfTests}; adjusted a: {alpha}')
+
+    allToWrite = []
     # loop over the input files (one for each paradigm to be estimated)
     for criterion in list(todoDict.items()):
         inFile = criterion[0]
@@ -138,7 +146,7 @@ if __name__ == "__main__":
             currentTestToWrite = []
             # unpack values (explicitly) from dict
             firstPred, firstQuant, secondPred, secondQuant = toDo
-            print(f'\nTesting {firstPred} ({firstQuant} runs) vs. '
+            print(f'{firstPred} ({firstQuant} runs) vs. '
                   f'{secondPred} ({secondQuant} runs)')
 
             # filter for first predictor
@@ -159,39 +167,41 @@ if __name__ == "__main__":
             firstValsZ = np.arctanh(firstVals)
             secondValsZ = np.arctanh(secondVals)
 
-            print('Tests for normality:')
-            print(f'{firstPred} ({firstQuant} runs), Fisher\'s transformed')
-            statFirstShap, pFirstShap = test_normality(firstValsZ,
-                                                       test='shapiro')
-            statFirstLill, pFirstLill = test_normality(firstValsZ,
-                                                       test='lilliefors')
 
-            print(f'{secondPred} ({secondQuant} runs), Fisher\'s transformed')
-            statSeconShap, pSeconShap = test_normality(secondValsZ,
-                                                       test='shapiro')
-            statSeconLill, pSeconLill = test_normality(secondValsZ,
-                                                       test='lilliefors')
-
-            # perform the t-tests
-            print(f't-test {firstPred} ({firstQuant} runs)' \
-                  f'vs. {secondPred} ({secondQuant})')
-            # independent t-test
-            indtValue, indpValue = test_ttest(firstValsZ, secondValsZ,
-                                              test='independent')
+#             print('Tests for normality:')
+#             print(f'{firstPred} ({firstQuant} runs), Fisher\'s transformed')
+#             statFirstShap, pFirstShap = test_normality(firstValsZ,
+#                                                        test='shapiro')
+#             statFirstLill, pFirstLill = test_normality(firstValsZ,
+#                                                        test='lilliefors')
+#
+#             print(f'{secondPred} ({secondQuant} runs), Fisher\'s transformed')
+#             statSeconShap, pSeconShap = test_normality(secondValsZ,
+#                                                        test='shapiro')
+#             statSeconLill, pSeconLill = test_normality(secondValsZ,
+#                                                        test='lilliefors')
+#
+#             # perform the t-tests
+#             print(f't-test {firstPred} ({firstQuant} runs)' \
+#                   f'vs. {secondPred} ({secondQuant})')
+#             # independent t-test
+#             indtValue, indpValue = test_ttest(firstValsZ, secondValsZ,
+#                                               test='independent')
             # dependent t-test
             deptValue, deppValue = test_ttest(firstValsZ, secondValsZ,
+                                              alpha,
                                               test='dependent')
 
             # chain the variables to be written to file later
             currentTestToWrite = [crit,
                                   firstPred, firstQuant,
                                   secondPred, secondQuant,
-                                  indtValue, indpValue,
+#                                   indtValue, indpValue,
                                   deptValue, deppValue,
-                                  statFirstShap, pFirstShap,
-                                  statFirstLill, pFirstLill,
-                                  statSeconShap, pSeconShap,
-                                  statSeconLill, pSeconLill
+#                                   statFirstShap, pFirstShap,
+#                                   statFirstLill, pFirstLill,
+#                                   statSeconShap, pSeconShap,
+#                                   statSeconLill, pSeconLill
                                   ]
 
             # extend current loops to previous loop
@@ -203,12 +213,12 @@ if __name__ == "__main__":
         'citerion',
         'pred1', 'quant1',
         'pred2', 'quant2',
-        'ind t-test t', 'ind t-test p',
+#         'ind t-test t', 'ind t-test p',
         'dep t-test t', 'dep t-test p',
-        'pred1ShapW', 'pred1ShapP',
-        'pred1LillD', 'pred1LillP',
-        'pred2ShapW', 'pred2ShapP',
-        'pred2LillD', 'pred2LillP',
+#         'pred1ShapW', 'pred1ShapP',
+#         'pred1LillD', 'pred1LillP',
+#         'pred2ShapW', 'pred2ShapP',
+#         'pred2LillD', 'pred2LillP',
     ]
 
     with open(outFpath, 'w') as f:
