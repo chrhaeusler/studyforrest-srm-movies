@@ -1,3 +1,13 @@
 code/*.sw?
 condor_logs/
 test/
+
+# files used by singularity container
+.cache
+.config
+.ipython
+.bash_history
+
+# track following directory when dataset is fix
+code/singularity
+code/venv

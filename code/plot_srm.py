@@ -18,7 +18,7 @@ import scipy.spatial.distance as sp_distance
 
 # do some slicing
 start = 0
-end = 7747  # first quarter of audio-description
+end = 7747
 
 
 def parse_arguments():
@@ -28,15 +28,16 @@ def parse_arguments():
         description='load a pickled SRM and do some plotting'
     )
 
+    parser.add_argument('-indir',
+                        required=False,
+                        default='test',
+                        help='e.g. test or .')
+
     parser.add_argument('-sub',
                         required=False,
                         default='sub-01',
                         help='subject to leave out (e.g. "subj-01")')
 
-    parser.add_argument('-indir',
-                        required=False,
-                        default='test',
-                        help='output directory (e.g. "sub-01")')
 
     parser.add_argument('-nfeat',
                         required=False,
@@ -127,9 +128,14 @@ def plot_top_repsonses(srm, start, end):
     # title
     # plt.title('Time series of shared features')
     # do some slicing, so the plot does not get too crowded
-    plt.plot(srm.s_[0, start:end], linewidth=0.5)
-    plt.plot(srm.s_[1, start:end], linewidth=0.5)
-    plt.plot(srm.s_[2, start:end], linewidth=0.5)
+    responses = srm.s_
+
+    # resclice for consistent visualization in the plots
+    responses= np.concatenate((srm.s_[:, 3524:7123], srm.s_[:, 0:3524], srm.s_[:, 7123:7747]), axis=1)
+
+    plt.plot(responses[0, start:end], linewidth=0.5, c='k', label = 'shared feature 1') # , c='#661100')
+    plt.plot(responses[1, start:end], linewidth=0.5, c='#117733', label = 'shared feature 2')
+    plt.plot(responses[2, start:end], linewidth=0.5, c='#888888', label = 'shared feature 3')
 #     plt.plot(srm.s_[3, start:end], linewidth=0.5)
 #     plt.plot(srm.s_[4, start:end], linewidth=0.5)
 #     plt.plot(srm.s_[5, start:end], linewidth=0.5)
@@ -138,11 +144,24 @@ def plot_top_repsonses(srm, start, end):
 #     plt.plot(srm.s_[8, start:end], linewidth=0.5)
 #     plt.plot(srm.s_[9, start:end], linewidth=0.5)
 
+    # plt.axvline(x = 3524, color = 'r', label = 'Start TR of the movie')
+    # plt.axvline(x = 7123, color = '#ccb974ff', label = 'Start TR of the visual localizer')
+
+    plt.axvspan(0, 3599, facecolor='#ff000033', alpha=0.2, zorder=-10) # '#ff000033'
+    plt.axvspan(3599, 7123, facecolor='#0000ff33', alpha=0.2, zorder=-10)
+    plt.axvspan(7123, 7747, facecolor='#ccb97433', alpha=0.2, zorder=-10)
+
     # some "making it neat"
     plt.xlim(start, end)
 
     # label x axis
     plt.xlabel('TR')
+
+    # label x axis
+    plt.ylabel('arbitrary unit???')
+
+    # draw legend
+    plt.legend(loc='upper left')
 
     extensions = ['pdf', 'png', 'svg']
     for extension in extensions:
@@ -184,12 +203,15 @@ if __name__ == "__main__":
     # read command line arguments
     subj, in_dir, n_feat, n_iter, outDir = parse_arguments()
 
+    # clean up when using script from command line
+    plt.close()
+
     # create output directory
     os.makedirs(outDir, exist_ok=True)
 
     # save model as (zipped) pickle variable
     in_fpath = os.path.join(
-        in_dir, subj, f'srm-ao-av-vis_feat{n_feat}-iter{n_iter}.npz'
+        in_dir, subj, 'models', f'srm-ao-av-vis_feat{n_feat}-iter{n_iter}.npz'
     )
 
     # load the srm from file
