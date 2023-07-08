@@ -27,35 +27,33 @@ def parse_arguments():
 
     parser.add_argument('-invis',
                         required=False,
-                        default='test/results/corr_vis-ppa-vs-estimation_srm-ao-av-vis_feat10.csv',
+                        default='./results/corr_vis-ppa-vs-estimation_srm-ao-av-vis_feat10.csv',
                         help='csv file with correlations VIS vs. estimation')
 
     parser.add_argument('-inav',
                         required=False,
-                        default='test/results/corr_av-ppa-vs-estimation_srm-ao-av-vis_feat10.csv',
+                        default='./results/corr_av-ppa-vs-estimation_srm-ao-av-vis_feat10.csv',
                         help='csv file with correlations AV vs. estimation')
 
     parser.add_argument('-inao',
                         required=False,
-                        default='test/results/corr_ao-ppa-vs-estimation_srm-ao-av-vis_feat10.csv',
+                        default='./results/corr_ao-ppa-vs-estimation_srm-ao-av-vis_feat10.csv',
                         help='csv file with correlations AO vs. estimation')
 
     parser.add_argument('-incronb',
                         required=False,
-                        default='test/results/statistics_cronbachs.csv',
+                        default='./results/statistics_cronbachs.csv',
                         help='csv file with Cronbachs Alpha of PPA from VIS, AV & AO')
 
     parser.add_argument('-useMin',
                         required=False,
-                        default='False',
+                        default='True',
                         help='plot minutes instead of TRs?')
 
     parser.add_argument('-outdir',
                         required=False,
-                        default='test/results',
+                        default='results',
                         help='output directory')
-
-
 
     args = parser.parse_args()
 
@@ -338,7 +336,5 @@ if __name__ == "__main__":
         fpath = os.path.join(outDir,
                              f'plot_corr-emp-vs-estimation.{extension}')
         plt.savefig(fpath, bbox_inches='tight')
-
-    plt.show()
 
     plt.close()

@@ -21,35 +21,22 @@ def parse_arguments():
     parser = argparse.ArgumentParser(
         description='loads a csv file to plot data as stripplot')
 
-    parser.add_argument('-invis',
+    parser.add_argument('-cronbachs',
                         required=False,
-                        default='test/srm-ao-av-vis_feat10_corr_VIS-PPA-vs-CFS-PPA.csv',
+                        default='results/statistics_cronbachs.csv',
                         help='the data as csv')
-
-    parser.add_argument('-inav',
-                        required=False,
-                        default='test/srm-ao-av-vis_feat10_corr_AV-PPA-vs-CFS-PPA.csv',
-                        help='the data as csv')
-
-    parser.add_argument('-inao',
-                        required=False,
-                        default='test/srm-ao-av-vis_feat10_corr_AO-PPA-vs-CFS-PPA.csv',
-                        help='the data as csv')
-
 
     parser.add_argument('-outdir',
                         required=False,
-                        default='test',
+                        default='results',
                         help='output directory')
 
     args = parser.parse_args()
 
-    inVisResults = args.invis
-    inAvResults = args.inav
-    inAoResults = args.inao
+    cronbachs = args.cronbachs
     outdir = args.outdir
 
-    return inVisResults, inAvResults, inAoResults, outdir
+    return cronbachs, outdir
 
 
 def plot_boxplot(data):
@@ -123,12 +110,9 @@ def plot_stripplot(data):
     # return ax
 
 if __name__ == "__main__":
-    # for now, hard code some stuff
-    cronbachsResults = 'test/statistics_cronbachs.csv'
-    outDir = 'test'
-
-    # read command line arguments
-    # visResults, avResults, aoResults, outDir = parse_arguments()
+    # take the number of voxels from the results from script calculating
+    # cronbach
+    cronbachsResults, outDir = parse_arguments()
 
     df = pd.read_csv(cronbachsResults)
     voxelDf = df.loc[df['stimulus'] == 'visual localizer']
@@ -187,7 +171,5 @@ if __name__ == "__main__":
     for extension in extensions:
         fpath = os.path.join(outDir, f'plot_voxel-counts.{extension}')
         plt.savefig(fpath, bbox_inches='tight')
-
-    plt.show()
 
     plt.close()

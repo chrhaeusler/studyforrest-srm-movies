@@ -87,7 +87,7 @@ def parse_arguments():
                         'sub-01/run-1_movie-ppa-grp.feat/design.mat',
                         help='pattern of path/file for 1st lvl (AV) design files')
 
-    parser.add_argument('-modelFile',
+    parser.add_argument('-model',
                         default='sub-01/srm-ao-av-vis_feat10-iter30.npz',
                         help='the model file')
 
@@ -100,7 +100,7 @@ def parse_arguments():
     aoExample = args.ao
     avExample = args.av
     visExample = args.vis
-    modelFile = args.modelFile
+    modelFile = args.model
     outDir = args.o
 
     return aoExample, avExample, visExample, modelFile, outDir

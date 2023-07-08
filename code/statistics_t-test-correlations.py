@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 '''
-created on Mon March 29th 2021
 author: Christian Olaf Haeusler
-
-To do:
-    - test vs. Cronbach's?
 '''
 
 
@@ -57,12 +53,12 @@ def parse_arguments():
 
     parser.add_argument('-indir',
                         required=False,
-                        default='test',
+                        default='results',
                         help='input directory')
 
     parser.add_argument('-outdir',
                         required=False,
-                        default='test',
+                        default='results',
                         help='ouput directory')
 
     args = parser.parse_args()

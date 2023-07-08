@@ -61,7 +61,7 @@ def parse_arguments():
 
     parser.add_argument('-outDir',
                         required=False,
-                        default='code',
+                        default='results',
                         help='the ouput directory')
 
     parser.add_argument('-vis',

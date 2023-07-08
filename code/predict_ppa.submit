@@ -14,5 +14,5 @@ executable = /bin/bash
 transfer_executable = False
 should_transfer_files = NO
 
-arguments = ./code/predict_ppa.py -model 'srm-ao-av-vis' -indir 'test' -nfeat '10' -niter '30'
+arguments = ./code/predict_ppa_venv.sh . srm-ao-av-vis 10 30
 queue

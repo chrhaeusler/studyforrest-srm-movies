@@ -21,6 +21,7 @@ import re
 AOAV_TRAIN_PATTERN = 'sub-??/sub-??_ao-av-vis_concatenated_zscored.npy'
 VIS_TRAIN_PATTERN = 'sub-??/sub-??_task_visloc_run-1-4_bold-filtered.npy'
 
+# TR of the audio-description's segments
 TIMINGS = [451, 441, 438, 488, 462, 439, 542, 338-75]
 
 
@@ -107,7 +108,7 @@ def load_and_zscore(aoav_fpath, vis_fpath):
     return zscored_aoavvis_array
 
 
-def shuffle_all_arrays(all_arrays, timings):
+def shuffle_all_arrays(all_arrays, timings, within=True):
     '''
     '''
     aoTimings = [0] + TIMINGS
@@ -125,11 +126,18 @@ def shuffle_all_arrays(all_arrays, timings):
     for subject, array in enumerate(all_arrays):
         print(f'\nSubject {subject}:')
 
-        # shuffle each paradigm separately
-        shuffledAO = random.sample(starts_ends[0:8], 8)
-        shuffledAV = random.sample(starts_ends[8:16], 8)
-        shuffledVIS = random.sample(starts_ends[16:], 4)
-        shuffled_starts_ends = shuffledAO + shuffledAV + shuffledVIS
+        print(starts_ends)
+
+        if within is True:
+            # shuffle runs within paradigm
+            shuffledAO = random.sample(starts_ends[0:8], 8)
+            shuffledAV = random.sample(starts_ends[8:16], 8)
+            shuffledVIS = random.sample(starts_ends[16:], 4)
+            shuffled_starts_ends = shuffledAO + shuffledAV + shuffledVIS
+
+        # shuffle runs across paradigms
+        else:
+            shuffled_starts_ends = random.sample(starts_ends, 20)
 
         shuffled_blocks_arrays = []
         for start, end in shuffled_starts_ends:
@@ -160,6 +168,19 @@ def fit_srm(list_of_arrays, out_dir):
 
     return srm
 
+def save_srm(model, out_dir, subj, out_file):
+    '''
+    '''
+    # create name of output path
+    out_fpath = os.path.join(out_dir, subj, 'models', out_file)
+    # create (sub)directories
+    os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
+    # save it
+    model.save(out_fpath)
+    print('SRM saved to', out_fpath)
+
+    return None
+
 
 if __name__ == "__main__":
     # read command line arguments
@@ -188,24 +209,35 @@ if __name__ == "__main__":
         # use always the same seed drawn from subject number
         random.seed(int(subj[-2:]))
         # fit the SRM
-        srm = fit_srm(aoavvis_arrays, out_dir)
+        model = fit_srm(aoavvis_arrays, out_dir)
         # prepared name of output file
         out_file = f'srm-ao-av-vis_feat{n_feat}-iter{n_iter}.npz'
+
+        # save it
+        save_srm(model, out_dir, subj, out_file)
+
     else:
         # set the seed
         random.seed(rseed)
-        # shuffle the runs for each paradigm and subject separately
-        shuffled_aoavvis_arrays = shuffle_all_arrays(aoavvis_arrays,
-                                                     TIMINGS)
-        # fit the SRM to shuffled runs
-        srm_aoavvis = fit_srm(shuffled_aoavvis_arrays, out_dir)
-        # prepared name of output file
-        out_file = f'srm-ao-av-vis_shuffled_feat{n_feat}-iter{n_iter}-{rseed:04d}.npz'
 
-    # create name of output path
-    out_fpath = os.path.join(out_dir, subj, 'models', out_file)
-    # create (sub)directories
-    os.makedirs(os.path.dirname(out_fpath), exist_ok=True)
-    # save it
-    srm.save(out_fpath)
-    print('SRM saved to', out_fpath)
+        # shuffle the runs within paradigms
+        shuffled_aoavvis_arrays = shuffle_all_arrays(aoavvis_arrays,
+                                                     TIMINGS,
+                                                     within=True)
+        # fit the SRM to shuffled runs within paradigms
+        model_shuffled_within = fit_srm(shuffled_aoavvis_arrays, out_dir)
+        # prepared name of output file
+        out_file = f'srm-ao-av-vis_shuffled-within_feat{n_feat}-iter{n_iter}-{rseed:04d}.npz'
+        # save the model
+        save_srm(model_shuffled_within, out_dir, subj, out_file)
+
+        # shuffle the runs across paradigms
+        shuffled_aoavvis_arrays = shuffle_all_arrays(aoavvis_arrays,
+                                                     TIMINGS,
+                                                     within=False)
+        # fit the SRM to shuffled runs across paradigms
+        model_shuffled_across = fit_srm(shuffled_aoavvis_arrays, out_dir)
+        # prepared name of output file
+        out_file = f'srm-ao-av-vis_shuffled-across_feat{n_feat}-iter{n_iter}-{rseed:04d}.npz'
+        # save the model
+        save_srm(model_shuffled_across, out_dir, subj, out_file)
