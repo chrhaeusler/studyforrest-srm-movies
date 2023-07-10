@@ -1,6 +1,6 @@
 #!/bin/sh
-model=$1
-indir=$2
+indir=$1
+model=$2
 nfeat=$3
 niter=$4
 
