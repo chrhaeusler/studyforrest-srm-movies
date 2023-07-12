@@ -332,9 +332,10 @@ if __name__ == "__main__":
     os.makedirs(outDir, exist_ok=True)
 
     extensions = ['pdf', 'png', 'svg']
+    nfeat = visResults.split('_')[-1].split('.')[0]
     for extension in extensions:
         fpath = os.path.join(outDir,
-                             f'plot_corr-emp-vs-estimation.{extension}')
+                             f'plot_corr-emp-vs-estimation_{nfeat}.{extension}')
         plt.savefig(fpath, bbox_inches='tight')
 
     plt.close()

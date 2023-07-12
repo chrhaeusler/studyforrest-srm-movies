@@ -1,0 +1,26 @@
+universe = vanilla
+getenv   = True
+request_cpus = 1
+request_memory = 4G
+
+# Outputs
+output = condor_logs/$(CLUSTER).$(PROCESS).out
+error = condor_logs/$(CLUSTER).$(PROCESS).err
+log = condor_logs/$(CLUSTER).$(PROCESS).log
+
+# Execution
+initialdir = /data/group/psyinf/studyforrest-srm-movies
+executable = /bin/bash
+transfer_executable = False
+should_transfer_files = NO
+
+arguments = ./code/predict_ppa_venv.sh . srm-ao-av-vis 5 30
+queue
+arguments = ./code/predict_ppa_venv.sh . srm-ao-av-vis 20 30
+queue
+arguments = ./code/predict_ppa_venv.sh . srm-ao-av-vis 30 30
+queue
+arguments = ./code/predict_ppa_venv.sh . srm-ao-av-vis 40 30
+queue
+arguments = ./code/predict_ppa_venv.sh . srm-ao-av-vis 50 30
+queue
