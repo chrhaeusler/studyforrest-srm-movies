@@ -1,0 +1,16 @@
+citerion,pred1,quant1,pred2,quant2,dep t-test t,dep t-test p
+vis,visual localizer,3,anatomical alignment,0,13.9946958,0.0000000
+vis,movie,1,anatomical alignment,0,6.3525801,0.0000253
+vis,movie,1,visual localizer,3,-11.6444837,0.0000000
+vis,movie,2,movie,1,5.4946197,0.0001031
+vis,movie,3,movie,2,0.1293549,0.8990568
+vis,audio-description,8,anatomical alignment,0,-1.1675348,0.2639631
+av,movie,1,anatomical alignment,0,5.7754451,0.0000643
+av,visual localizer,3,anatomical alignment,0,1.1456902,0.2725766
+av,movie,1,visual localizer,3,5.5254640,0.0000978
+av,movie,2,movie,1,3.7454591,0.0024485
+av,movie,3,movie,2,2.5759897,0.0230310
+av,audio-description,8,anatomical alignment,0,-2.4041018,0.0318396
+ao,audio-description,1,anatomical alignment,0,-1.8158931,0.0925110
+ao,audio-description,8,anatomical alignment,0,6.5605207,0.0000182
+ao,movie,8,anatomical alignment,0,-0.7570822,0.4625025
